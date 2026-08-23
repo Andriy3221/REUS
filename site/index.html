@@ -61,8 +61,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
             background: #161c26;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: background 0.2s;
         }
         .team-header:hover {
             background: #1a222f;
@@ -149,13 +151,15 @@
         <div class="content-layout">
             <div class="left-column">
                 <div class="team-card">
-                    <div class="team-header">
+                    <!-- Назва команди тепер посилання на сторінку команди -->
+                    <a href="team.html?name=Yami%20Esports&logo=team_logo.png" class="team-header">
                         <div class="team-info">
                             <span style="color: var(--text-muted); font-weight: bold;">#1</span>
                             <span style="font-size: 1.1rem; font-weight: bold;">Yami Esports</span>
                         </div>
                         <span style="color: var(--text-muted);">1000 pts ▾</span>
-                    </div>
+                    </a>
+                    
                     <div class="team-players">
                         <a href="player.html?name=oz1k&img=player1.png" class="player-box">
                             <img src="player1.png" alt="oz1k">
