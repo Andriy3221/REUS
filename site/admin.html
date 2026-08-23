@@ -100,54 +100,65 @@
         <h1>⚙️ Панель управління REUS</h1>
         <div id="success" class="success-msg">Зміни успішно збережено!</div>
 
-        <!-- Керування командами -->
-        <h2>🏆 Керування командами</h2>
+        <!-- 🏆 Створення та управління командами -->
+        <h2>🏆 Додати / Керувати командами</h2>
         <div class="form-group">
-            <label>Додати / Редагувати назву команди</label>
-            <input type="text" id="inputTeamName" placeholder="Наприклад: Yami Esports">
+            <label>Назва команди</label>
+            <input type="text" id="teamNameInput" placeholder="Наприклад: Yami Esports">
+        </div>
+        <div class="form-group">
+            <label>Файл логотипу команди (наприклад: Yami.jpg)</label>
+            <input type="text" id="teamLogoInput" placeholder="Yami.jpg">
         </div>
         <div class="form-group" style="display: flex; gap: 10px;">
             <div style="flex:1;">
-                <label>Valve Rank</label>
-                <input type="text" id="inputValveRank" value="#1">
+                <label>Valve Rank (#)</label>
+                <input type="text" id="teamValveRank" value="#1">
             </div>
             <div style="flex:1;">
-                <label>World Rank</label>
-                <input type="text" id="inputWorldRank" value="#1">
+                <label>World Rank (#)</label>
+                <input type="text" id="teamWorldRank" value="#1">
             </div>
         </div>
-        <button onclick="saveTeam()">Зберегти команду</button>
+        <button onclick="saveTeam()">Зберегти / Додати команду</button>
 
-        <h2 style="margin-top: 30px;">👥 Керування гравцями та трансферами</h2>
+        <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Список команд:</h3>
+        <div id="teamsListContainer"></div>
+
+        <!-- 👥 Створення та управління гравцями -->
+        <h2 style="margin-top: 35px;">👥 Додати / Керувати гравцями</h2>
         <div class="form-group">
-            <label>Ім'я гравця (Нікнейм)</label>
-            <input type="text" id="playerName" placeholder="Наприклад: oz1k">
+            <label>Нікнейм гравця</label>
+            <input type="text" id="playerNameInput" placeholder="Наприклад: oz1k">
         </div>
         <div class="form-group">
-            <label>Назва файлу фото (наприклад: player1.png)</label>
-            <input type="text" id="playerPhoto" placeholder="player1.png">
+            <label>Файл фото гравця (наприклад: player1.png)</label>
+            <input type="text" id="playerPhotoInput" placeholder="player1.png">
         </div>
         <div class="form-group">
-            <label>Статус / Команда гравця</label>
-            <select id="playerStatus">
-                <option value="Yami Esports">Yami Esports (Основний склад)</option>
-                <option value="Free Agent">Вільний агент (Free Agent)</option>
-                <option value="Inactive">Інактив (Inactive)</option>
+            <label>Команда або статус</label>
+            <select id="playerTeamSelect">
+                <!-- Динамічно заповнюється через JS -->
             </select>
         </div>
-        <button onclick="addOrUpdatePlayer()">Додати / Оновити гравця</button>
+        <button onclick="savePlayer()">Зберегти / Додати гравця</button>
 
-        <h2 style="margin-top: 30px;">📜 Список поточних гравців</h2>
-        <div id="playersListContainer">
-            <!-- Список генерується через JS -->
-        </div>
+        <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Список гравців:</h3>
+        <div id="playersListContainer"></div>
 
         <br>
         <a href="index.html" class="back-link">← На головну сайту</a>
     </div>
 
     <script>
-        // Базові дані для прикладу (якщо локально пусто)
+        // Ініціалізація стандартних даних, якщо їх ще немає в localStorage
+        if (!localStorage.getItem('reus_teams')) {
+            const defaultTeams = [
+                { name: 'Yami Esports', logo: 'Yami.jpg', valveRank: '#1', worldRank: '#1' }
+            ];
+            localStorage.setItem('reus_teams', JSON.stringify(defaultTeams));
+        }
+
         if (!localStorage.getItem('reus_players')) {
             const defaultPlayers = [
                 { name: 'oz1k', photo: 'player1.png', team: 'Yami Esports' },
@@ -159,46 +170,83 @@
             localStorage.setItem('reus_players', JSON.stringify(defaultPlayers));
         }
 
-        // Завантаження полів команди
-        document.getElementById('inputTeamName').value = localStorage.getItem('yami_teamName') || 'Yami Esports';
-        document.getElementById('inputValveRank').value = localStorage.getItem('yami_valveRank') || '#1';
-        document.getElementById('inputWorldRank').value = localStorage.getItem('yami_worldRank') || '#1';
-
         function showSuccess() {
             const msg = document.getElementById('success');
             msg.style.display = 'block';
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
-            renderPlayersList();
+            renderAll();
         }
 
+        // Оновлення списку вибору команд у формі гравців
+        function updateTeamDropdown() {
+            const select = document.getElementById('playerTeamSelect');
+            const teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
+            
+            let options = `
+                <option value="Free Agent">Вільний агент (Free Agent)</option>
+                <option value="Inactive">Інактив (Inactive)</option>
+            `;
+            
+            teams.forEach(t => {
+                options += `<option value="${t.name}">${t.name}</option>`;
+            });
+
+            select.innerHTML = options;
+        }
+
+        // Збереження команди
         function saveTeam() {
-            localStorage.setItem('yami_teamName', document.getElementById('inputTeamName').value);
-            localStorage.setItem('yami_valveRank', document.getElementById('inputValveRank').value);
-            localStorage.setItem('yami_worldRank', document.getElementById('inputWorldRank').value);
+            const name = document.getElementById('teamNameInput').value.trim();
+            const logo = document.getElementById('teamLogoInput').value.trim();
+            const valveRank = document.getElementById('teamValveRank').value.trim();
+            const worldRank = document.getElementById('teamWorldRank').value.trim();
+
+            if (!name || !logo) {
+                alert('Введіть назву команди та файл логотипу!');
+                return;
+            }
+
+            let teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
+            let index = teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+
+            if (index >= 0) {
+                teams[index] = { name, logo, valveRank, worldRank };
+            } else {
+                teams.push({ name, logo, valveRank, worldRank });
+            }
+
+            localStorage.setItem('reus_teams', JSON.stringify(teams));
             showSuccess();
         }
 
-        function addOrUpdatePlayer() {
-            const name = document.getElementById('playerName').value.trim();
-            const photo = document.getElementById('playerPhoto').value.trim();
-            const team = document.getElementById('playerStatus').value;
+        // Видалення команди
+        function deleteTeam(name) {
+            let teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
+            teams = teams.filter(t => t.name !== name);
+            localStorage.setItem('reus_teams', JSON.stringify(teams));
+            renderAll();
+        }
+
+        // Збереження гравця
+        function savePlayer() {
+            const name = document.getElementById('playerNameInput').value.trim();
+            const photo = document.getElementById('playerPhotoInput').value.trim();
+            const team = document.getElementById('playerTeamSelect').value;
 
             if (!name || !photo) {
-                alert('Введіть нікнейм та назву файлу фото!');
+                alert('Введіть нікнейм гравця та файл фото!');
                 return;
             }
 
             let players = JSON.parse(localStorage.getItem('reus_players')) || [];
-            
-            // Перевіряємо чи є вже такий гравець, щоб оновити, або додати нового
-            let existingIndex = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-            
-            // Автоматично додаємо запис у трансфери
-            let transferText = `[${new Date().toISOString().split('T')[0]}] Гравця <strong>${name}</strong> переведено у <em>${team}</em>.`;
+            let index = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+
+            // Додаємо запис у блок трансферів
+            const transferText = `[${new Date().toISOString().split('T')[0]}] Гравця <strong>${name}</strong> переведено у <em>${team}</em>.`;
             localStorage.setItem('yami_transfer', transferText);
 
-            if (existingIndex >= 0) {
-                players[existingIndex] = { name, photo, team };
+            if (index >= 0) {
+                players[index] = { name, photo, team };
             } else {
                 players.push({ name, photo, team });
             }
@@ -207,35 +255,55 @@
             showSuccess();
         }
 
+        // Видалення гравця
         function deletePlayer(name) {
             let players = JSON.parse(localStorage.getItem('reus_players')) || [];
             players = players.filter(p => p.name !== name);
             localStorage.setItem('reus_players', JSON.stringify(players));
-            renderPlayersList();
+            renderAll();
         }
 
-        function renderPlayersList() {
-            const container = document.getElementById('playersListContainer');
-            let players = JSON.parse(localStorage.getItem('reus_players')) || [];
-            
-            if (players.length === 0) {
-                container.innerHTML = '<p style="color: #8a99ad;">Немає доданих гравців.</p>';
-                return;
+        // Рендер списків в адмінці
+        function renderAll() {
+            updateTeamDropdown();
+
+            // Рендер команд
+            const teamsContainer = document.getElementById('teamsListContainer');
+            let teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
+            if (teams.length === 0) {
+                teamsContainer.innerHTML = '<p style="color: #8a99ad;">Немає доданих команд.</p>';
+            } else {
+                teamsContainer.innerHTML = '';
+                teams.forEach(t => {
+                    teamsContainer.innerHTML += `
+                        <div class="item-row">
+                            <span>🏆 <strong>${t.name}</strong> (Лого: ${t.logo} | Valve: ${t.valveRank})</span>
+                            <button class="btn-danger" onclick="deleteTeam('${t.name}')">Видалити</button>
+                        </div>
+                    `;
+                });
             }
 
-            container.innerHTML = '';
-            players.forEach(p => {
-                container.innerHTML += `
-                    <div class="item-row">
-                        <span><strong>${p.name}</strong> (${p.team}) — <small>${p.photo}</small></span>
-                        <button class="btn-danger" onclick="deletePlayer('${p.name}')">Видалити</button>
-                    </div>
-                `;
-            });
+            // Рендер гравців
+            const playersContainer = document.getElementById('playersListContainer');
+            let players = JSON.parse(localStorage.getItem('reus_players')) || [];
+            if (players.length === 0) {
+                playersContainer.innerHTML = '<p style="color: #8a99ad;">Немає доданих гравців.</p>';
+            } else {
+                playersContainer.innerHTML = '';
+                players.forEach(p => {
+                    playersContainer.innerHTML += `
+                        <div class="item-row">
+                            <span>👤 <strong>${p.name}</strong> — Команда/Статус: <em>${p.team}</em> (Фото: ${p.photo})</span>
+                            <button class="btn-danger" onclick="deletePlayer('${p.name}')">Видалити</button>
+                        </div>
+                    `;
+                });
+            }
         }
 
-        // Запуск при завантаженні
-        renderPlayersList();
+        // Первинний запуск
+        renderAll();
     </script>
 
 </body>
