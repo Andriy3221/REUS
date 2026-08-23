@@ -3,117 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLTV Rankings & Transfers</title>
+    <title>Кіберспортивний Портал | REUS</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        h1, h2 { text-align: center; color: #00ffcc; }
-        .rank-row { background: #1e1e1e; padding: 15px 20px; margin: 10px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; border-left: 4px solid #00ffcc; }
-        .rank-row:hover { background: #2a2a2a; }
-        .rank-left { display: flex; align-items: center; gap: 15px; }
-        .rank-num { font-size: 20px; font-weight: bold; color: #888; }
-        .rank-logo { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
-        .rank-team-name { font-size: 18px; font-weight: bold; }
-        .rank-points { color: #888; font-size: 14px; }
-        .team-dropdown { display: none; background: #181818; padding: 20px; margin-top: -5px; border-radius: 0 0 8px 8px; border: 1px solid #333; }
-        .team-dropdown.active { display: block; }
-        .players-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
-        .player-card { background: #222; padding: 10px; border-radius: 6px; text-align: center; text-decoration: none; color: #fff; display: block; }
-        .player-card img.avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid #00ffcc; }
-        .player-info { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
-        .flag-icon { width: 20px; height: 14px; }
-        .transfers-section { margin-top: 40px; background: #1a1a1a; padding: 20px; border-radius: 8px; }
-        .transfer-item { padding: 8px 0; border-bottom: 1px solid #333; font-size: 14px; color: #ccc; }
-        .admin-link { display: block; text-align: center; margin-top: 30px; color: #888; text-decoration: none; }
-        .admin-link:hover { color: #00ffcc; }
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #131820;
+            --accent-color: #00ff88;
+            --text-color: #ffffff;
+            --text-muted: #8a99ad;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #1f2937;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        h2 {
+            color: var(--accent-color);
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        /* Таблиця рейтингу */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #1f2937;
+        }
+        th {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .my-team {
+            background-color: rgba(0, 255, 136, 0.1);
+            font-weight: bold;
+        }
+        /* Блок кубка та переможців */
+        .trophy-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+        .trophy-icon {
+            font-size: 3rem;
+        }
+        .admin-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .admin-link:hover {
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Кіберспортивний Рейтинг</h1>
-        
-        <div id="rankings-container">Завантаження команд...</div>
 
-        <div class="transfers-section">
-            <h2>Останні Трансфери</h2>
-            <div id="transfers-container">Завантаження трансферів...</div>
+    <div class="container">
+        <header>
+            <h1>REUS Esports Portal</h1>
+            <p style="color: var(--text-muted);">Офіційний рейтинг та турніри нашої команди</p>
+        </header>
+
+        <!-- Блок переможців турніру (Кубок) -->
+        <div class="section">
+            <h2>🏆 Переможці останнього турніру</h2>
+            <div class="trophy-box">
+                <div class="trophy-icon">🥇</div>
+                <div>
+                    <h3 style="margin: 0 0 5px 0; color: #fff;">REUS Championship Season 1</h3>
+                    <p style="margin: 0; color: var(--accent-color); font-size: 1.1rem; font-weight: bold;">Чемпіон: Yami Esports</p>
+                    <p style="margin: 5px 0 0 0; color: var(---text-muted); font-size: 0.85rem;">Фінальний рахунок: 2:0 проти challenger squad</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Рейтинг команд (з акцентом на нашу) -->
+        <div class="section">
+            <h2>📊 Рейтинг команд</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Місце</th>
+                        <th>Команда</th>
+                        <th>HLTV Pts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="my-team">
+                        <td>#1</td>
+                        <td>🔥 Yami Esports (Наша команда)</td>
+                        <td>1000</td>
+                    </tr>
+                    <tr>
+                        <td>#2</td>
+                        <td>Shadow Gaming</td>
+                        <td>850</td>
+                    </tr>
+                    <tr>
+                        <td>#3</td>
+                        <td>Apex Squad</td>
+                        <td>720</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Останні трансфери -->
+        <div class="section">
+            <h2>🔄 Останні трансфери</h2>
+            <p style="color: var(--text-muted);">[2026-08-23] Гравця <strong>oz1k</strong> переведено із статусу <em>Free Agent</em> у <strong>Yami Esports</strong>.</p>
         </div>
 
         <a href="admin.html" class="admin-link">Перейти в панель адміністратора ⚙️</a>
     </div>
 
-    <script>
-        const NPOINT_ID = "05aaa99f07362cfde9c9";
-
-        async function loadData() {
-            try {
-                let response = await fetch(`https://api.npoint.io/${NPOINT_ID}`);
-                let data = await response.json();
-                
-                renderRankings(data.teams);
-                renderTransfers(data.transfers);
-            } catch (e) {
-                document.getElementById('rankings-container').innerHTML = "<p style='color:red; text-align:center;'>Помилка завантаження даних!</p>";
-            }
-        }
-
-        function renderRankings(teams) {
-            if (!teams) return;
-            teams.sort((a, b) => b.points - a.points);
-            
-            let html = "";
-            teams.forEach((team, index) => {
-                let rank = index + 1;
-                let playersHtml = "";
-                
-                if (team.players) {
-                    team.players.forEach(p => {
-                        playersHtml += `
-                            <div class="player-card">
-                                <img src="${p.photo || 'NoPhotoPlayer.jpg'}" class="avatar">
-                                <div class="player-info">
-                                    <img src="https://flagcdn.com/w40/${p.flag || 'ua'}.png" class="flag-icon">
-                                    <span>${p.nick}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                html += `
-                    <div class="rank-row" onclick="toggleTeam(${team.id})">
-                        <div class="rank-left">
-                            <span class="rank-num">#${rank}</span>
-                            <img src="${team.logo || 'NoPhotoPlayer.jpg'}" class="rank-logo">
-                            <span class="rank-team-name">${team.name} <span class="rank-points">(${team.points} HLTV pts)</span></span>
-                        </div>
-                    </div>
-                    <div id="team-drop-${team.id}" class="team-dropdown">
-                        <div class="players-grid">${playersHtml}</div>
-                    </div>
-                `;
-            });
-            document.getElementById('rankings-container').innerHTML = html;
-        }
-
-        function renderTransfers(transfers) {
-            if (!transfers || transfers.length === 0) {
-                document.getElementById('transfers-container').innerHTML = "<p>Поки немає трансферів.</p>";
-                return;
-            }
-            let html = "";
-            transfers.forEach(t => {
-                html += `<div class="transfer-item"><b>[${t.date}]</b> Гравець <b>${t.player}</b> перейшов із <i>${t.from}</i> в <b>${t.to}</b></div>`;
-            });
-            document.getElementById('transfers-container').innerHTML = html;
-        }
-
-        function toggleTeam(id) {
-            let drop = document.getElementById(`team-drop-${id}`);
-            drop.classList.toggle('active');
-        }
-
-        loadData();
-    </script>
 </body>
 </html>
