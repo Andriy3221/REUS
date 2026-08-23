@@ -24,6 +24,24 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+        /* Блок логотипу та заголовку */
+        .site-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .site-logo {
+            height: 50px;
+            width: auto;
+            border-radius: 6px;
+            object-fit: contain;
+        }
+        .site-title {
+            margin: 0;
+            font-size: 1.6rem;
+            color: var(--text-color);
+        }
         .search-bar {
             width: 100%;
             padding: 12px 20px;
@@ -48,8 +66,9 @@
             width: 320px;
         }
         h2 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 15px;
+            margin-top: 0;
         }
         .team-card {
             background: var(--card-bg);
@@ -151,11 +170,20 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
             margin-bottom: 15px;
+            font-weight: bold;
         }
         .transfer-item {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 8px;
+        }
+        .transfer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
         .transfer-item strong {
             color: var(--text-color);
@@ -172,10 +200,14 @@
 <body>
 
     <div class="main-container">
+        <!-- Шапка сайту з логотипом REUS.png -->
+        <header class="site-header">
+            <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
+            <h1 class="site-title">Counter-Strike World Ranking</h1>
+        </header>
+
         <!-- Пошук по сторінці -->
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
-
-        <h2 style="color: #fff;">Counter-Strike World Ranking</h2>
 
         <div class="content-layout">
             <div class="left-column" id="teamsContainer">
@@ -185,8 +217,8 @@
             <div class="right-column">
                 <div class="transfers-box">
                     <div class="transfers-title">⚡ Top Transfers</div>
-                    <div class="transfer-item" id="transferText">
-                        Трансфери поки відсутні.
+                    <div id="transfersListContainer">
+                        <div class="transfer-item">Трансфери поки відсутні.</div>
                     </div>
                 </div>
             </div>
@@ -194,10 +226,26 @@
     </div>
 
     <script>
-        // Завантаження останнього трансферу
-        const savedTransfer = localStorage.getItem('yami_transfer');
-        if (savedTransfer) {
-            document.getElementById('transferText').innerHTML = savedTransfer;
+        // Завантаження та вивід трансферів з localStorage
+        function renderTransfers() {
+            const container = document.getElementById('transfersListContainer');
+            const transfers = JSON.parse(localStorage.getItem('reus_transfers_list')) || [];
+
+            if (transfers.length === 0) {
+                // Перевіряємо застаріле поле для сумісності
+                const singleTransfer = localStorage.getItem('yami_transfer');
+                if (singleTransfer) {
+                    container.innerHTML = `<div class="transfer-item">${singleTransfer}</div>`;
+                } else {
+                    container.innerHTML = '<div class="transfer-item">Трансфери поки відсутні.</div>';
+                }
+                return;
+            }
+
+            container.innerHTML = '';
+            transfers.forEach(tr => {
+                container.innerHTML += `<div class="transfer-item">${tr}</div>`;
+            });
         }
 
         // Рендер команд і гравців на головній сторінці
@@ -259,7 +307,7 @@
             card.classList.toggle('open');
         }
 
-        // Живий пошук по командах
+        // Пошук по командах
         function filterRanking() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
@@ -274,8 +322,9 @@
             });
         }
 
-        // Запуск при завантаженні
+        // Запуск функцій при завантаженні
         renderIndexTeams();
+        renderTransfers();
     </script>
 
 </body>
