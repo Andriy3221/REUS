@@ -24,7 +24,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Блок логотипу та заголовку */
+        /* Стилі для шапки з нормальним розміром логотипу */
         .site-header {
             display: flex;
             align-items: center;
@@ -32,15 +32,17 @@
             margin-bottom: 25px;
         }
         .site-logo {
-            height: 50px;
+            height: 45px;
             width: auto;
-            border-radius: 6px;
+            max-width: 150px;
             object-fit: contain;
+            border-radius: 4px;
         }
         .site-title {
             margin: 0;
             font-size: 1.6rem;
             color: var(--text-color);
+            font-weight: 700;
         }
         .search-bar {
             width: 100%;
@@ -64,11 +66,6 @@
         }
         .right-column {
             width: 320px;
-        }
-        h2 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            margin-top: 0;
         }
         .team-card {
             background: var(--card-bg);
@@ -200,18 +197,18 @@
 <body>
 
     <div class="main-container">
-        <!-- Шапка сайту з логотипом REUS.png -->
+        <!-- Шапка сайту з виправленим логотипом -->
         <header class="site-header">
             <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
             <h1 class="site-title">Counter-Strike World Ranking</h1>
         </header>
 
-        <!-- Пошук по сторінці -->
+        <!-- Пошук -->
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
 
         <div class="content-layout">
             <div class="left-column" id="teamsContainer">
-                <!-- Динамічно завантажуються команди -->
+                <!-- Команди -->
             </div>
 
             <div class="right-column">
@@ -226,19 +223,24 @@
     </div>
 
     <script>
-        // Завантаження та вивід трансферів з localStorage
+        // Потужна перевірка трансферів з усіх можливих сховищ адмінки
         function renderTransfers() {
             const container = document.getElementById('transfersListContainer');
-            const transfers = JSON.parse(localStorage.getItem('reus_transfers_list')) || [];
+            
+            let transfers = JSON.parse(localStorage.getItem('reus_transfers_list')) 
+                         || JSON.parse(localStorage.getItem('reus_transfers')) 
+                         || [];
+
+            // Якщо масив пустий, перевіряємо поодинокі ключі
+            if (transfers.length === 0) {
+                const single = localStorage.getItem('yami_transfer') || localStorage.getItem('reus_transfer');
+                if (single && !single.includes('відсутні')) {
+                    transfers = [single];
+                }
+            }
 
             if (transfers.length === 0) {
-                // Перевіряємо застаріле поле для сумісності
-                const singleTransfer = localStorage.getItem('yami_transfer');
-                if (singleTransfer) {
-                    container.innerHTML = `<div class="transfer-item">${singleTransfer}</div>`;
-                } else {
-                    container.innerHTML = '<div class="transfer-item">Трансфери поки відсутні.</div>';
-                }
+                container.innerHTML = '<div class="transfer-item">Трансфери поки відсутні.</div>';
                 return;
             }
 
@@ -248,7 +250,6 @@
             });
         }
 
-        // Рендер команд і гравців на головній сторінці
         function renderIndexTeams() {
             const container = document.getElementById('teamsContainer');
             const teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
@@ -301,13 +302,11 @@
             });
         }
 
-        // Відкриття/закриття випадаючого списку команди
         function toggleTeam(teamId) {
             const card = document.getElementById(teamId);
             card.classList.toggle('open');
         }
 
-        // Пошук по командах
         function filterRanking() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
@@ -322,7 +321,6 @@
             });
         }
 
-        // Запуск функцій при завантаженні
         renderIndexTeams();
         renderTransfers();
     </script>
