@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель управління | REUS</title>
+    <title>Admin Panel | REUS</title>
     <style>
         :root {
             --bg-color: #0b0e14;
             --card-bg: #131820;
             --border-color: #1f2937;
             --accent-color: #00ff88;
-            --danger-color: #ff4444;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
+            --danger-color: #ff4444;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,31 +25,8 @@
             max-width: 900px;
             margin: 0 auto;
         }
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        h1, h2 {
             color: var(--text-color);
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-        .nav-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-        .nav-btn.active {
-            background: var(--accent-color);
-            color: #000;
-            border-color: var(--accent-color);
         }
         .section-box {
             background: var(--card-bg);
@@ -57,18 +34,8 @@
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 25px;
-            display: none;
         }
-        .section-box.active {
-            display: block;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 10px 15px;
             background: #1a222f;
@@ -78,352 +45,239 @@
             font-size: 1rem;
             margin-bottom: 15px;
             box-sizing: border-box;
-            font-family: inherit;
         }
-        textarea {
-            resize: vertical;
-            height: 80px;
-        }
-        .btn-primary {
+        button {
             background: var(--accent-color);
             color: #000;
             border: none;
             padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
             font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
             transition: opacity 0.2s;
         }
-        .btn-primary:hover {
+        button:hover {
             opacity: 0.9;
+        }
+        .btn-danger {
+            background: var(--danger-color);
+            color: #fff;
         }
         .item-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #161c26;
-            padding: 12px 15px;
+            background: #1a222f;
+            padding: 10px 15px;
             border-radius: 6px;
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
         }
-        .btn-danger {
-            background: var(--danger-color);
-            color: #fff;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
+        .status-msg {
+            margin-top: 10px;
             font-weight: bold;
-        }
-        .back-link {
-            display: inline-block;
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-top: 15px;
-        }
-        .back-link:hover {
-            color: var(--text-color);
         }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <h2>⚙️ Панель управління REUS</h2>
+        <h1>⚙️ Панель керування REUS</h1>
+        <p style="color: var(--text-muted);">Зміни зберігаються автоматично у спільну хмару і одразу відображаються на сайті.</p>
+        <div id="globalStatus" class="status-msg" style="color: var(--accent-color); margin-bottom: 20px;"></div>
 
-        <!-- Перемикач розділів -->
-        <div class="nav-buttons">
-            <button class="nav-btn active" id="btnTeamsTab" onclick="switchTab('teams')">Керування командами</button>
-            <button class="nav-btn" id="btnPlayersTab" onclick="switchTab('players')">Керування гравцями</button>
-            <button class="nav-btn" id="btnTransfersTab" onclick="switchTab('transfers')">⚡ Top Transfers</button>
+        <!-- Додавання команди -->
+        <div class="section-box">
+            <h2>Додати команду</h2>
+            <input type="text" id="teamName" placeholder="Назва команди (наприклад, Yami Esports)">
+            <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
+            <input type="text" id="teamRank" placeholder="Рейтинг (наприклад, #1 або 1)">
+            <button onclick="addTeam()">Зберегти команду</button>
         </div>
 
-        <!-- РОЗДІЛ: Команди -->
-        <div class="section-box active" id="teamsSection">
-            <h2>Додати або редагувати команду</h2>
-            <form id="teamForm" onsubmit="saveTeam(event)">
-                <label>Назва команди</label>
-                <input type="text" id="teamName" placeholder="Наприклад: Natus Vincere" required>
-
-                <label>Логотип команди (назва файлу, наприклад: navi.png)</label>
-                <input type="text" id="teamLogo" placeholder="navi.png" required>
-
-                <label>Місце в рейтингу Valve (Valve Rank)</label>
-                <input type="text" id="teamValveRank" placeholder="#1" required>
-
-                <button type="submit" class="btn-primary">Зберегти команду</button>
-            </form>
-
-            <h3 style="margin-top: 25px; font-size: 1.1rem;">Список команд:</h3>
-            <div id="adminTeamsList"></div>
+        <!-- Додавання гравця -->
+        <div class="section-box">
+            <h2>Додати гравця</h2>
+            <select id="playerTeamSelect">
+                <option value="">Оберіть команду</option>
+            </select>
+            <input type="text" id="playerName" placeholder="Нікнейм гравця (наприклад, oz1k)">
+            <input type="text" id="playerPhoto" placeholder="Посилання на фото гравця (URL)">
+            <button onclick="addPlayer()">Зберегти гравця</button>
         </div>
 
-        <!-- РОЗДІЛ: Гравці -->
-        <div class="section-box" id="playersSection">
-            <h2>Додати або редагувати гравця</h2>
-            <form id="playerForm" onsubmit="savePlayer(event)">
-                <label>Нікнейм гравця</label>
-                <input type="text" id="playerName" placeholder="Наприклад: s1mple" required>
-
-                <label>Файл фото гравця (наприклад: player1.png або free.jpg)</label>
-                <input type="text" id="playerPhoto" placeholder="player1.png" required>
-
-                <label>Команда або статус</label>
-                <select id="playerTeamSelect" required>
-                    <!-- Заповнюється динамічно -->
-                </select>
-
-                <button type="submit" class="btn-primary">Зберегти гравця</button>
-            </form>
-
-            <h3 style="margin-top: 25px; font-size: 1.1rem;">Список гравців:</h3>
-            <div id="adminPlayersList"></div>
+        <!-- Додавання трансферу -->
+        <div class="section-box">
+            <h2>Додати трансфер</h2>
+            <input type="text" id="transferText" placeholder="Текст трансферу (наприклад, oz1k перейшов у Yami)">
+            <button onclick="addTransfer()">Додати трансфер</button>
         </div>
 
-        <!-- РОЗДІЛ: Top Transfers -->
-        <div class="section-box" id="transfersSection">
-            <h2>Керування трансферами (Top Transfers)</h2>
-            <form id="transferForm" onsubmit="saveTransfer(event)">
-                <label>Текст новини / трансферу (підтримує HTML, наприклад &lt;strong&gt;s1mple&lt;/strong&gt; перейшов у NAVI)</label>
-                <textarea id="transferInputText" placeholder="Наприклад: <strong>s1mple</strong> перейшов у Team Vitality" required></textarea>
-
-                <button type="submit" class="btn-primary">Додати трансфер</button>
-            </form>
-
-            <h3 style="margin-top: 25px; font-size: 1.1rem;">Останні трансфери:</h3>
-            <div id="adminTransfersList"></div>
+        <!-- Список поточних даних -->
+        <div class="section-box">
+            <h2>Поточні дані в базі</h2>
+            <div id="dbList">Завантаження...</div>
         </div>
-
-        <a href="index.html" class="back-link">← На головну сторінку</a>
     </div>
 
     <script>
-        function switchTab(tab) {
-            const teamsSec = document.getElementById('teamsSection');
-            const playersSec = document.getElementById('playersSection');
-            const transfersSec = document.getElementById('transfersSection');
+        const BIN_ID = '6a8b3dffda38895dfe079cb1';
+        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
-            const btnTeams = document.getElementById('btnTeamsTab');
-            const btnPlayers = document.getElementById('btnPlayersTab');
-            const btnTransfers = document.getElementById('btnTransfersTab');
+        let cloudData = {
+            teams: [],
+            players: [],
+            transfers: []
+        };
 
-            teamsSec.classList.remove('active');
-            playersSec.classList.remove('active');
-            transfersSec.classList.remove('active');
-            btnTeams.classList.remove('active');
-            btnPlayers.classList.remove('active');
-            btnTransfers.classList.remove('active');
+        async function fetchCloudData() {
+            setSt("Завантаження даних із хмари...", "#8a99ad");
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const result = await res.json();
+                cloudData = result.record || { teams: [], players: [], transfers: [] };
+                
+                // Якщо якихось полів немає, ініціалізуємо
+                if(!cloudData.teams) cloudData.teams = [];
+                if(!cloudData.players) cloudData.players = [];
+                if(!cloudData.transfers) cloudData.transfers = [];
 
-            if (tab === 'teams') {
-                teamsSec.classList.add('active');
-                btnTeams.classList.add('active');
-            } else if (tab === 'players') {
-                playersSec.classList.add('active');
-                btnPlayers.classList.add('active');
-                updateTeamSelectOptions();
-            } else if (tab === 'transfers') {
-                transfersSec.classList.add('active');
-                btnTransfers.classList.add('active');
-                renderAdminTransfers();
+                updateUI();
+                setSt("Дані успішно завантажено!", "var(--accent-color)");
+            } catch (err) {
+                console.error(err);
+                setSt("Помилка завантаження з хмари!", "var(--danger-color)");
             }
         }
 
-        // --- КОМАНДИ ---
-        function getTeams() {
-            return JSON.parse(localStorage.getItem('reus_teams')) || [];
+        async function saveCloudData() {
+            setSt("Збереження у хмару...", "#ffaa00");
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(cloudData)
+                });
+                if (res.ok) {
+                    setSt("Успішно збережено у хмару!", "var(--accent-color)");
+                    updateUI();
+                } else {
+                    setSt("Помилка збереження!", "var(--danger-color)");
+                }
+            } catch (err) {
+                console.error(err);
+                setSt("Помилка мережі при збереженні!", "var(--danger-color)");
+            }
         }
 
-        function saveTeam(e) {
-            e.preventDefault();
+        function setSt(text, color) {
+            const el = document.getElementById('globalStatus');
+            el.innerText = text;
+            el.style.color = color;
+        }
+
+        function updateUI() {
+            // Оновлюємо селект команд
+            const select = document.getElementById('playerTeamSelect');
+            select.innerHTML = '<option value="">Оберіть команду</option>';
+            cloudData.teams.forEach(t => {
+                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            });
+
+            // Виводимо список для видалення
+            const list = document.getElementById('dbList');
+            if (cloudData.teams.length === 0 && cloudData.players.length === 0 && cloudData.transfers.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-muted);">База даних поки порожня.</p>';
+                return;
+            }
+
+            let html = '<h3>Команди:</h3>';
+            cloudData.teams.forEach((t, i) => {
+                html += `<div class="item-row"><span><b>${t.name}</b> (${t.valveRank || '#1'})</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
+            });
+
+            html += '<h3>Гравці:</h3>';
+            cloudData.players.forEach((p, i) => {
+                html += `<div class="item-row"><span><b>${p.name}</b> [команда: ${p.team}]</span> <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div>`;
+            });
+
+            html += '<h3>Трансфери:</h3>';
+            cloudData.transfers.forEach((tr, i) => {
+                html += `<div class="item-row"><span>${tr}</span> <button class="btn-danger" onclick="deleteTransfer(${i})">Видалити</button></div>`;
+            });
+
+            list.innerHTML = html;
+        }
+
+        function addTeam() {
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
-            const valveRank = document.getElementById('teamValveRank').value.trim();
+            const valveRank = document.getElementById('teamRank').value.trim() || '#1';
 
-            let teams = getTeams();
-            const existingIndex = teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
-            
-            if (existingIndex >= 0) {
-                teams[existingIndex] = { name, logo, valveRank };
-            } else {
-                teams.push({ name, logo, valveRank });
+            if (!name) {
+                alert('Введіть назву команди!');
+                return;
             }
 
-            localStorage.setItem('reus_teams', JSON.stringify(teams));
-            document.getElementById('teamForm').reset();
-            renderAdminTeams();
-            alert('Команду успішно збережено!');
+            cloudData.teams.push({ name, logo, valveRank });
+            saveCloudData();
+
+            document.getElementById('teamName').value = '';
+            document.getElementById('teamLogo').value = '';
+            document.getElementById('teamRank').value = '';
+        }
+
+        function addPlayer() {
+            const team = document.getElementById('playerTeamSelect').value;
+            const name = document.getElementById('playerName').value.trim();
+            const photo = document.getElementById('playerPhoto').value.trim();
+
+            if (!team || !name) {
+                alert('Оберіть команду та введіть нікнейм гравця!');
+                return;
+            }
+
+            cloudData.players.push({ team, name, photo });
+            saveCloudData();
+
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerPhoto').value = '';
+        }
+
+        function addTransfer() {
+            const text = document.getElementById('transferText').value.trim();
+            if (!text) {
+                alert('Введіть текст трансферу!');
+                return;
+            }
+
+            cloudData.transfers.unshift(text); // Додаємо на початок
+            saveCloudData();
+            document.getElementById('transferText').value = '';
         }
 
         function deleteTeam(index) {
-            if (confirm('Видалити цю команду?')) {
-                let teams = getTeams();
-                teams.splice(index, 1);
-                localStorage.setItem('reus_teams', JSON.stringify(teams));
-                renderAdminTeams();
-            }
-        }
-
-        function renderAdminTeams() {
-            const container = document.getElementById('adminTeamsList');
-            const teams = getTeams();
-
-            if (teams.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Команд поки немає.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            teams.forEach((t, index) => {
-                container.innerHTML += `
-                    <div class="item-row">
-                        <div><strong>${t.valveRank}</strong> — ${t.name}</div>
-                        <button class="btn-danger" onclick="deleteTeam(${index})">Видалити</button>
-                    </div>
-                `;
-            });
-        }
-
-        // --- ГРАВЦІ ---
-        function getPlayers() {
-            return JSON.parse(localStorage.getItem('reus_players')) || [];
-        }
-
-        function updateTeamSelectOptions() {
-            const select = document.getElementById('playerTeamSelect');
-            const teams = getTeams();
-
-            let optionsHtml = '<option value="Вільний агент (Free Agent)">Вільний агент (Free Agent)</option>';
-            optionsHtml += '<option value="Лава запасних (Bench)">Лава запасних (Bench)</option>';
-            teams.forEach(t => {
-                optionsHtml += `<option value="${t.name}">${t.name}</option>`;
-            });
-            select.innerHTML = optionsHtml;
-        }
-
-        function savePlayer(e) {
-            e.preventDefault();
-            const name = document.getElementById('playerName').value.trim();
-            const photo = document.getElementById('playerPhoto').value.trim();
-            const team = document.getElementById('playerTeamSelect').value;
-
-            let players = getPlayers();
-            const existingIndex = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-
-            if (existingIndex >= 0) {
-                players[existingIndex] = { name, photo, team };
-            } else {
-                players.push({ name, photo, team });
-            }
-
-            localStorage.setItem('reus_players', JSON.stringify(players));
-            document.getElementById('playerForm').reset();
-            renderAdminPlayers();
-            alert('Гравця успішно збережено!');
+            cloudData.teams.splice(index, 1);
+            saveCloudData();
         }
 
         function deletePlayer(index) {
-            if (confirm('Видалити цього гравця?')) {
-                let players = getPlayers();
-                players.splice(index, 1);
-                localStorage.setItem('reus_players', JSON.stringify(players));
-                renderAdminPlayers();
-            }
-        }
-
-        function renderAdminPlayers() {
-            const container = document.getElementById('adminPlayersList');
-            const players = getPlayers();
-
-            if (players.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Гравців поки немає.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            players.forEach((p, index) => {
-                container.innerHTML += `
-                    <div class="item-row">
-                        <div><strong>${p.name}</strong> → <span style="color: var(--text-muted);">${p.team}</span></div>
-                        <button class="btn-danger" onclick="deletePlayer(${index})">Видалити</button>
-                    </div>
-                `;
-            });
-        }
-
-        // --- TOP TRANSFERS (З ПЕРЕВІРКОЮ СТАРИХ ДАНИХ) ---
-        function getTransfersList() {
-            let transfers = JSON.parse(localStorage.getItem('reus_transfers_list'));
-            if (!transfers) {
-                transfers = [];
-                // Якщо є старий єдиний трансфер, переносимо його у новий список автоматично
-                const oldTransfer = localStorage.getItem('yami_transfer');
-                if (oldTransfer && !oldTransfer.includes('Трансфери поки відсутні')) {
-                    transfers.push(oldTransfer);
-                    localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
-                }
-            }
-            return transfers;
-        }
-
-        function saveTransfer(e) {
-            e.preventDefault();
-            const text = document.getElementById('transferInputText').value.trim();
-            
-            let transfers = getTransfersList();
-            transfers.unshift(text); // Додаємо на початок
-
-            localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
-            localStorage.setItem('yami_transfer', text); // Оновлюємо для сумісності
-
-            document.getElementById('transferForm').reset();
-            renderAdminTransfers();
-            alert('Трансфер успішно додано!');
+            cloudData.players.splice(index, 1);
+            saveCloudData();
         }
 
         function deleteTransfer(index) {
-            if (confirm('Видалити цей трансфер?')) {
-                let transfers = getTransfersList();
-                transfers.splice(index, 1);
-                localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
-                
-                if (transfers.length > 0) {
-                    localStorage.setItem('yami_transfer', transfers[0]);
-                } else {
-                    localStorage.removeItem('yami_transfer');
-                }
-
-                renderAdminTransfers();
-            }
+            cloudData.transfers.splice(index, 1);
+            saveCloudData();
         }
 
-        function renderAdminTransfers() {
-            const container = document.getElementById('adminTransfersList');
-            const transfers = getTransfersList();
-
-            if (transfers.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Трансфери поки відсутні.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            transfers.forEach((tr, index) => {
-                container.innerHTML += `
-                    <div class="item-row">
-                        <div>${tr}</div>
-                        <button class="btn-danger" onclick="deleteTransfer(${index})">Видалити</button>
-                    </div>
-                `;
-            });
-        }
-
-        // Ініціалізація
-        renderAdminTeams();
-        renderAdminPlayers();
-        renderAdminTransfers();
+        fetchCloudData();
     </script>
-
 </body>
 </html>
