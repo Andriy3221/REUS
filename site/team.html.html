@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yami Esports - HLTV Profile</title>
+    <style>
+        body { 
+            background-color: #121519; 
+            color: #b0b5bd; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 30px 20px; 
+            display: flex; 
+            justify-content: center; 
+        }
+        .main-container { width: 100%; max-width: 900px; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #7a8494;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { color: #fff; }
+
+        .players-row { 
+            display: flex; 
+            justify-content: space-between; 
+            background-color: #1a1f26; 
+            padding: 16px; 
+            border-top: 3px solid #3168a9; 
+            border-radius: 6px 6px 0 0;
+            gap: 10px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        }
+        .player-card { 
+            text-align: center; 
+            width: 19%; 
+            background: #14181f; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #202631;
+            text-decoration: none;
+            transition: border-color 0.2s;
+        }
+        .player-card:hover { border-color: #3168a9; }
+        .player-card img.avatar { width: 100%; height: 160px; object-fit: cover; object-position: center 20%; display: block; }
+        .player-info { 
+            background: #0e1117; 
+            padding: 7px 4px; 
+            font-size: 13px; 
+            color: #fff; 
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 5px; 
+            margin-top: auto; 
+            border-top: 1px solid #1f2633;
+        }
+        .flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; }
+
+        .team-box { 
+            background-color: #1a1f26; 
+            border-radius: 0 0 6px 6px; 
+            padding: 22px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
+            border: 1px solid #232a35;
+            border-top: 1px solid #252d3a;
+        }
+        .team-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #252d3a; 
+            padding-bottom: 16px; 
+            margin-bottom: 16px; 
+        }
+        .team-title { display: flex; align-items: center; gap: 16px; }
+        .team-logo { 
+            width: 52px; 
+            height: 52px; 
+            object-fit: cover; 
+            border-radius: 10px; 
+            mix-blend-mode: screen; 
+            background: #121519;
+            padding: 2px;
+            border: 1px solid #2a3442;
+        }
+        .team-name { font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; }
+        
+        .social-icons a { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #229ed9; 
+            width: 38px; 
+            height: 38px; 
+            border-radius: 6px; 
+            transition: background 0.2s, transform 0.2s; 
+        }
+        .social-icons a:hover { background: #1b85b8; transform: scale(1.05); }
+        .social-icons svg { width: 20px; height: 20px; fill: white; }
+
+        .stat-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 11px 0; 
+            border-bottom: 1px solid #222935; 
+            font-size: 14px; 
+        }
+        .stat-row:last-child { border-bottom: none; }
+        .stat-label { color: #7a8494; }
+        .stat-value { color: #ffffff; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <a href="index.html" class="back-link">← Назад до рейтингу</a>
+
+    <div class="players-row">
+        <a href="player.html?id=1" class="player-card">
+            <img src="player1.png" class="avatar">
+            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>oz1k</span></div>
+        </a>
+        <a href="player.html?id=2" class="player-card">
+            <img src="player2.png" class="avatar">
+            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>r1kizy</span></div>
+        </a>
+        <a href="player.html?id=3" class="player-card">
+            <img src="player3.png" class="avatar">
+            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>Yokirito</span></div>
+        </a>
+        <a href="player.html?id=4" class="player-card">
+            <img src="player4.png" class="avatar">
+            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>Fexum</span></div>
+        </a>
+        <a href="player.html?id=5" class="player-card">
+            <img src="player5.png" class="avatar">
+            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>darkpr1nc9</span></div>
+        </a>
+    </div>
+
+    <div class="team-box">
+        <div class="team-header">
+            <div class="team-title">
+                <img src="Yami.jpg" alt="Logo" class="team-logo">
+                <span class="team-name">Yami Esports</span>
+            </div>
+            <div class="social-icons">
+                <a href="https://t.me/yami_esport" target="_blank" title="Telegram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2s-.2-.05-.28-.03c-.12.03-2.02 1.28-5.71 3.74-.54.37-.98.55-1.4.54-.46-.01-1.35-.26-2.01-.48-.81-.27-1.46-.42-1.4-.88.03-.24.36-.49 1.01-.76 3.97-1.74 6.62-2.91 7.95-3.5 3.78-1.66 4.56-1.95 5.07-1.96.11 0 .36.03.52.16.14.12.18.28.2.46-.02.08-.03.17-.05.25z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="stat-row"><span class="stat-label">Valve ranking</span><span class="stat-value">#--</span></div>
+        <div class="stat-row"><span class="stat-label">World ranking</span><span class="stat-value">#--</span></div>
+        <div class="stat-row"><span class="stat-label">Weeks in top30 for core</span><span class="stat-value">0</span></div>
+        <div class="stat-row"><span class="stat-label">Average player age</span><span class="stat-value">--</span></div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLTV Rankings & Transfers</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1, h2 { text-align: center; color: #00ffcc; }
+        .rank-row { background: #1e1e1e; padding: 15px 20px; margin: 10px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; border-left: 4px solid #00ffcc; }
+        .rank-row:hover { background: #2a2a2a; }
+        .rank-left { display: flex; align-items: center; gap: 15px; }
+        .rank-num { font-size: 20px; font-weight: bold; color: #888; }
+        .rank-logo { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
+        .rank-team-name { font-size: 18px; font-weight: bold; }
+        .rank-points { color: #888; font-size: 14px; }
+        .team-dropdown { display: none; background: #181818; padding: 20px; margin-top: -5px; border-radius: 0 0 8px 8px; border: 1px solid #333; }
+        .team-dropdown.active { display: block; }
+        .players-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; }
+        .player-card { background: #222; padding: 10px; border-radius: 6px; text-align: center; text-decoration: none; color: #fff; display: block; }
+        .player-card img.avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid #00ffcc; }
+        .player-info { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px; }
+        .flag-icon { width: 20px; height: 14px; }
+        .transfers-section { margin-top: 40px; background: #1a1a1a; padding: 20px; border-radius: 8px; }
+        .transfer-item { padding: 8px 0; border-bottom: 1px solid #333; font-size: 14px; color: #ccc; }
+        .admin-link { display: block; text-align: center; margin-top: 30px; color: #888; text-decoration: none; }
+        .admin-link:hover { color: #00ffcc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Кіберспортивний Рейтинг</h1>
+        
+        <div id="rankings-container">Завантаження команд...</div>
+
+        <div class="transfers-section">
+            <h2>Останні Трансфери</h2>
+            <div id="transfers-container">Завантаження трансферів...</div>
+        </div>
+
+        <a href="admin.html" class="admin-link">Перейти в панель адміністратора ⚙️</a>
+    </div>
+
+    <script>
+        const NPOINT_ID = "05aaa99f07362cfde9c9";
+
+        async function loadData() {
+            try {
+                let response = await fetch(`https://api.npoint.io/${NPOINT_ID}`);
+                let data = await response.json();
+                
+                renderRankings(data.teams);
+                renderTransfers(data.transfers);
+            } catch (e) {
+                document.getElementById('rankings-container').innerHTML = "<p style='color:red; text-align:center;'>Помилка завантаження даних!</p>";
+            }
+        }
+
+        function renderRankings(teams) {
+            if (!teams) return;
+            teams.sort((a, b) => b.points - a.points);
+            
+            let html = "";
+            teams.forEach((team, index) => {
+                let rank = index + 1;
+                let playersHtml = "";
+                
+                if (team.players) {
+                    team.players.forEach(p => {
+                        playersHtml += `
+                            <div class="player-card">
+                                <img src="${p.photo || 'NoPhotoPlayer.jpg'}" class="avatar">
+                                <div class="player-info">
+                                    <img src="https://flagcdn.com/w40/${p.flag || 'ua'}.png" class="flag-icon">
+                                    <span>${p.nick}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                html += `
+                    <div class="rank-row" onclick="toggleTeam(${team.id})">
+                        <div class="rank-left">
+                            <span class="rank-num">#${rank}</span>
+                            <img src="${team.logo || 'NoPhotoPlayer.jpg'}" class="rank-logo">
+                            <span class="rank-team-name">${team.name} <span class="rank-points">(${team.points} HLTV pts)</span></span>
+                        </div>
+                    </div>
+                    <div id="team-drop-${team.id}" class="team-dropdown">
+                        <div class="players-grid">${playersHtml}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('rankings-container').innerHTML = html;
+        }
+
+        function renderTransfers(transfers) {
+            if (!transfers || transfers.length === 0) {
+                document.getElementById('transfers-container').innerHTML = "<p>Поки немає трансферів.</p>";
+                return;
+            }
+            let html = "";
+            transfers.forEach(t => {
+                html += `<div class="transfer-item"><b>[${t.date}]</b> Гравець <b>${t.player}</b> перейшов із <i>${t.from}</i> в <b>${t.to}</b></div>`;
+            });
+            document.getElementById('transfers-container').innerHTML = html;
+        }
+
+        function toggleTeam(id) {
+            let drop = document.getElementById(`team-drop-${id}`);
+            drop.classList.toggle('active');
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Profile - HLTV</title>
+    <style>
+        body { 
+            background-color: #121519; 
+            color: #b0b5bd; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            padding: 30px 20px; 
+            display: flex; 
+            justify-content: center; 
+        }
+        .main-container { width: 100%; max-width: 850px; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #7a8494;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover { color: #fff; }
+
+        .player-profile-box {
+            background-color: #1a1f26;
+            border-radius: 6px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            border: 1px solid #232a35;
+            overflow: hidden;
+        }
+
+        .profile-content {
+            display: flex;
+            padding: 20px;
+            gap: 24px;
+        }
+
+        .profile-left {
+            width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tag-badge {
+            background: #252d3a;
+            color: #8c97a8;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 3px;
+            align-self: flex-start;
+        }
+
+        .team-mini-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: cover;
+            border-radius: 3px;
+            background: #121519;
+            padding: 1px;
+            border: 1px solid #2a3442;
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            background: linear-gradient(180deg, #1c232d 0%, #14181f 100%);
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid #232a35;
+        }
+
+        .profile-avatar-container img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
+        }
+
+        .profile-right {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-name-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .player-real-name {
+            font-size: 14px;
+            color: #7a8494;
+            margin-bottom: 24px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #222935;
+            font-size: 14px;
+        }
+
+        .info-label { color: #7a8494; }
+        .info-value { color: #ffffff; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+
+        .team-link { color: #ffffff; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+        .team-link:hover { text-decoration: underline; }
+
+        .profile-footer {
+            background-color: #14181f;
+            border-top: 1px solid #232a35;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .trophy-icon { width: 22px; height: 22px; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <a href="index.html" class="back-link">← Назад до рейтингу</a>
+
+    <div class="player-profile-box">
+        <div class="profile-content">
+            <div class="profile-left">
+                <div class="tag-badge">Player</div>
+                <div class="profile-avatar-container">
+                    <img id="player-img" src="player1.png" alt="Player">
+                </div>
+            </div>
+
+            <div class="profile-right">
+                <div id="player-nickname" class="player-name-title">oz1k</div>
+                <div id="player-fullname" class="player-real-name">Yami Player</div>
+
+                <div class="info-row">
+                    <span class="info-label">Current team</span>
+                    <span class="info-value">
+                        <a href="team.html" class="team-link">
+                            <img src="Yami.jpg" class="team-mini-icon"> Yami Esports
+                        </a>
+                    </span>
+                </div>
+
+                <div class="info-row" style="border-bottom: none;">
+                    <span class="info-label">Prize money <span style="font-size:11px; color: #5a6371; cursor:help;">(?)</span></span>
+                    <span class="info-value">$0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-footer">
+            <svg class="trophy-icon" viewBox="0 0 24 24" fill="#8c97a8"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.66 4.4 5.03.73 1.37 2.05 2.38 3.6 2.65V19H8v2h8v-2h-3v-3.32c1.55-.27 2.87-1.28 3.6-2.65 2.48-.37 4.4-2.48 4.4-5.03V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerId = urlParams.get('id') || '1';
+
+    // Нікнейми гравців за їхнім ID
+    const playersData = {
+        '1': { nickname: 'oz1k' },
+        '2': { nickname: 'r1kizy' },
+        '3': { nickname: 'Yokirito' },
+        '4': { nickname: 'Fexum' },
+        '5': { nickname: 'darkpr1nc9' }
+    };
+
+    const player = playersData[playerId] || { nickname: 'Player' };
+
+    document.getElementById('player-img').src = `player${playerId}.png`;
+    document.getElementById('player-nickname').innerText = player.nickname;
+</script>
+
+</body>
+</html>

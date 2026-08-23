@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Адмін-панель</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; background: #1e1e1e; padding: 20px; border-radius: 8px; }
+        h2 { color: #00ffcc; text-align: center; }
+        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #333; }
+        input, select, button { width: 100%; padding: 10px; margin: 8px 0; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        button { background: #00ffcc; color: #000; font-weight: bold; cursor: pointer; border: none; }
+        button:hover { background: #00cca3; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #888; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Адмін-панель сайту</h2>
+
+        <div class="section">
+            <h3>Додати нову команду</h3>
+            <input type="text" id="newTeamName" placeholder="Назва команди (наприклад, NaVi)">
+            <input type="number" id="newTeamPoints" placeholder="Очки HLTV (наприклад, 850)">
+            <input type="text" id="newTeamLogo" placeholder="Назва файлу логотипу (наприклад, navi.jpg)">
+            <button onclick="addTeam()">Додати команду</button>
+        </div>
+
+        <div class="section">
+            <h3>Додати трансфер</h3>
+            <input type="text" id="trPlayer" placeholder="Нік гравця">
+            <input type="text" id="trFrom" placeholder="Звідки (команда)">
+            <input type="text" id="trTo" placeholder="Куди (команда)">
+            <button onclick="addTransfer()">Записати трансфер</button>
+        </div>
+
+        <a href="index.html" class="back-link">← Повернутися на головну сторінку сайту</a>
+    </div>
+
+    <script>
+        const NPOINT_ID = "05aaa99f07362cfde9c9";
+
+        async function getData() {
+            let res = await fetch(`https://api.npoint.io/${NPOINT_ID}`);
+            return await res.json();
+        }
+
+        async function saveData(data) {
+            await fetch(`https://api.npoint.io/${NPOINT_ID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            alert('Зміни успішно збережено!');
+        }
+
+        async function addTeam() {
+            let name = document.getElementById('newTeamName').value;
+            let points = parseInt(document.getElementById('newTeamPoints').value);
+            let logo = document.getElementById('newTeamLogo').value;
+
+            if (!name) return alert('Введи назву команди!');
+
+            let data = await getData();
+            let newId = data.teams && data.teams.length > 0 ? Math.max(...data.teams.map(t => t.id)) + 1 : 1;
+
+            if (!data.teams) data.teams = [];
+
+            data.teams.push({
+                id: newId,
+                name: name,
+                points: points || 0,
+                logo: logo || 'NoPhotoPlayer.jpg',
+                players: [
+                    {"nick": "Player1", "flag": "ua", "photo": "NoPhotoPlayer.jpg"},
+                    {"nick": "Player2", "flag": "ua", "photo": "NoPhotoPlayer.jpg"},
+                    {"nick": "Player3", "flag": "ua", "photo": "NoPhotoPlayer.jpg"},
+                    {"nick": "Player4", "flag": "ua", "photo": "NoPhotoPlayer.jpg"},
+                    {"nick": "Player5", "flag": "ua", "photo": "NoPhotoPlayer.jpg"}
+                ]
+            });
+
+            await saveData(data);
+            location.reload();
+        }
+
+        async function addTransfer() {
+            let player = document.getElementById('trPlayer').value;
+            let from = document.getElementById('trFrom'].value;
+            let to = document.getElementById('trTo').value;
+
+            if (!player) return alert('Введи нік гравця!');
+
+            let data = await getData();
+            let today = new Date().toISOString().split('T')[0];
+
+            if (!data.transfers) data.transfers = [];
+            data.transfers.unshift({ date: today, player, from, to });
+
+            await saveData(data);
+            location.reload();
+        }
+    </script>
+</body>
+</html>
