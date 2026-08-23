@@ -40,7 +40,6 @@
             margin: 0 auto;
         }
         
-        /* Шапка сайту з кнопкою теми */
         .site-header {
             display: flex;
             justify-content: space-between;
@@ -73,7 +72,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* Кнопка перемикання теми */
         .theme-toggle-btn {
             background: var(--card-hover);
             border: 1px solid var(--border-color);
@@ -102,7 +100,7 @@
             font-size: 1rem;
             margin-bottom: 25px;
             box-sizing: border-box;
-            transition: border-color 0.2s, background 0.3s;
+            transition: border-color 0.2s, background 0.3s, color 0.3s;
         }
         .search-bar:focus {
             outline: none;
@@ -283,7 +281,6 @@
     </div>
 
     <script>
-        // Логіка перемикання теми
         function toggleTheme() {
             const body = document.body;
             const themeIcon = document.getElementById('themeIcon');
@@ -302,7 +299,6 @@
             }
         }
 
-        // Перевірка збереженої теми при завантаженні сторінки
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('reus_theme') || 'dark';
             const body = document.body;
@@ -409,14 +405,7 @@
         }
 
         function filterRanking() {
-            const query = document.getElementById('searchInput').value.toLowerCase,
-            const cards = document.querySelectorAll('.team-card');
-            // Перевіримо безпечно обробку пошуку нижче:
-        }
-
-        // Оновлена функція фільтрації (щоб нічого не завадило роботі пошуку)
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const query = this.value.toLowerCase();
+            const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
 
             cards.forEach(card => {
@@ -427,7 +416,7 @@
                     card.style.display = 'none';
                 }
             });
-        });
+        }
 
         loadCloudData();
     </script>
