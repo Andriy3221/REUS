@@ -175,64 +175,15 @@
         <h2 style="color: #fff;">Counter-Strike World ranking</h2>
 
         <div class="content-layout">
-            <div class="left-column">
-                <div class="team-card" id="team1">
-                    <div class="team-header" onclick="toggleTeam('team1')">
-                        <div class="team-info">
-                            <span style="color: var(--text-muted); font-weight: bold;">#1</span>
-                            <img src="Yami.jpg" alt="Yami" class="team-logo">
-                            <a href="team.html?name=Yami%20Esports" class="team-name-link" onclick="event.stopPropagation()">Yami Esports</a>
-                        </div>
-                        <div style="color: var(--text-muted);">
-                            1000 pts <span class="arrow-icon" style="display:inline-block;">▾</span>
-                        </div>
-                    </div>
-                    
-                    <div class="team-players" id="team1-players">
-                        <a href="player.html?name=oz1k&img=player1.png" class="player-box">
-                            <img src="player1.png" alt="oz1k">
-                            <div class="player-footer">
-                                <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
-                                oz1k
-                            </div>
-                        </a>
-                        <a href="player.html?name=r1kizy&img=player2.png" class="player-box">
-                            <img src="player2.png" alt="r1kizy">
-                            <div class="player-footer">
-                                <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
-                                r1kizy
-                            </div>
-                        </a>
-                        <a href="player.html?name=Yokirito&img=player3.png" class="player-box">
-                            <img src="player3.png" alt="Yokirito">
-                            <div class="player-footer">
-                                <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
-                                Yokirito
-                            </div>
-                        </a>
-                        <a href="player.html?name=Fexum&img=player4.png" class="player-box">
-                            <img src="player4.png" alt="Fexum">
-                            <div class="player-footer">
-                                <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
-                                Fexum
-                            </div>
-                        </a>
-                        <a href="player.html?name=darkpr1nc9&img=player5.png" class="player-box">
-                            <img src="player5.png" alt="darkpr1nc9">
-                            <div class="player-footer">
-                                <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
-                                darkpr1nc9
-                            </div>
-                        </a>
-                    </div>
-                </div>
+            <div class="left-column" id="teamsContainer">
+                <!-- Динамічно завантажуються команди з адмінки -->
             </div>
 
             <div class="right-column">
                 <div class="transfers-box">
                     <div class="transfers-title">⚡ Top Transfers</div>
-                    <div class="transfer-item">
-                        [2026-08-23] Гравця <strong>oz1k</strong> переведено із <em>Free Agent</em> у <strong>Yami Esports</strong>.
+                    <div class="transfer-item" id="transferText">
+                        [2026-08-23] Гравця <strong>oz1k</strong> переведено у <strong>Yami Esports</strong>.
                     </div>
                 </div>
             </div>
@@ -240,13 +191,73 @@
     </div>
 
     <script>
+        // Завантаження трансферу
+        const savedTransfer = localStorage.getItem('yami_transfer');
+        if (savedTransfer) {
+            document.getElementById('transferText').innerHTML = savedTransfer;
+        }
+
+        // Рендер списку команд на головній
+        function renderIndexTeams() {
+            const container = document.getElementById('teamsContainer');
+            const teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
+            const players = JSON.parse(localStorage.getItem('reus_players')) || [];
+
+            if (teams.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">Немає команд у рейтингу.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            teams.forEach((t, index) => {
+                const teamId = 'team' + index;
+                const teamPlayers = players.filter(p => p.team === t.name);
+
+                let playersHtml = '';
+                if (teamPlayers.length === 0) {
+                    playersHtml = '<p style="color: #8a99ad; width: 100%; text-align: center; margin: 0;">У цій команді поки немає гравців</p>';
+                } else {
+                    teamPlayers.forEach(p => {
+                        playersHtml += `
+                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}" class="player-box">
+                                <img src="${p.photo}" alt="${p.name}">
+                                <div class="player-footer">
+                                    <svg width="18" height="12" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
+                                    ${p.name}
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+
+                container.innerHTML += `
+                    <div class="team-card" id="${teamId}">
+                        <div class="team-header" onclick="toggleTeam('${teamId}')">
+                            <div class="team-info">
+                                <span style="color: var(--text-muted); font-weight: bold;">${t.valveRank || '#1'}</span>
+                                <img src="${t.logo}" alt="${t.name}" class="team-logo">
+                                <a href="team.html?name=${encodeURIComponent(t.name)}" class="team-name-link" onclick="event.stopPropagation()">${t.name}</a>
+                            </div>
+                            <div style="color: var(--text-muted);">
+                                1000 pts <span class="arrow-icon" style="display:inline-block;">▾</span>
+                            </div>
+                        </div>
+                        <div class="team-players" id="${teamId}-players">
+                            ${playersHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         function toggleTeam(teamId) {
             const card = document.getElementById(teamId);
             const players = document.getElementById(teamId + '-players');
-            
             card.classList.toggle('open');
             players.classList.toggle('active');
         }
+
+        renderIndexTeams();
     </script>
 
 </body>
