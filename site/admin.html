@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | REUS</title>
+    <title>Admin Panel | REUS (File Upload)</title>
     <style>
         :root {
             --bg-color: #0b0e14;
@@ -46,6 +46,27 @@
             margin-bottom: 15px;
             box-sizing: border-box;
         }
+        /* Стиль для поля завантаження файлу */
+        .file-input-wrapper {
+            margin-bottom: 15px;
+            border: 1px dashed var(--border-color);
+            padding: 10px;
+            border-radius: 6px;
+            background: #1a222f;
+        }
+        .file-input-wrapper label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .file-input-wrapper input[type="file"] {
+            width: auto;
+            border: none;
+            padding: 5px;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
         button {
             background: var(--accent-color);
             color: #000;
@@ -56,6 +77,7 @@
             border-radius: 6px;
             cursor: pointer;
             transition: opacity 0.2s;
+            width: 100%;
         }
         button:hover {
             opacity: 0.9;
@@ -63,6 +85,7 @@
         .btn-danger {
             background: var(--danger-color);
             color: #fff;
+            width: auto;
         }
         .item-row {
             display: flex;
@@ -78,22 +101,52 @@
             margin-top: 10px;
             font-weight: bold;
         }
+        .preview-img {
+            max-width: 50px;
+            max-height: 50px;
+            margin-left: 10px;
+            border-radius: 4px;
+            background: #000;
+            object-fit: contain;
+        }
+        .info-box {
+            background: #161c26;
+            color: #ffcc00;
+            border: 1px solid #ffcc00;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <h1>⚙️ Панель керування REUS</h1>
-        <p style="color: var(--text-muted);">Зміни зберігаються автоматично у спільну хмару і одразу відображаються на сайті.</p>
+        <h1>⚙️ Панель керування REUS (Завантаження файлів)</h1>
+        
+        <!-- Попередження про обмеження -->
+        <div class="info-box">
+            ⚠️ **УВАГА: ОБМЕЖЕННЯ БЕЗКОШТОВНОГО ТАРИФУ JSONBIN.**<br>
+            Загальний розмір усіх даних (включно з картинками, перетвореними в Base64) не може перевищувати 100 КБ. 
+            Якщо ви завантажите кілька логотипів, база переповниться і перестане працювати. 
+            Рекомендується використовувати **посилання на картинки (URL)**, а не завантаження файлів, якщо ви хочете додати багато команд.
+        </div>
+
         <div id="globalStatus" class="status-msg" style="color: var(--accent-color); margin-bottom: 20px;"></div>
 
         <!-- Додавання команди -->
         <div class="section-box">
             <h2>Додати команду</h2>
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, Yami Esports)">
-            <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
+            
+            <div class="file-input-wrapper">
+                <label>Логотип команди (завантажити файл)</label>
+                <input type="file" id="teamLogoFile" accept="image/*">
+            </div>
+            
             <input type="text" id="teamRank" placeholder="Рейтинг (наприклад, #1 або 1)">
-            <button onclick="addTeam()">Зберегти команду</button>
+            <button onclick="processAndAddTeam()">Зберегти команду</button>
         </div>
 
         <!-- Додавання гравця -->
@@ -103,14 +156,19 @@
                 <option value="">Оберіть команду</option>
             </select>
             <input type="text" id="playerName" placeholder="Нікнейм гравця (наприклад, oz1k)">
-            <input type="text" id="playerPhoto" placeholder="Посилання на фото гравця (URL)">
-            <button onclick="addPlayer()">Зберегти гравця</button>
+            
+            <div class="file-input-wrapper">
+                <label>Фото гравця (завантажити файл)</label>
+                <input type="file" id="playerPhotoFile" accept="image/*">
+            </div>
+            
+            <button onclick="processAndAddPlayer()">Зберегти гравця</button>
         </div>
 
         <!-- Додавання трансферу -->
         <div class="section-box">
             <h2>Додати трансфер</h2>
-            <input type="text" id="transferText" placeholder="Текст трансферу (наприклад, oz1k перейшов у Yami)">
+            <input type="text" id="transferText" placeholder="Текст трансферу">
             <button onclick="addTransfer()">Додати трансфер</button>
         </div>
 
@@ -131,6 +189,8 @@
             transfers: []
         };
 
+        // --- ФУНКЦІЇ РОБОТИ З БАЗОЮ ---
+
         async function fetchCloudData() {
             setSt("Завантаження даних із хмари...", "#8a99ad");
             try {
@@ -140,7 +200,7 @@
                 const result = await res.json();
                 cloudData = result.record || { teams: [], players: [], transfers: [] };
                 
-                // Якщо якихось полів немає, ініціалізуємо
+                // Ініціалізація пустих масивів, якщо їх немає
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
                 if(!cloudData.transfers) cloudData.transfers = [];
@@ -168,7 +228,7 @@
                     setSt("Успішно збережено у хмару!", "var(--accent-color)");
                     updateUI();
                 } else {
-                    setSt("Помилка збереження!", "var(--danger-color)");
+                    setSt("ПОМИЛКА ЗБЕРЕЖЕННЯ (можливо, перевищено ліміт 100КБ)!", "var(--danger-color)");
                 }
             } catch (err) {
                 console.error(err);
@@ -182,42 +242,35 @@
             el.style.color = color;
         }
 
-        function updateUI() {
-            // Оновлюємо селект команд
-            const select = document.getElementById('playerTeamSelect');
-            select.innerHTML = '<option value="">Оберіть команду</option>';
-            cloudData.teams.forEach(t => {
-                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+        // --- ДОПОМІЖНА ФУНКЦІЯ КОНВЕРТАЦІЇ ФАЙЛУ В BASE64 ---
+        function fileToBase64(fileInputId) {
+            return new Promise((resolve, reject) => {
+                const fileInput = document.getElementById(fileInputId);
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    resolve(null); // Якщо файл не вибрано
+                    return;
+                }
+
+                // Перевірка на розмір файлу (дуже приблизна)
+                if (file.size > 50000) { // Більше 50КБ
+                     alert("Файл занадто великий (перевищує 50КБ). База переповниться. Краще використовуйте посилання (URL).");
+                     reject('File too large');
+                     return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
             });
-
-            // Виводимо список для видалення
-            const list = document.getElementById('dbList');
-            if (cloudData.teams.length === 0 && cloudData.players.length === 0 && cloudData.transfers.length === 0) {
-                list.innerHTML = '<p style="color: var(--text-muted);">База даних поки порожня.</p>';
-                return;
-            }
-
-            let html = '<h3>Команди:</h3>';
-            cloudData.teams.forEach((t, i) => {
-                html += `<div class="item-row"><span><b>${t.name}</b> (${t.valveRank || '#1'})</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
-            });
-
-            html += '<h3>Гравці:</h3>';
-            cloudData.players.forEach((p, i) => {
-                html += `<div class="item-row"><span><b>${p.name}</b> [команда: ${p.team}]</span> <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div>`;
-            });
-
-            html += '<h3>Трансфери:</h3>';
-            cloudData.transfers.forEach((tr, i) => {
-                html += `<div class="item-row"><span>${tr}</span> <button class="btn-danger" onclick="deleteTransfer(${i})">Видалити</button></div>`;
-            });
-
-            list.innerHTML = html;
         }
 
-        function addTeam() {
+        // --- ЛОГІКА ДОДАВАННЯ/ВИДАЛЕННЯ ---
+
+        async function processAndAddTeam() {
             const name = document.getElementById('teamName').value.trim();
-            const logo = document.getElementById('teamLogo').value.trim();
             const valveRank = document.getElementById('teamRank').value.trim() || '#1';
 
             if (!name) {
@@ -225,29 +278,50 @@
                 return;
             }
 
-            cloudData.teams.push({ name, logo, valveRank });
-            saveCloudData();
+            try {
+                // Конвертуємо логотип у Base64
+                const base64Logo = await fileToBase64('teamLogoFile');
+                
+                // Додаємо в локальний масив
+                cloudData.teams.push({ name, logo: base64Logo, valveRank });
+                
+                // Зберігаємо в хмару
+                saveCloudData();
 
-            document.getElementById('teamName').value = '';
-            document.getElementById('teamLogo').value = '';
-            document.getElementById('teamRank').value = '';
+                // Очищаємо форму
+                document.getElementById('teamName').value = '';
+                document.getElementById('teamLogoFile').value = '';
+                document.getElementById('teamRank').value = '';
+
+            } catch (err) {
+                console.error('Помилка завантаження файлу:', err);
+                // Якщо помилка (наприклад, файл завеликий), не зберігаємо
+            }
         }
 
-        function addPlayer() {
+        async function processAndAddPlayer() {
             const team = document.getElementById('playerTeamSelect').value;
             const name = document.getElementById('playerName').value.trim();
-            const photo = document.getElementById('playerPhoto').value.trim();
 
             if (!team || !name) {
                 alert('Оберіть команду та введіть нікнейм гравця!');
                 return;
             }
 
-            cloudData.players.push({ team, name, photo });
-            saveCloudData();
+            try {
+                // Конвертуємо фото гравця у Base64
+                const base64Photo = await fileToBase64('playerPhotoFile');
 
-            document.getElementById('playerName').value = '';
-            document.getElementById('playerPhoto').value = '';
+                cloudData.players.push({ team, name, photo: base64Photo });
+                
+                saveCloudData();
+
+                document.getElementById('playerName').value = '';
+                document.getElementById('playerPhotoFile').value = '';
+
+            } catch (err) {
+                 console.error('Помилка завантаження файлу:', err);
+            }
         }
 
         function addTransfer() {
@@ -256,8 +330,7 @@
                 alert('Введіть текст трансферу!');
                 return;
             }
-
-            cloudData.transfers.unshift(text); // Додаємо на початок
+            cloudData.transfers.unshift(text);
             saveCloudData();
             document.getElementById('transferText').value = '';
         }
@@ -277,7 +350,34 @@
             saveCloudData();
         }
 
-        fetchCloudData();
-    </script>
-</body>
-</html>
+        // --- ОНОВЛЕННЯ ІНТЕРФЕЙСУ ---
+
+        function updateUI() {
+            const select = document.getElementById('playerTeamSelect');
+            select.innerHTML = '<option value="">Оберіть команду</option>';
+            cloudData.teams.forEach(t => {
+                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            });
+
+            const list = document.getElementById('dbList');
+            if (cloudData.teams.length === 0 && cloudData.players.length === 0 && cloudData.transfers.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-muted);">База даних поки порожня.</p>';
+                return;
+            }
+
+            let html = '<h3>Команди:</h3>';
+            cloudData.teams.forEach((t, i) => {
+                // Додаємо прев'ю картинки, якщо вона є
+                const previewHtml = t.logo ? `<img src="${t.logo}" class="preview-img" alt="logo">` : '';
+                html += `<div class="item-row"><span><b>${t.name}</b> (${t.valveRank || '#1'}) ${previewHtml}</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
+            });
+
+            html += '<h3>Гравці:</h3>';
+            cloudData.players.forEach((p, i) => {
+                 const previewHtml = p.photo ? `<img src="${p.photo}" class="preview-img" alt="photo">` : '';
+                html += `<div class="item-row"><span><b>${p.name}</b> [команда: ${p.team}] ${previewHtml}</span> <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div>`;
+            });
+
+            html += '<h3>Трансфери:</h3>';
+            cloudData.transfers.forEach((tr, i) => {
+                html += `<div class="item-row"><span>${tr}</span> <button class="btn-danger"
