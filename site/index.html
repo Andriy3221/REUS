@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Кіберспортивний Портал | REUS</title>
+    <title>Counter-Strike World ranking | REUS</title>
     <style>
         :root {
             --bg-color: #0b0e14;
             --card-bg: #131820;
+            --border-color: #1f2937;
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
@@ -19,75 +20,124 @@
             margin: 0;
             padding: 20px;
         }
-        header {
-            text-align: center;
-            padding: 30px 0;
-            border-bottom: 2px solid #1f2937;
-            margin-bottom: 30px;
-        }
-        header h1 {
-            color: var(--accent-color);
-            margin: 0;
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        .container {
-            max-width: 1000px;
+        .main-container {
+            max-width: 1200px;
             margin: 0 auto;
         }
-        .section {
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 1rem;
             margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+        .content-layout {
+            display: flex;
+            gap: 25px;
+        }
+        .left-column {
+            flex: 1;
+        }
+        .right-column {
+            width: 320px;
         }
         h2 {
-            color: var(--accent-color);
-            border-bottom: 1px solid #1f2937;
-            padding-bottom: 10px;
-            margin-top: 0;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
         }
-        /* Таблиця рейтингу */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        /* Рейтинг команд та акордеон */
+        .team-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
         }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #1f2937;
+        .team-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #161c26;
         }
-        th {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-transform: uppercase;
+        .team-header:hover {
+            background: #1a222f;
         }
-        .my-team {
-            background-color: rgba(0, 255, 136, 0.1);
-            font-weight: bold;
-        }
-        /* Блок кубка та переможців */
-        .trophy-box {
+        .team-info {
             display: flex;
             align-items: center;
-            gap: 20px;
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-color);
+            gap: 15px;
         }
-        .trophy-icon {
-            font-size: 3rem;
+        .team-players {
+            display: none;
+            padding: 20px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+        .team-players.active {
+            display: flex;
+        }
+        .player-box {
+            text-align: center;
+            background: #1a222f;
+            padding: 10px;
+            border-radius: 6px;
+            width: 18%;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: transform 0.2s;
+        }
+        .player-box:hover {
+            transform: translateY(-3px);
+            border: 1px solid var(--accent-color);
+        }
+        .player-box img {
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .player-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        /* Блок трансферів справа */
+        .transfers-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .transfers-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .transfer-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .transfer-item strong {
+            color: var(--text-color);
         }
         .admin-link {
             display: inline-block;
-            margin-top: 15px;
+            margin-top: 30px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.9rem;
         }
         .admin-link:hover {
             color: var(--accent-color);
@@ -96,64 +146,68 @@
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>REUS Esports Portal</h1>
-            <p style="color: var(--text-muted);">Офіційний рейтинг та турніри нашої команди</p>
-        </header>
+    <div class="main-container">
+        <input type="text" class="search-bar" placeholder="Search players, teams...">
 
-        <!-- Блок переможців турніру (Кубок) -->
-        <div class="section">
-            <h2>🏆 Переможці останнього турніру</h2>
-            <div class="trophy-box">
-                <div class="trophy-icon">🥇</div>
-                <div>
-                    <h3 style="margin: 0 0 5px 0; color: #fff;">REUS Championship Season 1</h3>
-                    <p style="margin: 0; color: var(--accent-color); font-size: 1.1rem; font-weight: bold;">Чемпіон: Yami Esports</p>
-                    <p style="margin: 5px 0 0 0; color: var(---text-muted); font-size: 0.85rem;">Фінальний рахунок: 2:0 проти challenger squad</p>
+        <h2 style="color: #fff;">Counter-Strike World ranking</h2>
+
+        <div class="content-layout">
+            <!-- Ліва колонка: Список команд -->
+            <div class="left-column">
+                <div class="team-card">
+                    <div class="team-header" onclick="toggleTeam('team1-players')">
+                        <div class="team-info">
+                            <span style="color: var(--text-muted); font-weight: bold;">#1</span>
+                            <span style="font-size: 1.1rem; font-weight: bold;">Yami Esports</span>
+                        </div>
+                        <span style="color: var(--text-muted);">1000 pts ▾</span>
+                    </div>
+                    <!-- Склад гравців (розгортається) -->
+                    <div class="team-players active" id="team1-players">
+                        <a href="player.html?name=oz1k" class="player-box">
+                            <img src="player1.png" alt="oz1k">
+                            <div class="player-name">oz1k</div>
+                        </a>
+                        <a href="player.html?name=r1kizy" class="player-box">
+                            <img src="player2.png" alt="r1kizy">
+                            <div class="player-name">r1kizy</div>
+                        </a>
+                        <a href="player.html?name=Yokirito" class="player-box">
+                            <img src="player3.png" alt="Yokirito">
+                            <div class="player-name">Yokirito</div>
+                        </a>
+                        <a href="player.html?name=Fexum" class="player-box">
+                            <img src="player4.png" alt="Fexum">
+                            <div class="player-name">Fexum</div>
+                        </a>
+                        <a href="player.html?name=darkpr1nc9" class="player-box">
+                            <img src="player5.png" alt="darkpr1nc9">
+                            <div class="player-name">darkpr1nc9</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Права колонка: Трансфери -->
+            <div class="right-column">
+                <div class="transfers-box">
+                    <div class="transfers-title">⚡ Top Transfers</div>
+                    <div class="transfer-item">
+                        [2026-08-23] Гравця <strong>oz1k</strong> переведено із <em>Free Agent</em> у <strong>Yami Esports</strong>.
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Рейтинг команд (з акцентом на нашу) -->
-        <div class="section">
-            <h2>📊 Рейтинг команд</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Місце</th>
-                        <th>Команда</th>
-                        <th>HLTV Pts</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="my-team">
-                        <td>#1</td>
-                        <td>🔥 Yami Esports (Наша команда)</td>
-                        <td>1000</td>
-                    </tr>
-                    <tr>
-                        <td>#2</td>
-                        <td>Shadow Gaming</td>
-                        <td>850</td>
-                    </tr>
-                    <tr>
-                        <td>#3</td>
-                        <td>Apex Squad</td>
-                        <td>720</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Останні трансфери -->
-        <div class="section">
-            <h2>🔄 Останні трансфери</h2>
-            <p style="color: var(--text-muted);">[2026-08-23] Гравця <strong>oz1k</strong> переведено із статусу <em>Free Agent</em> у <strong>Yami Esports</strong>.</p>
-        </div>
-
-        <a href="admin.html" class="admin-link">Перейти в панель адміністратора ⚙️</a>
+        <a href="admin.html" class="admin-link">Панель адміністратора ⚙️</a>
     </div>
+
+    <script>
+        function toggleTeam(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('active');
+        }
+    </script>
 
 </body>
 </html>
