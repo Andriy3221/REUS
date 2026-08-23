@@ -13,19 +13,18 @@
             padding: 20px;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background: #131820;
             border: 1px solid #1f2937;
             border-radius: 8px;
             padding: 25px;
+            margin-bottom: 30px;
         }
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+        h1, h2 {
+            color: #00ff88;
             border-bottom: 1px solid #1f2937;
             padding-bottom: 10px;
-            color: #00ff88;
         }
         .form-group {
             margin-bottom: 15px;
@@ -50,21 +49,33 @@
             background: #00ff88;
             color: #0b0e14;
             border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
+            padding: 10px 20px;
+            font-size: 0.95rem;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
             transition: opacity 0.2s;
         }
         button:hover {
             opacity: 0.9;
         }
+        .btn-danger {
+            background: #ff4d4d;
+            color: #fff;
+        }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a222f;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #1f2937;
+        }
         .back-link {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 10px;
             color: #8a99ad;
             text-decoration: none;
         }
@@ -86,56 +97,145 @@
 <body>
 
     <div class="container">
-        <h1>⚙️ Секретна панель адміністратора</h1>
-        
+        <h1>⚙️ Панель управління REUS</h1>
         <div id="success" class="success-msg">Зміни успішно збережено!</div>
 
+        <!-- Керування командами -->
+        <h2>🏆 Керування командами</h2>
         <div class="form-group">
-            <label>Назва команди</label>
-            <input type="text" id="inputTeamName" value="Yami Esports">
+            <label>Додати / Редагувати назву команди</label>
+            <input type="text" id="inputTeamName" placeholder="Наприклад: Yami Esports">
         </div>
+        <div class="form-group" style="display: flex; gap: 10px;">
+            <div style="flex:1;">
+                <label>Valve Rank</label>
+                <input type="text" id="inputValveRank" value="#1">
+            </div>
+            <div style="flex:1;">
+                <label>World Rank</label>
+                <input type="text" id="inputWorldRank" value="#1">
+            </div>
+        </div>
+        <button onclick="saveTeam()">Зберегти команду</button>
 
+        <h2 style="margin-top: 30px;">👥 Керування гравцями та трансферами</h2>
         <div class="form-group">
-            <label>Valve ranking (#)</label>
-            <input type="text" id="inputValveRank" value="#1">
+            <label>Ім'я гравця (Нікнейм)</label>
+            <input type="text" id="playerName" placeholder="Наприклад: oz1k">
         </div>
-
         <div class="form-group">
-            <label>World ranking (#)</label>
-            <input type="text" id="inputWorldRank" value="#1">
+            <label>Назва файлу фото (наприклад: player1.png)</label>
+            <input type="text" id="playerPhoto" placeholder="player1.png">
         </div>
-
         <div class="form-group">
-            <label>Текст нового трансферу</label>
-            <input type="text" id="inputTransfer" value="Гравця oz1k переведено у Yami Esports.">
+            <label>Статус / Команда гравця</label>
+            <select id="playerStatus">
+                <option value="Yami Esports">Yami Esports (Основний склад)</option>
+                <option value="Free Agent">Вільний агент (Free Agent)</option>
+                <option value="Inactive">Інактив (Inactive)</option>
+            </select>
         </div>
+        <button onclick="addOrUpdatePlayer()">Додати / Оновити гравця</button>
 
-        <button onclick="saveData()">Зберегти зміни</button>
+        <h2 style="margin-top: 30px;">📜 Список поточних гравців</h2>
+        <div id="playersListContainer">
+            <!-- Список генерується через JS -->
+        </div>
 
         <br>
         <a href="index.html" class="back-link">← На головну сайту</a>
     </div>
 
     <script>
-        // Завантаження збережених даних (якщо вони є в браузері)
+        // Базові дані для прикладу (якщо локально пусто)
+        if (!localStorage.getItem('reus_players')) {
+            const defaultPlayers = [
+                { name: 'oz1k', photo: 'player1.png', team: 'Yami Esports' },
+                { name: 'r1kizy', photo: 'player2.png', team: 'Yami Esports' },
+                { name: 'Yokirito', photo: 'player3.png', team: 'Yami Esports' },
+                { name: 'Fexum', photo: 'player4.png', team: 'Yami Esports' },
+                { name: 'darkpr1nc9', photo: 'player5.png', team: 'Yami Esports' }
+            ];
+            localStorage.setItem('reus_players', JSON.stringify(defaultPlayers));
+        }
+
+        // Завантаження полів команди
         document.getElementById('inputTeamName').value = localStorage.getItem('yami_teamName') || 'Yami Esports';
         document.getElementById('inputValveRank').value = localStorage.getItem('yami_valveRank') || '#1';
         document.getElementById('inputWorldRank').value = localStorage.getItem('yami_worldRank') || '#1';
-        document.getElementById('inputTransfer').value = localStorage.getItem('yami_transfer') || 'Гравця oz1k переведено у Yami Esports.';
 
-        function saveData() {
-            localStorage.setItem('yami_teamName', document.getElementById('inputTeamName').value);
-            localStorage.setItem('yami_valveRank', document.getElementById('inputWordlRank'] || document.getElementById('inputValveRank').value);
-            localStorage.setItem('yami_valveRank', document.getElementById('inputValveRank').value);
-            localStorage.setItem('yami_worldRank', document.getElementById('inputWorldRank').value);
-            localStorage.setItem('yami_transfer', document.getElementById('inputTransfer').value);
-
+        function showSuccess() {
             const msg = document.getElementById('success');
             msg.style.display = 'block';
-            setTimeout(() => {
-                msg.style.display = 'none';
-            }, 3000);
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+            renderPlayersList();
         }
+
+        function saveTeam() {
+            localStorage.setItem('yami_teamName', document.getElementById('inputTeamName').value);
+            localStorage.setItem('yami_valveRank', document.getElementById('inputValveRank').value);
+            localStorage.setItem('yami_worldRank', document.getElementById('inputWorldRank').value);
+            showSuccess();
+        }
+
+        function addOrUpdatePlayer() {
+            const name = document.getElementById('playerName').value.trim();
+            const photo = document.getElementById('playerPhoto').value.trim();
+            const team = document.getElementById('playerStatus').value;
+
+            if (!name || !photo) {
+                alert('Введіть нікнейм та назву файлу фото!');
+                return;
+            }
+
+            let players = JSON.parse(localStorage.getItem('reus_players')) || [];
+            
+            // Перевіряємо чи є вже такий гравець, щоб оновити, або додати нового
+            let existingIndex = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+            
+            // Автоматично додаємо запис у трансфери
+            let transferText = `[${new Date().toISOString().split('T')[0]}] Гравця <strong>${name}</strong> переведено у <em>${team}</em>.`;
+            localStorage.setItem('yami_transfer', transferText);
+
+            if (existingIndex >= 0) {
+                players[existingIndex] = { name, photo, team };
+            } else {
+                players.push({ name, photo, team });
+            }
+
+            localStorage.setItem('reus_players', JSON.stringify(players));
+            showSuccess();
+        }
+
+        function deletePlayer(name) {
+            let players = JSON.parse(localStorage.getItem('reus_players')) || [];
+            players = players.filter(p => p.name !== name);
+            localStorage.setItem('reus_players', JSON.stringify(players));
+            renderPlayersList();
+        }
+
+        function renderPlayersList() {
+            const container = document.getElementById('playersListContainer');
+            let players = JSON.parse(localStorage.getItem('reus_players')) || [];
+            
+            if (players.length === 0) {
+                container.innerHTML = '<p style="color: #8a99ad;">Немає доданих гравців.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            players.forEach(p => {
+                container.innerHTML += `
+                    <div class="item-row">
+                        <span><strong>${p.name}</strong> (${p.team}) — <small>${p.photo}</small></span>
+                        <button class="btn-danger" onclick="deletePlayer('${p.name}')">Видалити</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Запуск при завантаженні
+        renderPlayersList();
     </script>
 
 </body>
