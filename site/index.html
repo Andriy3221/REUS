@@ -49,7 +49,6 @@
             font-size: 1.4rem;
             margin-bottom: 15px;
         }
-        /* Рейтинг команд та акордеон */
         .team-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -74,16 +73,12 @@
             gap: 15px;
         }
         .team-players {
-            display: none;
+            display: flex;
             padding: 20px;
             background: var(--card-bg);
             border-top: 1px solid var(--border-color);
-            display: flex;
             gap: 15px;
             justify-content: space-between;
-        }
-        .team-players.active {
-            display: flex;
         }
         .player-box {
             text-align: center;
@@ -111,7 +106,6 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
-        /* Блок трансферів справа */
         .transfers-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -153,35 +147,33 @@
         <h2 style="color: #fff;">Counter-Strike World ranking</h2>
 
         <div class="content-layout">
-            <!-- Ліва колонка: Список команд -->
             <div class="left-column">
                 <div class="team-card">
-                    <div class="team-header" onclick="toggleTeam('team1-players')">
+                    <div class="team-header">
                         <div class="team-info">
                             <span style="color: var(--text-muted); font-weight: bold;">#1</span>
                             <span style="font-size: 1.1rem; font-weight: bold;">Yami Esports</span>
                         </div>
                         <span style="color: var(--text-muted);">1000 pts ▾</span>
                     </div>
-                    <!-- Склад гравців (розгортається) -->
-                    <div class="team-players active" id="team1-players">
-                        <a href="player.html?name=oz1k" class="player-box">
+                    <div class="team-players">
+                        <a href="player.html?name=oz1k&img=player1.png" class="player-box">
                             <img src="player1.png" alt="oz1k">
                             <div class="player-name">oz1k</div>
                         </a>
-                        <a href="player.html?name=r1kizy" class="player-box">
+                        <a href="player.html?name=r1kizy&img=player2.png" class="player-box">
                             <img src="player2.png" alt="r1kizy">
                             <div class="player-name">r1kizy</div>
                         </a>
-                        <a href="player.html?name=Yokirito" class="player-box">
+                        <a href="player.html?name=Yokirito&img=player3.png" class="player-box">
                             <img src="player3.png" alt="Yokirito">
                             <div class="player-name">Yokirito</div>
                         </a>
-                        <a href="player.html?name=Fexum" class="player-box">
+                        <a href="player.html?name=Fexum&img=player4.png" class="player-box">
                             <img src="player4.png" alt="Fexum">
                             <div class="player-name">Fexum</div>
                         </a>
-                        <a href="player.html?name=darkpr1nc9" class="player-box">
+                        <a href="player.html?name=darkpr1nc9&img=player5.png" class="player-box">
                             <img src="player5.png" alt="darkpr1nc9">
                             <div class="player-name">darkpr1nc9</div>
                         </a>
@@ -189,7 +181,6 @@
                 </div>
             </div>
 
-            <!-- Права колонка: Трансфери -->
             <div class="right-column">
                 <div class="transfers-box">
                     <div class="transfers-title">⚡ Top Transfers</div>
@@ -202,13 +193,6 @@
 
         <a href="admin.html" class="admin-link">Панель адміністратора ⚙️</a>
     </div>
-
-    <script>
-        function toggleTeam(id) {
-            const el = document.getElementById(id);
-            el.classList.toggle('active');
-        }
-    </script>
 
 </body>
 </html>
