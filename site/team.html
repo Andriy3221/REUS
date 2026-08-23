@@ -3,167 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yami Esports - HLTV Profile</title>
+    <title>Профіль команди | REUS</title>
     <style>
-        body { 
-            background-color: #121519; 
-            color: #b0b5bd; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            padding: 30px 20px; 
-            display: flex; 
-            justify-content: center; 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0e14;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
         }
-        .main-container { width: 100%; max-width: 900px; }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        /* Рядок гравців зверху */
+        .team-players-row {
+            display: flex;
+            gap: 12px;
+            background: #131820;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            justify-content: space-between;
+        }
+        .player-card-mini {
+            background: #1a222f;
+            border-radius: 6px;
+            width: 18%;
+            text-align: center;
+            padding: 8px;
+            text-decoration: none;
+            color: #fff;
+            transition: transform 0.2s;
+        }
+        .player-card-mini:hover {
+            transform: translateY(-3px);
+            border: 1px solid #00ff88;
+        }
+        .player-card-mini img {
+            width: 100%;
+            height: 90px;
+            object-fit: contain;
+            background: #111;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        .player-card-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* Основний блок інформації команди */
+        .team-profile-card {
+            background: #131820;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .team-header-main {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        .team-identity {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .team-logo-box {
+            width: 60px;
+            height: 60px;
+            background: #1a222f;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1f2937;
+        }
+        .team-logo-box img {
+            max-width: 45px;
+            max-height: 45px;
+            object-fit: contain;
+        }
+        .team-title-text h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+        }
+        .team-region {
+            color: #8a99ad;
+            font-size: 0.9rem;
+        }
+        /* Кнопка соціальної мережі (Telegram) */
+        .social-btn {
+            background: #229ed9;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .social-btn:hover {
+            opacity: 0.85;
+        }
+        .social-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #fff;
+        }
+
+        /* Рядки статистики команди */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #1f2937;
+            font-size: 0.95rem;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            color: #8a99ad;
+        }
+        .info-value {
+            font-weight: bold;
+            color: #fff;
+        }
 
         .back-link {
             display: inline-block;
-            margin-bottom: 15px;
-            color: #7a8494;
+            margin-top: 15px;
+            color: #8a99ad;
             text-decoration: none;
-            font-size: 14px;
         }
-        .back-link:hover { color: #fff; }
-
-        .players-row { 
-            display: flex; 
-            justify-content: space-between; 
-            background-color: #1a1f26; 
-            padding: 16px; 
-            border-top: 3px solid #3168a9; 
-            border-radius: 6px 6px 0 0;
-            gap: 10px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+        .back-link:hover {
+            color: #00ff88;
         }
-        .player-card { 
-            text-align: center; 
-            width: 19%; 
-            background: #14181f; 
-            border-radius: 4px; 
-            overflow: hidden; 
-            display: flex; 
-            flex-direction: column; 
-            border: 1px solid #202631;
-            text-decoration: none;
-            transition: border-color 0.2s;
-        }
-        .player-card:hover { border-color: #3168a9; }
-        .player-card img.avatar { width: 100%; height: 160px; object-fit: cover; object-position: center 20%; display: block; }
-        .player-info { 
-            background: #0e1117; 
-            padding: 7px 4px; 
-            font-size: 13px; 
-            color: #fff; 
-            font-weight: 600; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 5px; 
-            margin-top: auto; 
-            border-top: 1px solid #1f2633;
-        }
-        .flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; }
-
-        .team-box { 
-            background-color: #1a1f26; 
-            border-radius: 0 0 6px 6px; 
-            padding: 22px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
-            border: 1px solid #232a35;
-            border-top: 1px solid #252d3a;
-        }
-        .team-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid #252d3a; 
-            padding-bottom: 16px; 
-            margin-bottom: 16px; 
-        }
-        .team-title { display: flex; align-items: center; gap: 16px; }
-        .team-logo { 
-            width: 52px; 
-            height: 52px; 
-            object-fit: cover; 
-            border-radius: 10px; 
-            mix-blend-mode: screen; 
-            background: #121519;
-            padding: 2px;
-            border: 1px solid #2a3442;
-        }
-        .team-name { font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; }
-        
-        .social-icons a { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: #229ed9; 
-            width: 38px; 
-            height: 38px; 
-            border-radius: 6px; 
-            transition: background 0.2s, transform 0.2s; 
-        }
-        .social-icons a:hover { background: #1b85b8; transform: scale(1.05); }
-        .social-icons svg { width: 20px; height: 20px; fill: white; }
-
-        .stat-row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 11px 0; 
-            border-bottom: 1px solid #222935; 
-            font-size: 14px; 
-        }
-        .stat-row:last-child { border-bottom: none; }
-        .stat-label { color: #7a8494; }
-        .stat-value { color: #ffffff; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <a href="index.html" class="back-link">← Назад до рейтингу</a>
+    <div class="container">
+        <!-- Склад гравців зверху -->
+        <div class="team-players-row">
+            <a href="player.html?name=oz1k&img=player1.png" class="player-card-mini">
+                <img src="player1.png" alt="oz1k">
+                <div class="player-card-name">oz1k</div>
+            </a>
+            <a href="player.html?name=r1kizy&img=player2.png" class="player-card-mini">
+                <img src="player2.png" alt="r1kizy">
+                <div class="player-card-name">r1kizy</div>
+            </a>
+            <a href="player.html?name=Yokirito&img=player3.png" class="player-card-mini">
+                <img src="player3.png" alt="Yokirito">
+                <div class="player-card-name">Yokirito</div>
+            </a>
+            <a href="player.html?name=Fexum&img=player4.png" class="player-card-mini">
+                <img src="player4.png" alt="Fexum">
+                <div class="player-card-name">Fexum</div>
+            </a>
+            <a href="player.html?name=darkpr1nc9&img=player5.png" class="player-card-mini">
+                <img src="player5.png" alt="darkpr1nc9">
+                <div class="player-card-name">darkpr1nc9</div>
+            </a>
+        </div>
 
-    <div class="players-row">
-        <a href="player.html?id=1" class="player-card">
-            <img src="player1.png" class="avatar">
-            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>oz1k</span></div>
-        </a>
-        <a href="player.html?id=2" class="player-card">
-            <img src="player2.png" class="avatar">
-            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>r1kizy</span></div>
-        </a>
-        <a href="player.html?id=3" class="player-card">
-            <img src="player3.png" class="avatar">
-            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>Yokirito</span></div>
-        </a>
-        <a href="player.html?id=4" class="player-card">
-            <img src="player4.png" class="avatar">
-            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>Fexum</span></div>
-        </a>
-        <a href="player.html?id=5" class="player-card">
-            <img src="player5.png" class="avatar">
-            <div class="player-info"><img src="https://flagcdn.com/w40/ua.png" class="flag"> <span>darkpr1nc9</span></div>
-        </a>
-    </div>
+        <!-- Головна картка команди -->
+        <div class="team-profile-card">
+            <div class="team-header-main">
+                <div class="team-identity">
+                    <div class="team-logo-box">
+                        <img id="team-logo" src="player1.png" alt="Logo">
+                    </div>
+                    <div class="team-title-text">
+                        <h1 id="team-name">Yami Esports</h1>
+                        <div class="team-region">🇪🇺 Europe</div>
+                    </div>
+                </div>
 
-    <div class="team-box">
-        <div class="team-header">
-            <div class="team-title">
-                <img src="Yami.jpg" alt="Logo" class="team-logo">
-                <span class="team-name">Yami Esports</span>
-            </div>
-            <div class="social-icons">
-                <a href="https://t.me/yami_esport" target="_blank" title="Telegram">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2s-.2-.05-.28-.03c-.12.03-2.02 1.28-5.71 3.74-.54.37-.98.55-1.4.54-.46-.01-1.35-.26-2.01-.48-.81-.27-1.46-.42-1.4-.88.03-.24.36-.49 1.01-.76 3.97-1.74 6.62-2.91 7.95-3.5 3.78-1.66 4.56-1.95 5.07-1.96.11 0 .36.03.52.16.14.12.18.28.2.46-.02.08-.03.17-.05.25z"/></svg>
+                <!-- Кнопка Telegram -->
+                <a href="https://t.me/yami_esport" target="_blank" class="social-btn" title="Telegram">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.12.03-1.99 1.27-5.62 3.72-.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.08-.78 4.22-1.84 7.03-3.05 8.43-3.62 4.01-1.67 4.84-1.96 5.38-1.97.12 0 .39.03.56.17.15.12.19.28.21.4-.01.06.01.24 0 .38z"/>
+                    </svg>
                 </a>
             </div>
+
+            <div class="info-row">
+                <span class="info-label">Valve ranking</span>
+                <span class="info-value" style="color: #00ff88;">#1</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">World ranking</span>
+                <span class="info-value">#1</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Weeks in top30 for core</span>
+                <span class="info-value">12</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Average player age</span>
+                <span class="info-value">19.4</span>
+            </div>
         </div>
-        <div class="stat-row"><span class="stat-label">Valve ranking</span><span class="stat-value">#--</span></div>
-        <div class="stat-row"><span class="stat-label">World ranking</span><span class="stat-value">#--</span></div>
-        <div class="stat-row"><span class="stat-label">Weeks in top30 for core</span><span class="stat-value">0</span></div>
-        <div class="stat-row"><span class="stat-label">Average player age</span><span class="stat-value">--</span></div>
+
+        <a href="index.html" class="back-link">← Назад до рейтингу</a>
     </div>
-</div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const teamName = urlParams.get('name');
+        if (teamName) {
+            document.getElementById('team-name').innerText = teamName;
+        }
+    </script>
 
 </body>
 </html>
