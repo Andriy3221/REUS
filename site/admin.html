@@ -201,7 +201,6 @@
     </div>
 
     <script>
-        // Перемикання між вкладками
         function switchTab(tab) {
             const teamsSec = document.getElementById('teamsSection');
             const playersSec = document.getElementById('playersSection');
@@ -232,7 +231,7 @@
             }
         }
 
-        // --- РОБОТА З КОМАНДАМИ ---
+        // --- КОМАНДИ ---
         function getTeams() {
             return JSON.parse(localStorage.getItem('reus_teams')) || [];
         }
@@ -287,7 +286,7 @@
             });
         }
 
-        // --- РОБОТА З ГРАВЦЯМИ ---
+        // --- ГРАВЦІ ---
         function getPlayers() {
             return JSON.parse(localStorage.getItem('reus_players')) || [];
         }
@@ -354,9 +353,19 @@
             });
         }
 
-        // --- РОБОТА З TOP TRANSFERS ---
+        // --- TOP TRANSFERS (З ПЕРЕВІРКОЮ СТАРИХ ДАНИХ) ---
         function getTransfersList() {
-            return JSON.parse(localStorage.getItem('reus_transfers_list')) || [];
+            let transfers = JSON.parse(localStorage.getItem('reus_transfers_list'));
+            if (!transfers) {
+                transfers = [];
+                // Якщо є старий єдиний трансфер, переносимо його у новий список автоматично
+                const oldTransfer = localStorage.getItem('yami_transfer');
+                if (oldTransfer && !oldTransfer.includes('Трансфери поки відсутні')) {
+                    transfers.push(oldTransfer);
+                    localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
+                }
+            }
+            return transfers;
         }
 
         function saveTransfer(e) {
@@ -364,11 +373,10 @@
             const text = document.getElementById('transferInputText').value.trim();
             
             let transfers = getTransfersList();
-            transfers.unshift(text); // Додаємо на початок списку
+            transfers.unshift(text); // Додаємо на початок
 
-            // Зберігаємо список і для головної сторінки (беремо перший або об'єднуємо)
             localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
-            localStorage.setItem('yami_transfer', text); // Для зворотної сумісності з індексом
+            localStorage.setItem('yami_transfer', text); // Оновлюємо для сумісності
 
             document.getElementById('transferForm').reset();
             renderAdminTransfers();
@@ -381,7 +389,6 @@
                 transfers.splice(index, 1);
                 localStorage.setItem('reus_transfers_list', JSON.stringify(transfers));
                 
-                // Оновлюємо актуальний трансфер для головної
                 if (transfers.length > 0) {
                     localStorage.setItem('yami_transfer', transfers[0]);
                 } else {
@@ -412,7 +419,7 @@
             });
         }
 
-        // Початкове завантаження
+        // Ініціалізація
         renderAdminTeams();
         renderAdminPlayers();
         renderAdminTransfers();
