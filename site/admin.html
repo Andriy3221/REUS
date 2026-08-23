@@ -26,6 +26,33 @@
             border-bottom: 1px solid #1f2937;
             padding-bottom: 10px;
         }
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            background: #1a222f;
+            color: #8a99ad;
+            border: 1px solid #1f2937;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #00ff88;
+            color: #0b0e14;
+            border-color: #00ff88;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -45,7 +72,7 @@
             font-size: 1rem;
             box-sizing: border-box;
         }
-        button {
+        button.action-btn {
             background: #00ff88;
             color: #0b0e14;
             border: none;
@@ -55,27 +82,33 @@
             border-radius: 6px;
             cursor: pointer;
             transition: opacity 0.2s;
+            width: 100%;
         }
-        button:hover {
+        button.action-btn:hover {
             opacity: 0.9;
         }
         .btn-danger {
             background: #ff4d4d;
             color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
         }
         .item-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #1a222f;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: 6px;
             margin-bottom: 10px;
             border: 1px solid #1f2937;
         }
         .back-link {
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
             color: #8a99ad;
             text-decoration: none;
         }
@@ -100,58 +133,76 @@
         <h1>⚙️ Панель управління REUS</h1>
         <div id="success" class="success-msg">Зміни успішно збережено!</div>
 
-        <!-- 🏆 Створення та управління командами -->
-        <h2>🏆 Додати / Керувати командами</h2>
-        <div class="form-group">
-            <label>Назва команди</label>
-            <input type="text" id="teamNameInput" placeholder="Наприклад: Yami Esports">
+        <!-- Кнопки перемикання вкладок -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('teamsTab', this)">🏆 Керування командами</button>
+            <button class="tab-btn" onclick="switchTab('playersTab', this)">👥 Керування гравцями</button>
         </div>
-        <div class="form-group">
-            <label>Файл логотипу команди (наприклад: Yami.jpg)</label>
-            <input type="text" id="teamLogoInput" placeholder="Yami.jpg">
-        </div>
-        <div class="form-group" style="display: flex; gap: 10px;">
-            <div style="flex:1;">
-                <label>Valve Rank (#)</label>
-                <input type="text" id="teamValveRank" value="#1">
+
+        <!-- ВКЛАДКА 1: Команди -->
+        <div id="teamsTab" class="tab-content active">
+            <h2>🏆 Додати або редагувати команду</h2>
+            <div class="form-group">
+                <label>Назва команди</label>
+                <input type="text" id="teamNameInput" placeholder="Наприклад: Yami Esports">
             </div>
-            <div style="flex:1;">
-                <label>World Rank (#)</label>
-                <input type="text" id="teamWorldRank" value="#1">
+            <div class="form-group">
+                <label>Файл логотипу (наприклад: Yami.jpg)</label>
+                <input type="text" id="teamLogoInput" placeholder="Yami.jpg">
             </div>
-        </div>
-        <button onclick="saveTeam()">Зберегти / Додати команду</button>
+            <div class="form-group" style="display: flex; gap: 10px;">
+                <div style="flex:1;">
+                    <label>Valve Rank (#)</label>
+                    <input type="text" id="teamValveRank" value="#1">
+                </div>
+                <div style="flex:1;">
+                    <label>World Rank (#)</label>
+                    <input type="text" id="teamWorldRank" value="#1">
+                </div>
+            </div>
+            <button class="action-btn" onclick="saveTeam()">Зберегти команду</button>
 
-        <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Список команд:</h3>
-        <div id="teamsListContainer"></div>
+            <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Існуючі команди:</h3>
+            <div id="teamsListContainer"></div>
+        </div>
 
-        <!-- 👥 Створення та управління гравцями -->
-        <h2 style="margin-top: 35px;">👥 Додати / Керувати гравцями</h2>
-        <div class="form-group">
-            <label>Нікнейм гравця</label>
-            <input type="text" id="playerNameInput" placeholder="Наприклад: oz1k">
-        </div>
-        <div class="form-group">
-            <label>Файл фото гравця (наприклад: player1.png)</label>
-            <input type="text" id="playerPhotoInput" placeholder="player1.png">
-        </div>
-        <div class="form-group">
-            <label>Команда або статус</label>
-            <select id="playerTeamSelect">
-                <!-- Динамічно заповнюється через JS -->
-            </select>
-        </div>
-        <button onclick="savePlayer()">Зберегти / Додати гравця</button>
+        <!-- ВКЛАДКА 2: Гравці -->
+        <div id="playersTab" class="tab-content">
+            <h2>👥 Додати або редагувати гравця</h2>
+            <div class="form-group">
+                <label>Нікнейм гравця</label>
+                <input type="text" id="playerNameInput" placeholder="Наприклад: oz1k">
+            </div>
+            <div class="form-group">
+                <label>Файл фото гравця (наприклад: player1.png)</label>
+                <input type="text" id="playerPhotoInput" placeholder="player1.png">
+            </div>
+            <div class="form-group">
+                <label>Команда або статус</label>
+                <select id="playerTeamSelect">
+                    <!-- Заповнюється через JS -->
+                </select>
+            </div>
+            <button class="action-btn" onclick="savePlayer()">Зберегти гравця</button>
 
-        <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Список гравців:</h3>
-        <div id="playersListContainer"></div>
+            <h3 style="margin-top: 25px; color: #8a99ad; font-size: 1rem;">Список гравців:</h3>
+            <div id="playersListContainer"></div>
+        </div>
 
         <br>
         <a href="index.html" class="back-link">← На головну сайту</a>
     </div>
 
     <script>
-        // Ініціалізація стандартних даних, якщо їх ще немає в localStorage
+        // Перемикання вкладок
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // Базова ініціалізація, якщо дані відсутні
         if (!localStorage.getItem('reus_teams')) {
             const defaultTeams = [
                 { name: 'Yami Esports', logo: 'Yami.jpg', valveRank: '#1', worldRank: '#1' }
@@ -177,7 +228,6 @@
             renderAll();
         }
 
-        // Оновлення списку вибору команд у формі гравців
         function updateTeamDropdown() {
             const select = document.getElementById('playerTeamSelect');
             const teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
@@ -186,11 +236,9 @@
                 <option value="Free Agent">Вільний агент (Free Agent)</option>
                 <option value="Inactive">Інактив (Inactive)</option>
             `;
-            
             teams.forEach(t => {
                 options += `<option value="${t.name}">${t.name}</option>`;
             });
-
             select.innerHTML = options;
         }
 
@@ -219,7 +267,6 @@
             showSuccess();
         }
 
-        // Видалення команди
         function deleteTeam(name) {
             let teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
             teams = teams.filter(t => t.name !== name);
@@ -241,7 +288,7 @@
             let players = JSON.parse(localStorage.getItem('reus_players')) || [];
             let index = players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
 
-            // Додаємо запис у блок трансферів
+            // Оновлюємо трансфери
             const transferText = `[${new Date().toISOString().split('T')[0]}] Гравця <strong>${name}</strong> переведено у <em>${team}</em>.`;
             localStorage.setItem('yami_transfer', transferText);
 
@@ -255,7 +302,6 @@
             showSuccess();
         }
 
-        // Видалення гравця
         function deletePlayer(name) {
             let players = JSON.parse(localStorage.getItem('reus_players')) || [];
             players = players.filter(p => p.name !== name);
@@ -263,46 +309,36 @@
             renderAll();
         }
 
-        // Рендер списків в адмінці
         function renderAll() {
             updateTeamDropdown();
 
-            // Рендер команд
+            // Рендер команд в адмінці
             const teamsContainer = document.getElementById('teamsListContainer');
             let teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
-            if (teams.length === 0) {
-                teamsContainer.innerHTML = '<p style="color: #8a99ad;">Немає доданих команд.</p>';
-            } else {
-                teamsContainer.innerHTML = '';
-                teams.forEach(t => {
-                    teamsContainer.innerHTML += `
-                        <div class="item-row">
-                            <span>🏆 <strong>${t.name}</strong> (Лого: ${t.logo} | Valve: ${t.valveRank})</span>
-                            <button class="btn-danger" onclick="deleteTeam('${t.name}')">Видалити</button>
-                        </div>
-                    `;
-                });
-            }
+            teamsContainer.innerHTML = teams.length === 0 ? '<p style="color: #8a99ad;">Немає команд.</p>' : '';
+            teams.forEach(t => {
+                teamsContainer.innerHTML += `
+                    <div class="item-row">
+                        <span>🏆 <strong>${t.name}</strong> (Лого: ${t.logo})</span>
+                        <button class="btn-danger" onclick="deleteTeam('${t.name}')">Видалити</button>
+                    </div>
+                `;
+            });
 
-            // Рендер гравців
+            // Рендер гравців в адмінці
             const playersContainer = document.getElementById('playersListContainer');
             let players = JSON.parse(localStorage.getItem('reus_players')) || [];
-            if (players.length === 0) {
-                playersContainer.innerHTML = '<p style="color: #8a99ad;">Немає доданих гравців.</p>';
-            } else {
-                playersContainer.innerHTML = '';
-                players.forEach(p => {
-                    playersContainer.innerHTML += `
-                        <div class="item-row">
-                            <span>👤 <strong>${p.name}</strong> — Команда/Статус: <em>${p.team}</em> (Фото: ${p.photo})</span>
-                            <button class="btn-danger" onclick="deletePlayer('${p.name}')">Видалити</button>
-                        </div>
-                    `;
-                });
-            }
+            playersContainer.innerHTML = players.length === 0 ? '<p style="color: #8a99ad;">Немає гравців.</p>' : '';
+            players.forEach(p => {
+                playersContainer.innerHTML += `
+                    <div class="item-row">
+                        <span>👤 <strong>${p.name}</strong> ➔ <em>${p.team}</em></span>
+                        <button class="btn-danger" onclick="deletePlayer('${p.name}')">Видалити</button>
+                    </div>
+                `;
+            });
         }
 
-        // Первинний запуск
         renderAll();
     </script>
 
