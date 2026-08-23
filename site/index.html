@@ -24,7 +24,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Стилі для шапки з нормальним розміром логотипу */
         .site-header {
             display: flex;
             align-items: center;
@@ -182,9 +181,6 @@
             margin-bottom: 0;
             padding-bottom: 0;
         }
-        .transfer-item strong {
-            color: var(--text-color);
-        }
         .arrow-icon {
             transition: transform 0.3s;
             display: inline-block;
@@ -192,30 +188,33 @@
         .team-card.open .arrow-icon {
             transform: rotate(180deg);
         }
+        .loading {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="main-container">
-        <!-- Шапка сайту з виправленим логотипом -->
         <header class="site-header">
             <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
             <h1 class="site-title">Counter-Strike World Ranking</h1>
         </header>
 
-        <!-- Пошук -->
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
 
         <div class="content-layout">
             <div class="left-column" id="teamsContainer">
-                <!-- Команди -->
+                <div class="loading">Завантаження з хмари...</div>
             </div>
 
             <div class="right-column">
                 <div class="transfers-box">
                     <div class="transfers-title">⚡ Top Transfers</div>
                     <div id="transfersListContainer">
-                        <div class="transfer-item">Трансфери поки відсутні.</div>
+                        <div class="transfer-item">Завантаження...</div>
                     </div>
                 </div>
             </div>
@@ -223,23 +222,30 @@
     </div>
 
     <script>
-        // Потужна перевірка трансферів з усіх можливих сховищ адмінки
-        function renderTransfers() {
-            const container = document.getElementById('transfersListContainer');
-            
-            let transfers = JSON.parse(localStorage.getItem('reus_transfers_list')) 
-                         || JSON.parse(localStorage.getItem('reus_transfers')) 
-                         || [];
+        const BIN_ID = '6a8b3dffda38895dfe079cb1';
+        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
-            // Якщо масив пустий, перевіряємо поодинокі ключі
-            if (transfers.length === 0) {
-                const single = localStorage.getItem('yami_transfer') || localStorage.getItem('reus_transfer');
-                if (single && !single.includes('відсутні')) {
-                    transfers = [single];
-                }
+        async function loadCloudData() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: {
+                        'X-Master-Key': API_KEY
+                    }
+                });
+                const result = await response.json();
+                const data = result.record || {};
+                
+                renderIndexTeams(data.teams || [], data.players || []);
+                renderTransfers(data.transfers || []);
+            } catch (error) {
+                console.error("Помилка завантаження:", error);
+                document.getElementById('teamsContainer').innerHTML = '<div class="loading" style="color: #ff4444;">Помилка підключення до бази даних.</div>';
             }
+        }
 
-            if (transfers.length === 0) {
+        function renderTransfers(transfers) {
+            const container = document.getElementById('transfersListContainer');
+            if (!transfers || transfers.length === 0) {
                 container.innerHTML = '<div class="transfer-item">Трансфери поки відсутні.</div>';
                 return;
             }
@@ -250,20 +256,18 @@
             });
         }
 
-        function renderIndexTeams() {
+        function renderIndexTeams(teams, players) {
             const container = document.getElementById('teamsContainer');
-            const teams = JSON.parse(localStorage.getItem('reus_teams')) || [];
-            const players = JSON.parse(localStorage.getItem('reus_players')) || [];
 
-            if (teams.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">Немає команд у рейтингу. Додайте їх через адмін-панель.</p>';
+            if (!teams || teams.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Немає команд у рейтингу. Додайте їх через адмін-панель.</p>';
                 return;
             }
 
             container.innerHTML = '';
             teams.forEach((t, index) => {
                 const teamId = 'team_' + index;
-                const teamPlayers = players.filter(p => p.team === t.name);
+                const teamPlayers = (players || []).filter(p => p.team === t.name);
 
                 let playersHtml = '';
                 if (teamPlayers.length === 0) {
@@ -321,8 +325,7 @@
             });
         }
 
-        renderIndexTeams();
-        renderTransfers();
+        loadCloudData();
     </script>
 
 </body>
