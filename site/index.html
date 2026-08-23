@@ -62,8 +62,8 @@
             justify-content: space-between;
             align-items: center;
             background: #161c26;
-            text-decoration: none;
-            color: var(--text-color);
+            cursor: pointer;
+            user-select: none;
             transition: background 0.2s;
         }
         .team-header:hover {
@@ -74,14 +74,31 @@
             align-items: center;
             gap: 15px;
         }
+        /* Назва команди всередині шапки як посилання на профіль команди */
+        .team-name-link {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        .team-name-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        /* Випадаючий блок гравців */
         .team-players {
-            display: flex;
+            display: none; /* Згорнуто за замовчуванням */
             padding: 20px;
             background: var(--card-bg);
             border-top: 1px solid var(--border-color);
             gap: 15px;
             justify-content: space-between;
         }
+        .team-players.active {
+            display: flex; /* Розгорнуто */
+        }
+
         .player-box {
             text-align: center;
             background: #1a222f;
@@ -139,6 +156,12 @@
         .admin-link:hover {
             color: var(--accent-color);
         }
+        .arrow-icon {
+            transition: transform 0.3s;
+        }
+        .team-card.open .arrow-icon {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -150,17 +173,21 @@
 
         <div class="content-layout">
             <div class="left-column">
-                <div class="team-card">
-                    <!-- Назва команди тепер посилання на сторінку команди -->
-                    <a href="team.html?name=Yami%20Esports&logo=team_logo.png" class="team-header">
+                <div class="team-card" id="team1">
+                    <!-- Шапка команди: клік сюди згортає/розгортає гравців -->
+                    <div class="team-header" onclick="toggleTeam('team1')">
                         <div class="team-info">
                             <span style="color: var(--text-muted); font-weight: bold;">#1</span>
-                            <span style="font-size: 1.1rem; font-weight: bold;">Yami Esports</span>
+                            <!-- Клік на саму назву перекидає на сторінку команди, використовуючи stopPropagation, щоб не спрацьовувало згортання -->
+                            <a href="team.html?name=Yami%20Esports" class="team-name-link" onclick="event.stopPropagation()">Yami Esports</a>
                         </div>
-                        <span style="color: var(--text-muted);">1000 pts ▾</span>
-                    </a>
+                        <div style="color: var(--text-muted);">
+                            1000 pts <span class="arrow-icon" style="display:inline-block;">▾</span>
+                        </div>
+                    </div>
                     
-                    <div class="team-players">
+                    <!-- Склад гравців (згортається/розгортається) -->
+                    <div class="team-players" id="team1-players">
                         <a href="player.html?name=oz1k&img=player1.png" class="player-box">
                             <img src="player1.png" alt="oz1k">
                             <div class="player-name">oz1k</div>
@@ -197,6 +224,16 @@
 
         <a href="admin.html" class="admin-link">Панель адміністратора ⚙️</a>
     </div>
+
+    <script>
+        function toggleTeam(teamId) {
+            const card = document.getElementById(teamId);
+            const players = document.getElementById(teamId + '-players');
+            
+            card.classList.toggle('open');
+            players.classList.toggle('active');
+        }
+    </script>
 
 </body>
 </html>
