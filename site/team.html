@@ -84,11 +84,12 @@
             align-items: center;
             justify-content: center;
             border: 1px solid #1f2937;
+            overflow: hidden;
         }
         .team-logo-box img {
-            max-width: 45px;
-            max-height: 45px;
-            object-fit: contain;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Щоб логотип не обрізався */
         }
         .team-title-text h1 {
             margin: 0 0 5px 0;
@@ -181,8 +182,9 @@
         <div class="team-profile-card">
             <div class="team-header-main">
                 <div class="team-identity">
+                    <!-- Логотип команди Yami.jpg -->
                     <div class="team-logo-box">
-                        <img id="team-logo" src="player1.png" alt="Logo">
+                        <img src="Yami.jpg" alt="Yami Logo">
                     </div>
                     <div class="team-title-text">
                         <h1 id="team-name">Yami Esports</h1>
