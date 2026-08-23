@@ -38,9 +38,11 @@
         .content-layout {
             display: flex;
             gap: 25px;
+            flex-wrap: wrap;
         }
         .left-column {
             flex: 1;
+            min-width: 300px;
         }
         .right-column {
             width: 320px;
@@ -97,6 +99,7 @@
             border-top: 1px solid var(--border-color);
             gap: 15px;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
         .team-players.active {
             display: flex;
@@ -107,9 +110,12 @@
             padding: 10px;
             border-radius: 6px;
             width: 18%;
+            min-width: 110px;
             text-decoration: none;
             color: var(--text-color);
             transition: transform 0.2s;
+            box-sizing: border-box;
+            margin-bottom: 10px;
         }
         .player-box:hover {
             transform: translateY(-3px);
@@ -123,7 +129,11 @@
             border-radius: 4px;
             margin-bottom: 8px;
         }
-        .player-name {
+        .player-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             font-size: 0.9rem;
             font-weight: bold;
         }
@@ -179,7 +189,6 @@
                     <div class="team-header" onclick="toggleTeam('team1')">
                         <div class="team-info">
                             <span style="color: var(--text-muted); font-weight: bold;">#1</span>
-                            <!-- Логотип команди Yami.jpg -->
                             <img src="Yami.jpg" alt="Yami" class="team-logo">
                             <a href="team.html?name=Yami%20Esports" class="team-name-link" onclick="event.stopPropagation()">Yami Esports</a>
                         </div>
@@ -191,23 +200,23 @@
                     <div class="team-players" id="team1-players">
                         <a href="player.html?name=oz1k&img=player1.png" class="player-box">
                             <img src="player1.png" alt="oz1k">
-                            <div class="player-name">oz1k</div>
+                            <div class="player-footer"><span>🇺🇦</span> oz1k</div>
                         </a>
                         <a href="player.html?name=r1kizy&img=player2.png" class="player-box">
                             <img src="player2.png" alt="r1kizy">
-                            <div class="player-name">r1kizy</div>
+                            <div class="player-footer"><span>🇺🇦</span> r1kizy</div>
                         </a>
                         <a href="player.html?name=Yokirito&img=player3.png" class="player-box">
                             <img src="player3.png" alt="Yokirito">
-                            <div class="player-name">Yokirito</div>
+                            <div class="player-footer"><span>🇺🇦</span> Yokirito</div>
                         </a>
                         <a href="player.html?name=Fexum&img=player4.png" class="player-box">
                             <img src="player4.png" alt="Fexum">
-                            <div class="player-name">Fexum</div>
+                            <div class="player-footer"><span>🇺🇦</span> Fexum</div>
                         </a>
                         <a href="player.html?name=darkpr1nc9&img=player5.png" class="player-box">
                             <img src="player5.png" alt="darkpr1nc9">
-                            <div class="player-name">darkpr1nc9</div>
+                            <div class="player-footer"><span>🇺🇦</span> darkpr1nc9</div>
                         </a>
                     </div>
                 </div>
