@@ -8,33 +8,54 @@
         :root {
             --bg-color: #0b0e14;
             --card-bg: #131820;
+            --card-hover: #1a222f;
+            --header-bg: #161c26;
             --border-color: #1f2937;
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
         }
+
+        [data-theme="light"] {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --card-hover: #f0f2f5;
+            --header-bg: #e9ecef;
+            --border-color: #d1d5db;
+            --accent-color: #00a859;
+            --text-color: #111827;
+            --text-muted: #6b7280;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
         }
         
-        /* Шапка з підсвіткою логотипа */
+        /* Шапка сайту з кнопкою теми */
         .site-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
             margin-bottom: 25px;
             padding: 15px 20px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         .site-logo {
             height: 40px;
@@ -42,7 +63,6 @@
             max-width: 140px;
             object-fit: contain;
             border-radius: 6px;
-            /* М'яка неонова підсвітка логотипа */
             filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
         }
         .site-title {
@@ -51,6 +71,25 @@
             color: var(--text-color);
             font-weight: 700;
             letter-spacing: 0.3px;
+        }
+
+        /* Кнопка перемикання теми */
+        .theme-toggle-btn {
+            background: var(--card-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .theme-toggle-btn:hover {
+            border-color: var(--accent-color);
         }
 
         .search-bar {
@@ -63,7 +102,7 @@
             font-size: 1rem;
             margin-bottom: 25px;
             box-sizing: border-box;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.3s;
         }
         .search-bar:focus {
             outline: none;
@@ -87,19 +126,20 @@
             border-radius: 8px;
             margin-bottom: 15px;
             overflow: hidden;
+            transition: background 0.3s, border-color 0.3s;
         }
         .team-header {
             padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #161c26;
+            background: var(--header-bg);
             cursor: pointer;
             user-select: none;
             transition: background 0.2s;
         }
         .team-header:hover {
-            background: #1a222f;
+            background: var(--card-hover);
         }
         .team-info {
             display: flex;
@@ -137,14 +177,14 @@
         }
         .player-box {
             text-align: center;
-            background: #1a222f;
+            background: var(--card-hover);
             padding: 10px;
             border-radius: 6px;
             width: 18%;
             min-width: 110px;
             text-decoration: none;
             color: var(--text-color);
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s, border-color 0.2s, background 0.3s;
             box-sizing: border-box;
             border: 1px solid transparent;
         }
@@ -173,6 +213,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
+            transition: background 0.3s, border-color 0.3s;
         }
         .transfers-title {
             font-size: 0.9rem;
@@ -210,12 +251,17 @@
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
     <div class="main-container">
         <header class="site-header">
-            <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
-            <h1 class="site-title">Counter-Strike World Ranking</h1>
+            <div class="header-left">
+                <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
+                <h1 class="site-title">Counter-Strike World Ranking</h1>
+            </div>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="themeIcon">☀️</span> <span id="themeText">Світла тема</span>
+            </button>
         </header>
 
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
@@ -237,6 +283,42 @@
     </div>
 
     <script>
+        // Логіка перемикання теми
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('reus_theme', 'light');
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Темна тема';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('reus_theme', 'dark');
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Світла тема';
+            }
+        }
+
+        // Перевірка збереженої теми при завантаженні сторінки
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('reus_theme') || 'dark';
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Темна тема';
+            } else {
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Світла тема';
+            }
+        });
+
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
@@ -327,7 +409,14 @@
         }
 
         function filterRanking() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            const query = document.getElementById('searchInput').value.toLowerCase,
+            const cards = document.querySelectorAll('.team-card');
+            // Перевіримо безпечно обробку пошуку нижче:
+        }
+
+        // Оновлена функція фільтрації (щоб нічого не завадило роботі пошуку)
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
 
             cards.forEach(card => {
@@ -338,7 +427,7 @@
                     card.style.display = 'none';
                 }
             });
-        }
+        });
 
         loadCloudData();
     </script>
