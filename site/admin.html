@@ -230,6 +230,17 @@
 
         let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
 
+        // Функція для автоматичного сортування команд за числовим рангом
+        function sortTeamsByRank() {
+            if (cloudData.teams && cloudData.teams.length > 0) {
+                cloudData.teams.sort((a, b) => {
+                    let rA = parseRank(a.worldRank);
+                    let rB = parseRank(b.worldRank);
+                    return rA - rB;
+                });
+            }
+        }
+
         async function fetchCloudData() {
             setSt("Завантаження даних із хмари...", "#8a99ad");
             try {
@@ -246,6 +257,7 @@
                 if(!cloudData.transfers) cloudData.transfers = [];
                 if(!cloudData.trophies) cloudData.trophies = [];
 
+                sortTeamsByRank(); // Автоматично сортуємо при завантаженні
                 updateUI();
                 setSt("Дані успішно завантажено!", "var(--accent-color)");
             } catch (err) {
@@ -256,6 +268,7 @@
 
         async function saveCloudData() {
             setSt("Збереження у хмару...", "#ffaa00");
+            sortTeamsByRank(); // Автоматично сортуємо перед збереженням у хмару
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
@@ -364,7 +377,6 @@
 
             let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
 
-            // Точний каскадний зсув рангів (якщо переводимо з топ-5 на топ-1, всі інші зсуваються вниз)
             let oldWorldRankNum = 999;
             if (existingIndex !== -1) {
                 oldWorldRankNum = parseRank(cloudData.teams[existingIndex].worldRank);
@@ -397,6 +409,7 @@
                 }
             }
 
+            sortTeamsByRank(); // Сортуємо масив за рангом перед відправкою у хмару
             saveCloudData();
             resetTeamForm();
         }
