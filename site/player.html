@@ -127,7 +127,41 @@
         .player-sub {
             color: var(--text-muted);
             font-size: 0.95rem;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        /* Трофеї в лінію (як на скрині donk) */
+        .trophies-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .trophy-item {
+            width: 32px;
+            height: 32px;
+            background: var(--card-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            box-sizing: border-box;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .trophy-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        .trophy-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .info-grid {
@@ -226,7 +260,7 @@
     <div class="main-container">
         <a href="index.html" class="back-link">← Назад до рейтингу</a>
 
-        <!-- Профіль у стилі oz1k -->
+        <!-- Профіль у стилі oz1k + трофеї в лінію -->
         <div class="profile-layout">
             <div class="profile-avatar-box">
                 <img id="playerImg" src="" alt="Player Avatar" class="profile-avatar" onerror="this.src='default_player.png'">
@@ -237,7 +271,12 @@
                     <span class="player-sub" style="margin:0;">Pro Player</span>
                 </div>
                 <h1 id="playerName">Завантаження...</h1>
-                <div class="player-sub" style="margin-top: 4px; margin-bottom: 20px;">Reus Championship Participant</div>
+                <div class="player-sub" style="margin-top: 4px; margin-bottom: 12px;">Reus Championship Participant</div>
+
+                <!-- Рядок трофеїв у лінію (як на скріншоті donk) -->
+                <div class="trophies-row" id="playerTrophies">
+                    <!-- Сюди через скрипт або адмінку будуть додаватися іконки турнірів по URL -->
+                </div>
 
                 <div class="info-grid">
                     <div class="info-item">
@@ -275,7 +314,7 @@
     </div>
 
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             const savedTheme = localStorage.getItem('reus_theme') || 'dark';
             document.body.setAttribute('data-theme', savedTheme);
 
@@ -310,6 +349,24 @@
                 flagElement.style.display = 'inline-block';
             } else {
                 flagElement.style.display = 'none';
+            }
+
+            // Рендер трофеїв (якщо вони будуть передані масивом у базі / через URL або налаштування)
+            // Приклад демонстрації (якщо трофеїв нема, блок порожній або можна заповнити тестовими URL):
+            const trophiesContainer = document.getElementById('playerTrophies');
+            // У майбутньому сюди можна буде підтягувати масив URL із хмари для конкретного гравця:
+            // Приклад кількох іконок для перевірки вигляду (шеф зможе додавати їх через адмінку простим посиланням):
+            const sampleTrophies = []; // сюди підтягнеться масив з твого JSONbin
+            
+            if (sampleTrophies.length > 0) {
+                trophiesContainer.innerHTML = '';
+                sampleTrophies.forEach(url => {
+                    trophiesContainer.innerHTML += `
+                        <div class="class-item trophy-item">
+                            <img src="${url}" alt="Trophy" onerror="this.style.display='none'">
+                        </div>
+                    `;
+                });
             }
         });
     </script>
