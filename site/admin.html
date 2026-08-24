@@ -123,7 +123,24 @@
             </select>
             <input type="text" id="playerName" placeholder="Нікнейм гравця (наприклад, oz1k)">
             <input type="text" id="playerPhoto" placeholder="Посилання на фото гравця (URL)">
-            <input type="text" id="playerCountry" placeholder="Код країни (наприклад: ua, pl, dk, se)">
+            
+            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Країна гравця:</label>
+            <select id="playerCountrySelect">
+                <option value="ua">🇺🇦 Україна (UA)</option>
+                <option value="pl">🇵🇱 Польща (PL)</option>
+                <option value="dk">🇩🇰 Данія (DK)</option>
+                <option value="se">🇸🇪 Швеція (SE)</option>
+                <option value="fr">🇫🇷 Франція (FR)</option>
+                <option value="ru">🇷🇺 Росія (RU)</option>
+                <option value="kz">🇰🇿 Казахстан (KZ)</option>
+                <option value="br">🇧🇷 Бразилія (BR)</option>
+                <option value="us">🇺🇸 США (US)</option>
+                <option value="gb">🇬🇧 Велика Британія (GB)</option>
+                <option value="de">🇩🇪 Німеччина (DE)</option>
+                <option value="fi">🇫🇮 Фінляндія (FI)</option>
+                <option value="no">🇳🇴 Норвегія (NO)</option>
+            </select>
+
             <button onclick="addPlayer()">Зберегти гравця</button>
         </div>
 
@@ -223,7 +240,7 @@
             const team = document.getElementById('playerTeamSelect').value;
             const name = document.getElementById('playerName').value.trim();
             const photo = document.getElementById('playerPhoto').value.trim();
-            const country = document.getElementById('playerCountry').value.trim().toLowerCase() || 'ua';
+            const country = document.getElementById('playerCountrySelect').value;
 
             if (!team || !name) {
                 alert('Оберіть команду та введіть нікнейм гравця!');
@@ -235,7 +252,6 @@
 
             document.getElementById('playerName').value = '';
             document.getElementById('playerPhoto').value = '';
-            document.getElementById('playerCountry').value = '';
         }
 
         function addTransfer() {
