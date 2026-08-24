@@ -210,6 +210,18 @@
             text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
         }
 
+        .team-right-side {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .team-points {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
         .team-players {
             display: none;
             padding: 20px;
@@ -354,7 +366,6 @@
             </button>
         </header>
 
-        <!-- Пошук тепер шукає і по команді, і по гравцях -->
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
 
         <div class="content-layout">
@@ -450,10 +461,14 @@
                 return;
             }
 
+            // Сортуємо команди за очками: у кого більше очок (points), той вище (1, 2, 3...)
+            teams.sort((a, b) => (parseInt(b.points) || 0) - (parseInt(a.points) || 0));
+
             container.innerHTML = '';
             teams.forEach((t, index) => {
                 const teamId = 'team_' + index;
                 const teamPlayers = (players || []).filter(p => p.team === t.name);
+                const rankNumber = index + 1; // Автоматичний порядковий номер (#1, #2, #3 і т.д.)
 
                 let playersHtml = '';
                 if (teamPlayers.length === 0) {
@@ -478,11 +493,12 @@
                     <div class="team-card" id="${teamId}" data-team-name="${t.name.toLowerCase()}">
                         <div class="team-header" onclick="toggleTeam('${teamId}')">
                             <div class="team-info">
-                                <span class="team-rank">${t.valveRank || '#1'}</span>
+                                <span class="team-rank">#${rankNumber}</span>
                                 <img src="${t.logo}" alt="${t.name}" class="team-logo" onerror="this.style.display='none'">
                                 <a href="team.html?name=${encodeURIComponent(t.name)}" class="team-name-link" onclick="event.stopPropagation()">${t.name}</a>
                             </div>
-                            <div style="color: var(--text-muted);">
+                            <div class="team-right-side">
+                                <span class="team-points">${t.points || 0} pts</span>
                                 <span class="arrow-icon">▾</span>
                             </div>
                         </div>
@@ -499,7 +515,6 @@
             card.classList.toggle('open');
         }
 
-        // ВИПРАВЛЕНИЙ ПОШУК: шукає і по назві команди, і всередині гравців (автоматично розгортає картку, якщо знайдено гравця)
         function filterRanking() {
             const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.team-card');
@@ -519,7 +534,7 @@
                 if (query === '' || teamName.includes(query) || foundPlayer) {
                     card.style.display = 'block';
                     if (foundPlayer && query !== '') {
-                        card.classList.add('open'); // автоматично відкриваємо команду, якщо знайдено гравця
+                        card.classList.add('open');
                     }
                 } else {
                     card.style.display = 'none';
