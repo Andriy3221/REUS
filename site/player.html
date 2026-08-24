@@ -37,12 +37,11 @@
         .profile-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 8px 8px 0 0;
             padding: 30px;
             display: flex;
             gap: 30px;
             align-items: center;
-            margin-bottom: 25px;
         }
         .player-photo {
             width: 180px;
@@ -73,34 +72,54 @@
         .player-team:hover {
             text-decoration: underline;
         }
-        /* Акуратний рядок трофеїв гравця */
-        .trophies-container {
+
+        /* Стиль трофеїв HLTV (сітка знизу профілю) */
+        .trophies-section {
+            background: #0f141d;
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 15px 20px;
             display: flex;
             gap: 10px;
-            align-items: center;
             flex-wrap: wrap;
-            margin: 12px 0;
+            margin-bottom: 25px;
         }
-        .trophy-item {
+        .trophy-cell {
             position: relative;
+            background: #161d27;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #1a222f;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 4px 8px;
-            height: 36px;
+            flex-direction: column;
+            cursor: pointer;
         }
-        .trophy-img {
-            height: 24px;
-            width: auto;
+        .trophy-cell img {
+            max-height: 40px;
+            max-width: 50px;
             object-fit: contain;
         }
-        .trophy-item:hover::after {
+        /* Бейдж з кількістю або роком внизу комірки як на HLTV */
+        .trophy-badge {
+            position: absolute;
+            bottom: 3px;
+            right: 4px;
+            background: #1f2937;
+            color: var(--text-color);
+            font-size: 0.65rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        /* Тултип (назва трофею при наведенні) */
+        .trophy-cell:hover::after {
             content: attr(data-title);
             position: absolute;
-            bottom: 115%;
+            bottom: 110%;
             left: 50%;
             transform: translateX(-50%);
             background: #000;
@@ -113,6 +132,7 @@
             z-index: 10;
             pointer-events: none;
         }
+
         .stats-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -189,19 +209,21 @@
                     return;
                 }
 
+                // Формуємо блок трофеїв у стилі HLTV (панель знизу)
                 let trophiesHtml = '';
                 if (player.trophies && Array.isArray(player.trophies) && player.trophies.length > 0) {
-                    trophiesHtml = '<div class="trophies-container">';
+                    let cells = '';
                     player.trophies.forEach(iconUrl => {
                         const foundTr = globalTrophies.find(tr => tr.icon === iconUrl);
                         const title = foundTr ? foundTr.name : 'Трофей';
-                        trophiesHtml += `
-                            <div class="trophy-item" data-title="${title}">
-                                <img src="${iconUrl}" class="trophy-img" alt="${title}" onerror="this.style.display='none'">
+                        cells += `
+                            <div class="trophy-cell" data-title="${title}">
+                                <img src="${iconUrl}" alt="${title}" onerror="this.style.display='none'">
+                                <div class="trophy-badge">🏆</div>
                             </div>
                         `;
                     });
-                    trophiesHtml += '</div>';
+                    trophiesHtml = `<div class="trophies-section">${cells}</div>`;
                 }
 
                 const countryCode = (player.country || 'ua').toLowerCase();
@@ -215,14 +237,14 @@
                             <div class="player-role">Pro Player</div>
                             <h1>${flagTag} ${player.name}</h1>
                             
-                            ${trophiesHtml}
-
                             <div style="margin-top: 15px;">
                                 <div class="player-role">CURRENT TEAM</div>
                                 <a href="team.html?name=${encodeURIComponent(player.team)}" class="player-team">${player.team}</a>
                             </div>
                         </div>
                     </div>
+
+                    ${trophiesHtml}
 
                     <div class="stats-box">
                         <h3>СТАТИСТИКА ГРАВЦЯ</h3>
