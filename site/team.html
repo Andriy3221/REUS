@@ -40,9 +40,6 @@
             border-radius: 8px;
             padding: 30px;
             margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .team-title-area h1 {
             margin: 0 0 5px 0;
@@ -52,46 +49,60 @@
             color: var(--text-muted);
             font-size: 0.95rem;
         }
-        /* Акуратний блок трофеїв в рядок */
-        .trophies-container {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
+
+        /* БЛОК ТРОФЕЇВ КОМАНДИ З ГОРИЗОНТАЛЬНИМ СКРОЛОМ ТА ТЕКСТОМ ЗНИЗУ */
+        .trophies-section {
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
         }
-        .trophy-item {
-            position: relative;
+        .trophies-section h3 {
+            margin: 0 0 15px 0;
+            color: var(--accent-color);
+            font-size: 1.05rem;
+        }
+        .trophies-scroll-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+        .trophies-scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .trophies-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        .trophy-card-vertical {
             background: #1a222f;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 6px 10px;
-            height: 40px;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 120px;
+            max-width: 130px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-shrink: 0;
         }
-        .trophy-img {
-            height: 26px;
-            width: auto;
+        .trophy-card-vertical img {
+            width: 60px;
+            height: 60px;
             object-fit: contain;
+            margin-bottom: 10px;
         }
-        /* Підказка при наведенні на трофей */
-        .trophy-item:hover::after {
-            content: attr(data-title);
-            position: absolute;
-            bottom: 115%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #000;
-            color: #fff;
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            white-space: nowrap;
-            border: 1px solid var(--border-color);
-            z-index: 10;
-            pointer-events: none;
+        .trophy-name-vertical {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            font-weight: 500;
+            word-break: break-word;
+            line-height: 1.2;
         }
+
         .section-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -193,20 +204,26 @@
                     return;
                 }
 
-                // Генеруємо красиві іконки трофеїв із назвами при наведенні
+                // Формуємо крутий блок трофеїв з прокруткою та назвами знизу
                 let trophiesHtml = '';
                 if (team.trophies && Array.isArray(team.trophies) && team.trophies.length > 0) {
-                    trophiesHtml = '<div class="trophies-container">';
+                    let cards = '';
                     team.trophies.forEach(iconUrl => {
                         const foundTr = globalTrophies.find(tr => tr.icon === iconUrl);
                         const title = foundTr ? foundTr.name : 'Трофей';
-                        trophiesHtml += `
-                            <div class="trophy-item" data-title="${title}">
-                                <img src="${iconUrl}" class="trophy-img" alt="${title}" onerror="this.style.display='none'">
+                        cards += `
+                            <div class="trophy-card-vertical">
+                                <img src="${iconUrl}" alt="${title}" onerror="this.style.display='none'">
+                                <div class="trophy-name-vertical">${title}</div>
                             </div>
                         `;
                     });
-                    trophiesHtml += '</div>';
+                    trophiesHtml = `
+                        <div class="trophies-section">
+                            <h3>ДОСЯГНЕННЯ ТА ТРОФЕЇ КОМАНДИ</h3>
+                            <div class="trophies-scroll-container">${cards}</div>
+                        </div>
+                    `;
                 }
 
                 // Гравці команди
@@ -234,7 +251,7 @@
                             <h1>${team.name}</h1>
                             <div class="team-region">Europe</div>
                         </div>
-                        <div>${trophiesHtml}</div>
+                        ${trophiesHtml}
                     </div>
 
                     <div class="section-box">
@@ -246,6 +263,7 @@
                         <h3>Статистика</h3>
                         <div class="stats-row"><span>Valve ranking</span><span class="stats-val">${team.valveRank || '#1'}</span></div>
                         <div class="stats-row"><span>World ranking</span><span class="stats-val">${team.worldRank || '#1'}</span></div>
+                        <div class="stats-val" style="display:none"></div>
                         <div class="stats-row"><span>Weeks in top30 for core</span><span class="stats-val">${team.weeksTop30 || '0'}</span></div>
                         <div class="stats-row"><span>Average player age</span><span class="stats-val">${team.avgAge || '20.0'}</span></div>
                     </div>
