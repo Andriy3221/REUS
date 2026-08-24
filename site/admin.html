@@ -238,7 +238,6 @@
                 });
                 const result = await res.json();
                 
-                // Виправлено: підтримуємо як структуру з .record, так і прямий об'єкт
                 const rawRecord = result.record || result;
                 cloudData = rawRecord.record || rawRecord;
                 
@@ -363,20 +362,30 @@
                 return;
             }
 
-            // Виправлено: каскадний зсув рангів без дублікатів (суворо унікальні позиції)
-            const targetWorldRankNum = parseRank(worldRank);
-            cloudData.teams.forEach(t => {
-                if (t.name.toLowerCase() !== name.toLowerCase()) {
-                    let curRankNum = parseRank(t.worldRank);
-                    if (curRankNum === targetWorldRankNum) {
-                        t.worldRank = `#${curRankNum + 1}`;
-                    }
+            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+
+            // Точний каскадний зсув рангів (якщо переводимо з топ-5 на топ-1, всі інші зсуваються вниз)
+            let oldWorldRankNum = 999;
+            if (existingIndex !== -1) {
+                oldWorldRankNum = parseRank(cloudData.teams[existingIndex].worldRank);
+            }
+            const newWorldRankNum = parseRank(worldRank);
+
+            cloudData.teams.forEach((t, index) => {
+                if (existingIndex !== -1 && index === existingIndex) return;
+
+                let curRankNum = parseRank(t.worldRank);
+
+                if (newWorldRankNum <= curRankNum && curRankNum < oldWorldRankNum) {
+                    t.worldRank = `#${curRankNum + 1}`;
+                } else if (oldWorldRankNum < curRankNum && curRankNum <= newWorldRankNum) {
+                    t.worldRank = `#${curRankNum - 1}`;
+                } else if (curRankNum === newWorldRankNum) {
+                    t.worldRank = `#${curRankNum + 1}`;
                 }
             });
 
             const teamData = { name, logo, valveRank, worldRank, weeksTop30, avgAge, trophies };
-
-            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
 
             if (existingIndex === -1) {
                 cloudData.teams.push(teamData);
