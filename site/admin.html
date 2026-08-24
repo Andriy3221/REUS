@@ -118,7 +118,7 @@
             <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="number" id="teamPoints" placeholder="Очки (наприклад: 1250 або 980)">
+            <input type="number" id="teamPoints" placeholder="Очки / pts (наприклад: 1000 або 950)">
 
             <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
             <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
@@ -232,6 +232,7 @@
         }
 
         function resetTeamForm() {
+            document.getElementById('editTeamIndex').value = index = '';
             document.getElementById('editTeamIndex').value = '';
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
@@ -265,7 +266,7 @@
                             <b style="color: #f39c12;">#${rank}</b> 
                             ${t.logo ? `<img src="${t.logo}" class="preview-img" onerror="this.style.display='none'">` : ''} 
                             <b>${t.name}</b> 
-                            <span style="color:var(--text-muted); font-size:0.85rem;">(Очки: ${t.points || 0})</span>
+                            <span style="color:var(--text-muted); font-size:0.85rem;">(Очки: ${t.points || 0} pts)</span>
                         </span>
                         <div class="item-buttons">
                             <button class="btn-edit" onclick="editTeam(${i})">Редагувати</button>
