@@ -121,7 +121,7 @@
         <h1>⚙️ Панель керування REUS</h1>
         <div id="globalStatus" class="status-msg" style="color: var(--accent-color);"></div>
 
-        <!-- Додавання / Редагування команди -->
+        <!-- Керування командою -->
         <div class="section-box">
             <h2 id="teamFormTitle">Додати команду та статистику (HLTV style)</h2>
             <input type="hidden" id="editTeamIndex" value="">
@@ -135,9 +135,10 @@
             <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
         </div>
 
-        <!-- Додавання гравця -->
+        <!-- Керування гравцем -->
         <div class="section-box">
-            <h2>Додати гравця</h2>
+            <h2 id="playerFormTitle">Додати гравця та його статистику</h2>
+            <input type="hidden" id="editPlayerIndex" value="">
             <select id="playerTeamSelect">
                 <option value="">Оберіть команду</option>
             </select>
@@ -158,7 +159,14 @@
                 <option value="gb">🇬🇧 Велика Британія (GB)</option>
             </select>
 
-            <button onclick="addPlayer()">Зберегти гравця</button>
+            <!-- Статистика гравця (HLTV style) -->
+            <input type="text" id="playerKd" placeholder="K/D Ratio (наприклад: 1.15)">
+            <input type="text" id="playerRating" placeholder="Rating 2.0 (наприклад: 1.12)">
+            <input type="text" id="playerHs" placeholder="Headshot % (наприклад: 55%)">
+            <input type="text" id="playerMaps" placeholder="Maps played (наприклад: 142)">
+
+            <button id="playerSaveBtn" onclick="savePlayer()">Зберегти гравця</button>
+            <button id="playerCancelBtn" onclick="resetPlayerForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
         </div>
 
         <!-- Додавання трансферу -->
@@ -250,14 +258,11 @@
             }
 
             if (editIndex === "") {
-                // Додавання нової команди
                 cloudData.teams.push({ name, logo, valveRank, worldRank, weeksTop30, avgAge });
             } else {
-                // Оновлення існуючої команди
                 const oldName = cloudData.teams[editIndex].name;
                 cloudData.teams[editIndex] = { name, logo, valveRank, worldRank, weeksTop30, avgAge };
 
-                // Якщо назва команди змінилася, оновлюємо її і у гравців, щоб вони не загубилися
                 if (oldName !== name) {
                     cloudData.players.forEach(p => {
                         if (p.team === oldName) p.team = name;
@@ -299,22 +304,70 @@
             document.getElementById('teamCancelBtn').style.display = 'none';
         }
 
-        function addPlayer() {
+        function savePlayer() {
+            const editIndex = document.getElementById('editPlayerIndex').value;
             const team = document.getElementById('playerTeamSelect').value;
             const name = document.getElementById('playerName').value.trim();
             const photo = document.getElementById('playerPhoto').value.trim();
             const country = document.getElementById('playerCountrySelect').value;
+            
+            // Статистика гравця
+            const kd = document.getElementById('playerKd').value.trim() || '1.00';
+            const rating = document.getElementById('playerRating').value.trim() || '1.00';
+            const hs = document.getElementById('playerHs').value.trim() || '50%';
+            const maps = document.getElementById('playerMaps').value.trim() || '100';
 
             if (!team || !name) {
                 alert('Оберіть команду та введіть нікнейм гравця!');
                 return;
             }
 
-            cloudData.players.push({ team, name, photo, country });
-            saveCloudData();
+            const playerData = { team, name, photo, country, kd, rating, hs, maps };
 
+            if (editIndex === "") {
+                cloudData.players.push(playerData);
+            } else {
+                cloudData.players[editIndex] = playerData;
+            }
+
+            saveCloudData();
+            resetPlayerForm();
+        }
+
+        function editPlayer(index) {
+            const p = cloudData.players[index];
+            document.getElementById('editPlayerIndex').value = index;
+            document.getElementById('playerTeamSelect').value = p.team;
+            document.getElementById('playerName').value = p.name;
+            document.getElementById('playerPhoto').value = p.photo || '';
+            document.getElementById('playerCountrySelect').value = p.country || 'ua';
+            
+            document.getElementById('playerKd').value = p.kd || '';
+            document.getElementById('playerRating').value = p.rating || '';
+            document.getElementById('playerHs').value = p.hs || '';
+            document.getElementById('playerMaps').value = p.maps || '';
+
+            document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
+            document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
+            document.getElementById('playerCancelBtn').style.display = 'block';
+            
+            document.getElementById('playerFormTitle').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetPlayerForm() {
+            document.getElementById('editPlayerIndex').value = '';
             document.getElementById('playerName').value = '';
             document.getElementById('playerPhoto').value = '';
+            document.getElementById('playerCountrySelect').value = 'ua';
+            document.getElementById('playerTeamSelect').value = '';
+            document.getElementById('playerKd').value = '';
+            document.getElementById('playerRating').value = '';
+            document.getElementById('playerHs').value = '';
+            document.getElementById('playerMaps').value = '';
+
+            document.getElementById('playerFormTitle').innerText = 'Додати гравця та його статистику';
+            document.getElementById('playerSaveBtn').innerText = 'Зберегти гравця';
+            document.getElementById('playerCancelBtn').style.display = 'none';
         }
 
         function addTransfer() {
@@ -337,8 +390,10 @@
         }
 
         function deletePlayer(index) {
-            cloudData.players.splice(index, 1);
-            saveCloudData();
+            if (confirm("Видалити цього гравця?")) {
+                cloudData.players.splice(index, 1);
+                saveCloudData();
+            }
         }
 
         function deleteTransfer(index) {
@@ -377,7 +432,14 @@
                 const countryCode = (p.country || 'ua').toLowerCase();
                 const flagTag = `<img src="https://flagcdn.com/w20/${countryCode}.png" class="preview-flag" alt="${countryCode}">`;
                 const imgTag = p.photo ? `<img src="${p.photo}" class="preview-img" onerror="this.style.display='none'">` : '';
-                html += `<div class="item-row"><span>${flagTag}<b>${p.name}</b> [команда: ${p.team}] ${imgTag}</span> <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div>`;
+                html += `
+                    <div class="item-row">
+                        <span>${flagTag}<b>${p.name}</b> [команда: ${p.team}] (K/D: ${p.kd || '-'}) ${imgTag}</span> 
+                        <div class="item-buttons">
+                            <button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button>
+                            <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button>
+                        </div>
+                    </div>`;
             });
 
             html += '<h3>Трансфери:</h3>';
