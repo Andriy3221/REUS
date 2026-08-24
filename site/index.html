@@ -206,6 +206,12 @@
             font-size: 0.9rem;
             font-weight: bold;
         }
+        .player-flag {
+            width: 18px;
+            height: 12px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
         .transfers-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -367,11 +373,14 @@
                     playersHtml = '<p style="color: var(--text-muted); width: 100%; text-align: center; margin: 0;">У цій команді поки немає гравців</p>';
                 } else {
                     teamPlayers.forEach(p => {
+                        // Беремо країну з бази, а якщо її там нема — ставимо 'ua' за замовчуванням
+                        const countryCode = (p.country || 'ua').toLowerCase();
+                        
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}" class="player-box">
                                 <img src="${p.photo}" alt="${p.name}" onerror="this.src='default_player.png'">
                                 <div class="player-footer">
-                                    <svg width="16" height="11" viewBox="0 0 9 6" style="border-radius: 2px;"><rect width="9" height="3" fill="#005BBB"/><rect y="3" width="9" height="3" fill="#FFD500"/></svg>
+                                    <img src="https://flagcdn.com/w20/${countryCode}.png" alt="${countryCode}" class="player-flag">
                                     ${p.name}
                                 </div>
                             </a>
@@ -389,7 +398,7 @@
                             </div>
                             <div style="color: var(--text-muted);">
                                 <span class="arrow-icon">▾</span>
-                            </div>
+        </div>
                         </div>
                         <div class="team-players">
                             ${playersHtml}
@@ -408,7 +417,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
 
-            cards.forEach(card => {
+            cards.forEach(card, index => {
                 const teamName = card.getAttribute('data-team-name');
                 if (teamName.includes(query)) {
                     card.style.display = 'block';
