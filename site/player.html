@@ -72,7 +72,6 @@
         .player-team:hover {
             text-decoration: underline;
         }
-        /* Лінія трофеїв */
         .trophies-line {
             display: flex;
             gap: 10px;
@@ -142,7 +141,7 @@
             const playerName = urlParams.get('name');
 
             if (!playerName) {
-                document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Гравця не вказано в посиланні.</p>';
+                document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Гравця не вказано.</p>';
                 return;
             }
 
@@ -157,11 +156,10 @@
                 const player = players.find(p => p.name.toLowerCase() === playerName.toLowerCase());
 
                 if (!player) {
-                    document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Гравця не знайдено в базі даних.</p>';
+                    document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Гравця не знайдено.</p>';
                     return;
                 }
 
-                // Формуємо HTML для трофеїв, якщо вони є
                 let trophiesHtml = '';
                 if (player.trophies && Array.isArray(player.trophies) && player.trophies.length > 0) {
                     trophiesHtml = `
@@ -182,41 +180,26 @@
                             <div class="player-role">Pro Player</div>
                             <h1>${flagTag} ${player.name}</h1>
                             
-                            <!-- Лінія трофеїв прямо під ніком -->
                             ${trophiesHtml}
 
-                            <div style="margin-top: 20px; display: flex; gap: 40px;">
-                                <div>
-                                    <div class="player-role" style="font-size: 0.8rem;">CURRENT TEAM</div>
-                                    <a href="team.html?name=${encodeURIComponent(player.team)}" class="player-team">${player.team}</a>
-                                </div>
+                            <div style="margin-top: 20px;">
+                                <div class="player-role" style="font-size: 0.8rem;">CURRENT TEAM</div>
+                                <a href="team.html?name=${encodeURIComponent(player.team)}" class="player-team">${player.team}</a>
                             </div>
                         </div>
                     </div>
 
                     <div class="stats-box">
-                        <h3>СТАТИСТИКА ГРАВЦЯ (HLTV STYLE)</h3>
-                        <div class="stat-row">
-                            <span>K/D Ratio</span>
-                            <span class="stat-value">${player.kd || '1.00'}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Rating 2.0</span>
-                            <span class="stat-value">${player.rating || '1.00'}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Headshot %</span>
-                            <span class="stat-value">${player.hs || '50%'}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span>Maps played</span>
-                            <span class="stat-value">${player.maps || '100'}</span>
-                        </div>
+                        <h3>СТАТИСТИКА ГРАВЦЯ</h3>
+                        <div class="stat-row"><span>K/D Ratio</span><span class="stat-value">${player.kd || '1.00'}</span></div>
+                        <div class="stat-row"><span>Rating 2.0</span><span class="stat-value">${player.rating || '1.00'}</span></div>
+                        <div class="stat-row"><span>Headshot %</span><span class="stat-value">${player.hs || '50%'}</span></div>
+                        <div class="stat-row"><span>Maps played</span><span class="stat-value">${player.maps || '100'}</span></div>
                     </div>
                 `;
             } catch (err) {
                 console.error(err);
-                document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Помилка завантаження даних гравця.</p>';
+                document.getElementById('playerContent').innerHTML = '<p style="color: #ff4444;">Помилка завантаження.</p>';
             }
         }
 
