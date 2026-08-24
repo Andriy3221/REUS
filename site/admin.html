@@ -108,10 +108,13 @@
 
         <!-- Додавання команди -->
         <div class="section-box">
-            <h2>Додати команду</h2>
-            <input type="text" id="teamName" placeholder="Назва команди (наприклад, Yami Esports)">
+            <h2>Додати команду та статистику (HLTV style)</h2>
+            <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="text" id="teamRank" placeholder="Рейтинг (наприклад, #1 або 1)">
+            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #4)">
+            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
+            <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 for core (наприклад: 12)">
+            <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
             <button onclick="addTeam()">Зберегти команду</button>
         </div>
 
@@ -131,14 +134,11 @@
                 <option value="dk">🇩🇰 Данія (DK)</option>
                 <option value="se">🇸🇪 Швеція (SE)</option>
                 <option value="fr">🇫🇷 Франція (FR)</option>
-                <option value="ru">🇷🇺 Росія (RU)</option>
-                <option value="kz">🇰🇿 Казахстан (KZ)</option>
-                <option value="br">🇧🇷 Бразилія (BR)</option>
-                <option value="us">🇺🇸 США (US)</option>
-                <option value="gb">🇬🇧 Велика Британія (GB)</option>
                 <option value="de">🇩🇪 Німеччина (DE)</option>
                 <option value="fi">🇫🇮 Фінляндія (FI)</option>
                 <option value="no">🇳🇴 Норвегія (NO)</option>
+                <option value="us">🇺🇸 США (US)</option>
+                <option value="gb">🇬🇧 Велика Британія (GB)</option>
             </select>
 
             <button onclick="addPlayer()">Зберегти гравця</button>
@@ -221,19 +221,25 @@
         function addTeam() {
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
-            const valveRank = document.getElementById('teamRank').value.trim() || '#1';
+            const valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
+            const worldRank = document.getElementById('teamWorldRank').value.trim() || '#1';
+            const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim() || '0';
+            const avgAge = document.getElementById('teamAvgAge').value.trim() || '20.0';
 
             if (!name) {
                 alert('Введіть назву команди!');
                 return;
             }
 
-            cloudData.teams.push({ name, logo, valveRank });
+            cloudData.teams.push({ name, logo, valveRank, worldRank, weeksTop30, avgAge });
             saveCloudData();
 
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
-            document.getElementById('teamRank').value = '';
+            document.getElementById('teamValveRank').value = '';
+            document.getElementById('teamWorldRank').value = '';
+            document.getElementById('teamWeeksTop30').value = '';
+            document.getElementById('teamAvgAge').value = '';
         }
 
         function addPlayer() {
@@ -297,7 +303,7 @@
             let html = '<h3>Команди:</h3>';
             cloudData.teams.forEach((t, i) => {
                 const imgTag = t.logo ? `<img src="${t.logo}" class="preview-img" onerror="this.style.display='none'">` : '';
-                html += `<div class="item-row"><span><b>${t.name}</b> (${t.valveRank || '#1'}) ${imgTag}</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
+                html += `<div class="item-row"><span><b>${t.name}</b> (Valve: ${t.valveRank}, World: ${t.worldRank}) ${imgTag}</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
             });
 
             html += '<h3>Гравці:</h3>';
