@@ -106,21 +106,30 @@
         }
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 10px;
             background: #1a222f;
             padding: 15px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             margin-bottom: 15px;
-            max-height: 150px;
+            max-height: 180px;
             overflow-y: auto;
         }
         .checkbox-label {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-size: 0.95rem;
+            cursor: pointer;
+            background: #131820;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+        .checkbox-label input {
+            width: auto;
+            margin: 0;
             cursor: pointer;
         }
     </style>
@@ -131,9 +140,9 @@
         <h1>⚙️ Панель керування REUS</h1>
         <div id="globalStatus" class="status-msg" style="color: var(--accent-color);"></div>
 
-        <!-- 1. ОКРЕМА ВКЛАДКА: Керування трофеями (Глобальний список) -->
+        <!-- 1. ОКРЕМА ВКЛАДКА: База трофеїв -->
         <div class="section-box" style="border-color: var(--edit-color);">
-            <h2 id="trophyFormTitle">🏆 База трофеїв (Створити трофей)</h2>
+            <h2 id="trophyFormTitle">🏆 1. База трофеїв (Створити трофей)</h2>
             <input type="hidden" id="editTrophyIndex" value="">
             <input type="text" id="trophyName" placeholder="Назва трофею (наприклад, BLAST Premier Final)">
             <input type="text" id="trophyIcon" placeholder="Посилання на іконку трофею (URL PNG/SVG)">
@@ -148,7 +157,7 @@
 
         <!-- 2. Керування командою -->
         <div class="section-box">
-            <h2 id="teamFormTitle">Керування командою</h2>
+            <h2 id="teamFormTitle">2. Керування командою</h2>
             <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
@@ -157,7 +166,7 @@
             <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 (наприклад: 12)">
             <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
             
-            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Трофеї команди:</label>
+            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Оберіть трофеї для команди:</label>
             <div id="teamTrophiesCheckboxes" class="checkbox-group"></div>
 
             <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
@@ -166,7 +175,7 @@
 
         <!-- 3. Керування гравцем -->
         <div class="section-box">
-            <h2 id="playerFormTitle">Керування гравцем</h2>
+            <h2 id="playerFormTitle">3. Керування гравцем</h2>
             <input type="hidden" id="editPlayerIndex" value="">
             <select id="playerTeamSelect">
                 <option value="">Оберіть команду</option>
@@ -194,7 +203,7 @@
             <input type="text" id="playerHs" placeholder="Headshot % (наприклад: 55%)">
             <input type="text" id="playerMaps" placeholder="Maps played (наприклад: 142)">
 
-            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Трофеї гравця:</label>
+            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Оберіть трофеї для гравця:</label>
             <div id="playerTrophiesCheckboxes" class="checkbox-group"></div>
 
             <button id="playerSaveBtn" onclick="savePlayer()">Зберегти гравця</button>
@@ -203,7 +212,7 @@
 
         <!-- 4. Трансфери -->
         <div class="section-box">
-            <h2>Додати трансфер</h2>
+            <h2>4. Додати трансфер</h2>
             <input type="text" id="transferText" placeholder="Текст трансферу">
             <button onclick="addTransfer()">Додати трансфер</button>
         </div>
@@ -272,7 +281,7 @@
             el.style.color = color;
         }
 
-        // --- РОБОТА З ГЛОБАЛЬНИМИ ТРОФЕЯМИ ---
+        // --- ГЛОБАЛЬНІ ТРОФЕЇ ---
         function saveGlobalTrophy() {
             const editIndex = document.getElementById('editTrophyIndex').value;
             const name = document.getElementById('trophyName').value.trim();
@@ -311,7 +320,7 @@
             document.getElementById('editTrophyIndex').value = '';
             document.getElementById('trophyName').value = '';
             document.getElementById('trophyIcon').value = '';
-            document.getElementById('trophyFormTitle').innerText = '🏆 База трофеїв (Створити трофей)';
+            document.getElementById('trophyFormTitle').innerText = '🏆 1. База трофеїв (Створити трофей)';
             document.getElementById('trophySaveBtn').innerText = 'Додати трофей у базу';
             document.getElementById('trophyCancelBtn').style.display = 'none';
         }
@@ -323,7 +332,7 @@
             }
         }
 
-        // --- РОБОТА З КОМАНДАМИ ---
+        // --- КОМАНДИ ---
         function saveTeam() {
             const editIndex = document.getElementById('editTeamIndex').value;
             const name = document.getElementById('teamName').value.trim();
@@ -333,7 +342,6 @@
             const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim() || '0';
             const avgAge = document.getElementById('teamAvgAge').value.trim() || '20.0';
             
-            // Збираємо обрані трофеї
             const checkboxes = document.querySelectorAll('#teamTrophiesCheckboxes input[type="checkbox"]:checked');
             const trophies = Array.from(checkboxes).map(cb => cb.value);
 
@@ -373,6 +381,7 @@
             document.getElementById('teamFormTitle').innerText = `Редагувати команду: ${t.name}`;
             document.getElementById('teamSaveBtn').innerText = 'Оновити команду';
             document.getElementById('teamCancelBtn').style.display = 'block';
+            document.getElementById('teamFormTitle').scrollIntoView({ behavior: 'smooth' });
         }
 
         function resetTeamForm() {
@@ -385,12 +394,12 @@
             document.getElementById('teamAvgAge').value = '';
             renderCheckboxes('teamTrophiesCheckboxes', []);
 
-            document.getElementById('teamFormTitle').innerText = 'Керування командою';
+            document.getElementById('teamFormTitle').innerText = '2. Керування командою';
             document.getElementById('teamSaveBtn').innerText = 'Зберегти команду';
             document.getElementById('teamCancelBtn').style.display = 'none';
         }
 
-        // --- РОБОТА З ГРАВЦЯМИ ---
+        // --- ГРАВЦІ ---
         function savePlayer() {
             const editIndex = document.getElementById('editPlayerIndex').value;
             const team = document.getElementById('playerTeamSelect').value;
@@ -441,6 +450,7 @@
             document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
             document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
             document.getElementById('playerCancelBtn').style.display = 'block';
+            document.getElementById('playerFormTitle').scrollIntoView({ behavior: 'smooth' });
         }
 
         function resetPlayerForm() {
@@ -455,7 +465,7 @@
             document.getElementById('playerMaps').value = '';
             renderCheckboxes('playerTrophiesCheckboxes', []);
 
-            document.getElementById('playerFormTitle').innerText = 'Керування гравцем';
+            document.getElementById('playerFormTitle').innerText = '3. Керування гравцем';
             document.getElementById('playerSaveBtn').innerText = 'Зберегти гравця';
             document.getElementById('playerCancelBtn').style.display = 'none';
         }
@@ -468,12 +478,12 @@
             }
             container.innerHTML = '';
             cloudData.trophies.forEach(tr => {
-                const isChecked = selectedUrls.includes(tr.icon) ? 'checked' : '';
+                const isChecked = (selectedUrls && selectedUrls.includes(tr.icon)) ? 'checked' : '';
                 container.innerHTML += `
                     <label class="checkbox-label">
                         <input type="checkbox" value="${tr.icon}" ${isChecked}>
-                        <img src="${tr.icon}" style="width: 20px; height: 20px; object-fit: contain;" onerror="this.style.display='none'">
-                        ${tr.name}
+                        <img src="${tr.icon}" style="width: 22px; height: 22px; object-fit: contain;" onerror="this.style.display='none'">
+                        <span>${tr.name}</span>
                     </label>
                 `;
             });
@@ -492,25 +502,28 @@
         function deleteTransfer(i) { cloudData.transfers.splice(i, 1); saveCloudData(); }
 
         function updateUI() {
-            // Оновлюємо випадаючий список команд
             const select = document.getElementById('playerTeamSelect');
             select.innerHTML = '<option value="">Оберіть команду</option>';
             cloudData.teams.forEach(t => { select.innerHTML += `<option value="${t.name}">${t.name}</option>`; });
 
-            // Оновлюємо списки чекбоксів за замовчуванням
-            renderCheckboxes('teamTrophiesCheckboxes', []);
-            renderCheckboxes('playerTrophiesCheckboxes', []);
+            // Оновлюємо чекбокси тільки якщо не йде режим редагування конкретної форми
+            if (!document.getElementById('editTeamIndex').value) {
+                renderCheckboxes('teamTrophiesCheckboxes', []);
+            }
+            if (!document.getElementById('editPlayerIndex').value) {
+                renderCheckboxes('playerTrophiesCheckboxes', []);
+            }
 
             // Список глобальних трофеїв
             const tList = document.getElementById('globalTrophiesList');
             if (cloudData.trophies.length === 0) {
-                tList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.9rem;">Ще немає жодного трофею.</span>';
+                tList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.9rem;">Ще немає жодного трофею. Створіть перший вище.</span>';
             } else {
                 tList.innerHTML = '';
                 cloudData.trophies.forEach((tr, i) => {
                     tList.innerHTML += `
                         <div class="item-row">
-                            <span><img src="${tr.icon}" class="preview-img"> <b>${tr.name}</b></span>
+                            <span><img src="${tr.icon}" class="preview-img" onerror="this.style.display='none'"> <b>${tr.name}</b></span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editTrophy(${i})">Редагувати</button>
                                 <button class="btn-danger" onclick="deleteGlobalTrophy(${i})">Видалити</button>
@@ -524,12 +537,14 @@
             const list = document.getElementById('dbList');
             let html = '<h3>Команди:</h3>';
             cloudData.teams.forEach((t, i) => {
-                html += `<div class="item-row"><span><b>${t.name}</b></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
+                const count = t.trophies ? t.trophies.length : 0;
+                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
             });
 
             html += '<h3>Гравці:</h3>';
             cloudData.players.forEach((p, i) => {
-                html += `<div class="item-row"><span><b>${p.name}</b> [${p.team}]</span> <div class="item-buttons"><button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button><button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div></div>`;
+                const count = p.trophies ? p.trophies.length : 0;
+                html += `<div class="item-row"><span><b>${p.name}</b> [${p.team}] <span style="color:var(--text-muted); font-size:0.85rem;">(Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button><button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div></div>`;
             });
 
             html += '<h3>Трансфери:</h3>';
