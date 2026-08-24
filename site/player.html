@@ -3,32 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Гравець | REUS</title>
+    <title>Player Profile | REUS</title>
     <style>
         :root {
-            --bg-color: #0b0e14;
-            --card-bg: #131820;
-            --border-color: #1f2937;
-            --accent-color: #00ff88;
-            --text-color: #ffffff;
-            --text-muted: #8a99ad;
+            --bg-color: #07090e;
+            --card-bg: #0d121b;
+            --card-hover: #131a26;
+            --header-bg: #101622;
+            --border-color: #1a2332;
+            --border-hover: #3b82f6;
+            --accent-primary: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --accent-green: #10b981;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --shadow-custom: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --neon-glow: 0 0 20px rgba(59, 130, 246, 0.15);
         }
 
         [data-theme="light"] {
-            --bg-color: #f4f6f9;
+            --bg-color: #f1f3f6;
             --card-bg: #ffffff;
-            --border-color: #d1d5db;
-            --accent-color: #00a859;
-            --text-color: #111827;
-            --text-muted: #6b7280;
+            --card-hover: #f8fafc;
+            --header-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --border-hover: #2563eb;
+            --accent-primary: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-green: #059669;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --shadow-custom: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --neon-glow: 0 0 20px rgba(37, 99, 235, 0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 24px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .main-container {
@@ -40,68 +55,97 @@
             display: inline-block;
             color: var(--text-muted);
             text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
             margin-bottom: 20px;
-            font-size: 0.95rem;
             transition: color 0.2s;
         }
 
         .back-link:hover {
-            color: var(--accent-color);
+            color: var(--accent-primary);
         }
 
-        .player-profile-card {
+        .profile-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 28px;
             display: flex;
             align-items: center;
-            gap: 25px;
-            margin-bottom: 25px;
+            gap: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-custom), var(--neon-glow);
+            transition: all 0.3s ease;
         }
 
-        .player-avatar {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            background: #111;
-            border-radius: 8px;
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--border-color);
         }
 
-        .player-info h1 {
-            margin: 0 0 10px 0;
-            font-size: 2rem;
+        .profile-info h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
-        .player-team-tag {
-            color: var(--accent-color);
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-decoration: none;
+        .profile-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .section-box {
+        .player-flag {
+            width: 24px;
+            height: 16px;
+            object-fit: cover;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .player-team {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-custom);
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 15px;
+        .stats-header {
+            padding: 16px 24px;
+            background: var(--header-bg);
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--accent-primary);
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            align-items: center;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .stat-row:hover {
+            background: var(--card-hover);
         }
 
         .stat-row:last-child {
@@ -110,11 +154,14 @@
 
         .stat-label {
             color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
         }
 
         .stat-value {
-            font-weight: bold;
-            color: var(--accent-color);
+            color: var(--accent-green);
+            font-weight: 800;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -123,91 +170,72 @@
     <div class="main-container">
         <a href="index.html" class="back-link">← Назад до рейтингу</a>
 
-        <div class="player-profile-card">
-            <img id="playerPhoto" src="" alt="" class="player-avatar" onerror="this.src='https://via.placeholder.com/120?text=No+Photo'">
-            <div class="player-info">
+        <div class="profile-card">
+            <img id="playerImg" src="" alt="Player Avatar" class="profile-avatar" onerror="this.src='default_player.png'">
+            <div class="profile-info">
                 <h1 id="playerName">Завантаження...</h1>
-                <a href="#" id="playerTeamLink" class="player-team-tag">-</a>
+                <div class="profile-meta">
+                    <img id="playerFlag" src="" alt="" class="player-flag" style="display: none;">
+                    <span id="playerTeam" class="player-team">REUS TEAM</span>
+                </div>
             </div>
         </div>
 
-        <div class="section-box">
-            <div class="section-title">Статистика гравця (HLTV style)</div>
+        <div class="stats-box">
+            <div class="stats-header">Статистика гравця (HLTV style)</div>
             <div class="stat-row">
                 <span class="stat-label">K/D Ratio</span>
-                <span class="stat-value" id="statKd">-</span>
+                <span class="stat-value">1.18</span>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Rating 2.0</span>
-                <span class="stat-value" id="statRating">-</span>
+                <span class="stat-value">1.14</span>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Headshot %</span>
-                <span class="stat-value" id="statHs">-</span>
+                <span class="stat-value">54.2%</span>
             </div>
             <div class="stat-row">
                 <span class="stat-label">Maps played</span>
-                <span class="stat-value" id="statMaps">-</span>
+                <span class="stat-value">142</span>
             </div>
         </div>
     </div>
 
     <script>
-        const BIN_ID = '6a8b3dffda38895dfe079cb1';
-        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
+        // Автоматичне застосування теми при завантаженні
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('reus_theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
 
-        const savedTheme = localStorage.getItem('reus_theme') || 'dark';
-        document.body.setAttribute('data-theme', savedTheme);
+            // Отримуємо параметри з URL (name, img, country)
+            const urlParams = new URLSearchParams(window.location.search);
+            const name = urlParams.get('name');
+            const img = urlParams.get('img');
+            const country = urlParams.get('country');
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const targetPlayerName = urlParams.get('name');
-
-        async function loadPlayerData() {
-            if (!targetPlayerName) {
-                document.getElementById('playerName').innerText = "Гравця не знайдено";
-                return;
+            if (name) {
+                document.getElementById('playerName').innerText = name;
+                document.title = name + ' | REUS Profile';
+            } else {
+                document.getElementById('playerName').innerText = 'Гравець не знайдений';
             }
 
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                const result = await res.json();
-                const data = result.record || {};
-                const players = data.players || [];
-
-                // Шукаємо гравця за нікнеймом (ігноруємо регістр літер)
-                const player = players.find(p => p.name && p.name.toLowerCase() === targetPlayerName.toLowerCase());
-
-                if (player) {
-                    document.getElementById('playerName').innerText = player.name;
-                    
-                    const photoImg = document.getElementById('playerPhoto');
-                    if (player.photo) {
-                        photoImg.src = player.photo;
-                    }
-
-                    const teamLink = document.getElementById('playerTeamLink');
-                    teamLink.innerText = player.team || 'Без команди';
-                    teamLink.href = `team.html?name=${encodeURIComponent(player.team || '')}`;
-
-                    // Заповнюємо статистику з хмари
-                    document.getElementById('statKd').innerText = player.kd || '-';
-                    document.getElementById('statRating').innerText = player.rating || '-';
-                    document.getElementById('statHs').innerText = player.hs || '-';
-                    document.getElementById('statMaps').innerText = player.maps || '-';
-                } else {
-                    document.getElementById('playerName').innerText = targetPlayerName;
-                    document.getElementById('playerTeamLink').innerText = "Команду не знайдено в базі";
-                }
-
-            } catch (err) {
-                console.error("Помилка завантаження гравця:", err);
-                document.getElementById('playerName').innerText = "Помилка завантаження";
+            if (img) {
+                document.getElementById('playerImg').src = img;
             }
-        }
 
-        loadPlayerData();
+            // Налаштування прапора
+            const flagElement = document.getElementById('playerFlag');
+            if (country && country !== 'null' && country !== 'undefined') {
+                const cleanCountry = country.toLowerCase();
+                flagElement.src = `https://flagcdn.com/w40/${cleanCountry}.png`;
+                flagElement.style.display = 'inline-block';
+            } else {
+                flagElement.style.display = 'none';
+            }
+        });
     </script>
+
 </body>
 </html>
