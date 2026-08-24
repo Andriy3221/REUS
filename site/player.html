@@ -3,147 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профіль гравця | REUS</title>
+    <title>Гравець | REUS</title>
     <style>
+        :root {
+            --bg-color: #0b0e14;
+            --card-bg: #131820;
+            --border-color: #1f2937;
+            --accent-color: #00ff88;
+            --text-color: #ffffff;
+            --text-muted: #8a99ad;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --border-color: #d1d5db;
+            --accent-color: #00a859;
+            --text-color: #111827;
+            --text-muted: #6b7280;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b0e14;
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 30px;
+            padding: 20px;
         }
-        .container {
+
+        .main-container {
             max-width: 900px;
             margin: 0 auto;
         }
-        .profile-card {
-            background: #131820;
-            border: 1px solid #1f2937;
-            border-radius: 8px;
-            display: flex;
-            overflow: hidden;
+
+        .back-link {
+            display: inline-block;
+            color: var(--text-muted);
+            text-decoration: none;
             margin-bottom: 20px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
         }
-        .profile-image-side {
-            background: #161c26;
-            padding: 20px;
-            text-align: center;
-            width: 260px;
-            border-right: 1px solid #1f2937;
+
+        .back-link:hover {
+            color: var(--accent-color);
         }
-        .profile-image-side img {
-            width: 100%;
-            height: 280px;
-            object-fit: contain;
-            background: #111;
-            border-radius: 6px;
-        }
-        .profile-info-side {
-            padding: 30px;
-            flex: 1;
-        }
-        .player-nickname {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #fff;
-            margin: 0 0 5px 0;
-        }
-        .player-fullname {
-            color: #8a99ad;
-            font-size: 1rem;
+
+        .player-profile-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
             margin-bottom: 25px;
         }
-        .info-row {
+
+        .player-avatar {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            background: #111;
+            border-radius: 8px;
+        }
+
+        .player-info h1 {
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .player-team-tag {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .section-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .stat-row {
             display: flex;
             justify-content: space-between;
             padding: 12px 0;
-            border-bottom: 1px solid #1f2937;
-            font-size: 0.95rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1rem;
         }
-        .info-label {
-            color: #8a99ad;
+
+        .stat-row:last-child {
+            border-bottom: none;
         }
-        .info-value {
+
+        .stat-label {
+            color: var(--text-muted);
+        }
+
+        .stat-value {
             font-weight: bold;
-            color: #00ff88;
-        }
-        /* Трофеї знизу */
-        .trophies-section {
-            background: #131820;
-            border: 1px solid #1f2937;
-            border-radius: 8px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .trophy-item {
-            font-size: 1.8rem;
-        }
-        .back-link {
-            display: inline-block;
-            margin-top: 25px;
-            color: #8a99ad;
-            text-decoration: none;
-        }
-        .back-link:hover {
-            color: #00ff88;
+            color: var(--accent-color);
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="container">
-        <div class="profile-card">
-            <!-- Ліва колонка з фото -->
-            <div class="profile-image-side">
-                <img id="player-img" src="NoPhotoPlayer.jpg" alt="Player Photo">
-            </div>
-
-            <!-- Права колонка з інформацією -->
-            <div class="profile-info-side">
-                <h1 class="player-nickname" id="player-name">Нікнейм</h1>
-                <div class="player-fullname">Кіберспортсмен CS2</div>
-
-                <div class="info-row">
-                    <span class="info-label">Current team</span>
-                    <span class="info-value">Yami Esports</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Рейтинг (K/D)</span>
-                    <span class="info-value">1.18</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Винрейт мап</span>
-                    <span class="info-value">64%</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Блок трофеїв знизу в стилі HLTV -->
-        <div class="trophies-section">
-            <div class="trophy-item">🏆</div>
-            <div>
-                <div style="font-weight: bold; font-size: 1rem;">Переможець турнірів</div>
-                <div style="color: #8a99ad; font-size: 0.85rem;">3 золоті медалі у складі Yami Esports</div>
-            </div>
-        </div>
-
+    <div class="main-container">
         <a href="index.html" class="back-link">← Назад до рейтингу</a>
+
+        <div class="player-profile-card">
+            <img id="playerPhoto" src="" alt="" class="player-avatar" onerror="this.src='https://via.placeholder.com/120?text=No+Photo'">
+            <div class="player-info">
+                <h1 id="playerName">Завантаження...</h1>
+                <a href="#" id="playerTeamLink" class="player-team-tag">-</a>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Статистика гравця (HLTV style)</div>
+            <div class="stat-row">
+                <span class="stat-label">K/D Ratio</span>
+                <span class="stat-value" id="statKd">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Rating 2.0</span>
+                <span class="stat-value" id="statRating">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Headshot %</span>
+                <span class="stat-value" id="statHs">-</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Maps played</span>
+                <span class="stat-value" id="statMaps">-</span>
+            </div>
+        </div>
     </div>
 
     <script>
+        const BIN_ID = '6a8b3dffda38895dfe079cb1';
+        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
+
+        const savedTheme = localStorage.getItem('reus_theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+
         const urlParams = new URLSearchParams(window.location.search);
-        const playerName = urlParams.get('name');
-        const playerImg = urlParams.get('img');
+        const targetPlayerName = urlParams.get('name');
 
-        if (playerName) {
-            document.getElementById('player-name').innerText = playerName;
+        async function loadPlayerData() {
+            if (!targetPlayerName) {
+                document.getElementById('playerName').innerText = "Гравця не знайдено";
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const result = await res.json();
+                const data = result.record || {};
+                const players = data.players || [];
+
+                // Шукаємо гравця за нікнеймом (ігноруємо регістр літер)
+                const player = players.find(p => p.name && p.name.toLowerCase() === targetPlayerName.toLowerCase());
+
+                if (player) {
+                    document.getElementById('playerName').innerText = player.name;
+                    
+                    const photoImg = document.getElementById('playerPhoto');
+                    if (player.photo) {
+                        photoImg.src = player.photo;
+                    }
+
+                    const teamLink = document.getElementById('playerTeamLink');
+                    teamLink.innerText = player.team || 'Без команди';
+                    teamLink.href = `team.html?name=${encodeURIComponent(player.team || '')}`;
+
+                    // Заповнюємо статистику з хмари
+                    document.getElementById('statKd').innerText = player.kd || '-';
+                    document.getElementById('statRating').innerText = player.rating || '-';
+                    document.getElementById('statHs').innerText = player.hs || '-';
+                    document.getElementById('statMaps').innerText = player.maps || '-';
+                } else {
+                    document.getElementById('playerName').innerText = targetPlayerName;
+                    document.getElementById('playerTeamLink').innerText = "Команду не знайдено в базі";
+                }
+
+            } catch (err) {
+                console.error("Помилка завантаження гравця:", err);
+                document.getElementById('playerName').innerText = "Помилка завантаження";
+            }
         }
-        if (playerImg) {
-            document.getElementById('player-img').src = playerImg;
-        }
+
+        loadPlayerData();
     </script>
-
 </body>
 </html>
