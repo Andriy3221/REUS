@@ -36,7 +36,7 @@
             padding: 20px;
             margin-bottom: 25px;
         }
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 10px 15px;
             background: #1a222f;
@@ -46,6 +46,11 @@
             font-size: 1rem;
             margin-bottom: 15px;
             box-sizing: border-box;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+            height: 80px;
         }
         button {
             background: var(--accent-color);
@@ -165,6 +170,10 @@
             <input type="text" id="playerRating" placeholder="Rating 2.0 (наприклад: 1.12)">
             <input type="text" id="playerHs" placeholder="Headshot % (наприклад: 55%)">
             <input type="text" id="playerMaps" placeholder="Maps played (наприклад: 142)">
+
+            <!-- НОВЕ: Поле для трофеїв у лінію (URL через кому або новий рядок) -->
+            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Трофеї (URL іконок турнірів через кому):</label>
+            <textarea id="playerTrophies" placeholder="https://site.com/trophy1.png, https://site.com/trophy2.png"></textarea>
 
             <button id="playerSaveBtn" onclick="savePlayer()">Зберегти гравця</button>
             <button id="playerCancelBtn" onclick="resetPlayerForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
@@ -317,12 +326,19 @@
             const hs = document.getElementById('playerHs').value.trim() || '50%';
             const maps = document.getElementById('playerMaps').value.trim() || '100';
 
+            // Обробка трофеїв (розбиваємо по коме або перенесенню рядка у масив URL)
+            const rawTrophies = document.getElementById('playerTrophies').value.trim();
+            let trophies = [];
+            if (rawTrophies) {
+                trophies = rawTrophies.split(/[\n,]+/).map(url => url.trim()).filter(url => url.length > 0);
+            }
+
             if (!team || !name) {
                 alert('Оберіть команду та введіть нікнейм гравця!');
                 return;
             }
 
-            const playerData = { team, name, photo, country, kd, rating, hs, maps };
+            const playerData = { team, name, photo, country, kd, rating, hs, maps, trophies };
 
             if (editIndex === "") {
                 cloudData.players.push(playerData);
@@ -346,6 +362,9 @@
             document.getElementById('playerRating').value = p.rating || '';
             document.getElementById('playerHs').value = p.hs || '';
             document.getElementById('playerMaps').value = p.maps || '';
+            
+            // Підтягуємо наявні трофеї назад у textarea через кому
+            document.getElementById('playerTrophies').value = (p.trophies && Array.isArray(p.trophies)) ? p.trophies.join(', ') : '';
 
             document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
             document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
@@ -364,6 +383,7 @@
             document.getElementById('playerRating').value = '';
             document.getElementById('playerHs').value = '';
             document.getElementById('playerMaps').value = '';
+            document.getElementById('playerTrophies').value = '';
 
             document.getElementById('playerFormTitle').innerText = 'Додати гравця та його статистику';
             document.getElementById('playerSaveBtn').innerText = 'Зберегти гравця';
@@ -432,9 +452,10 @@
                 const countryCode = (p.country || 'ua').toLowerCase();
                 const flagTag = `<img src="https://flagcdn.com/w20/${countryCode}.png" class="preview-flag" alt="${countryCode}">`;
                 const imgTag = p.photo ? `<img src="${p.photo}" class="preview-img" onerror="this.style.display='none'">` : '';
+                const trophiesCount = (p.trophies && Array.isArray(p.trophies)) ? ` | 🏆 Трофеїв: ${p.trophies.length}` : '';
                 html += `
                     <div class="item-row">
-                        <span>${flagTag}<b>${p.name}</b> [команда: ${p.team}] (K/D: ${p.kd || '-'}) ${imgTag}</span> 
+                        <span>${flagTag}<b>${p.name}</b> [команда: ${p.team}] (K/D: ${p.kd || '-'})${trophiesCount} ${imgTag}</span> 
                         <div class="item-buttons">
                             <button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button>
                             <button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button>
