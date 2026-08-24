@@ -11,13 +11,14 @@
             --card-hover: #131a26;
             --header-bg: #101622;
             --border-color: #1a2332;
-            --border-hover: #2e3d56;
+            --border-hover: #3b82f6;
             --accent-primary: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.15);
+            --accent-glow: rgba(59, 130, 246, 0.25);
             --accent-gold: #fbbf24;
             --text-color: #f3f4f6;
             --text-muted: #9ca3af;
-            --shadow-custom: 0 8px 30px rgba(0, 0, 0, 0.4);
+            --shadow-custom: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --neon-glow: 0 0 20px rgba(59, 130, 246, 0.15);
         }
 
         [data-theme="light"] {
@@ -26,13 +27,14 @@
             --card-hover: #f8fafc;
             --header-bg: #ffffff;
             --border-color: #e2e8f0;
-            --border-hover: #cbd5e1;
+            --border-hover: #2563eb;
             --accent-primary: #2563eb;
-            --accent-glow: rgba(37, 99, 235, 0.08);
+            --accent-glow: rgba(37, 99, 235, 0.15);
             --accent-gold: #d97706;
             --text-color: #0f172a;
             --text-muted: #64748b;
-            --shadow-custom: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --shadow-custom: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --neon-glow: 0 0 20px rgba(37, 99, 235, 0.1);
         }
 
         body {
@@ -58,7 +60,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            box-shadow: var(--shadow-custom);
+            box-shadow: var(--shadow-custom), var(--neon-glow);
             transition: all 0.3s ease;
         }
 
@@ -74,6 +76,7 @@
             max-width: 150px;
             object-fit: contain;
             border-radius: 6px;
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
         }
 
         .site-title {
@@ -102,6 +105,7 @@
         .theme-toggle-btn:hover {
             border-color: var(--accent-primary);
             background: var(--accent-glow);
+            box-shadow: 0 0 12px var(--accent-glow);
             transform: translateY(-1px);
         }
 
@@ -122,7 +126,7 @@
         .search-bar:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 4px var(--accent-glow);
+            box-shadow: 0 0 0 4px var(--accent-glow), 0 0 15px rgba(59, 130, 246, 0.2);
         }
 
         .content-layout {
@@ -147,11 +151,12 @@
             margin-bottom: 14px;
             overflow: hidden;
             box-shadow: var(--shadow-custom);
-            transition: border-color 0.2s ease, transform 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         .team-card:hover {
             border-color: var(--border-hover);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.12);
         }
 
         .team-header {
@@ -180,7 +185,7 @@
             font-weight: 900;
             font-size: 0.95rem;
             min-width: 32px;
-            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
         }
 
         .team-logo {
@@ -202,6 +207,7 @@
 
         .team-name-link:hover {
             color: var(--accent-primary);
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
         }
 
         .team-players {
@@ -241,7 +247,7 @@
         .player-box:hover {
             transform: translateY(-3px);
             border-color: var(--accent-primary);
-            box-shadow: 0 6px 20px var(--accent-glow);
+            box-shadow: 0 6px 20px var(--accent-glow), 0 0 12px rgba(59, 130, 246, 0.2);
         }
 
         .player-box img {
@@ -292,6 +298,7 @@
             margin-bottom: 16px;
             font-weight: 800;
             letter-spacing: 0.8px;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
         }
 
         .transfer-item {
@@ -454,8 +461,9 @@
                     teamPlayers.forEach(p => {
                         const countryCode = (p.country || 'ua').toLowerCase();
                         
+                        // ВИПРАВЛЕННЯ: Додали передачу &country= в посилання на гравця
                         playersHtml += `
-                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}" class="player-box">
+                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}" class="player-box">
                                 <img src="${p.photo}" alt="${p.name}" onerror="this.src='default_player.png'">
                                 <div class="player-footer">
                                     <img src="https://flagcdn.com/w20/${countryCode}.png" alt="${countryCode}" class="player-flag">
@@ -495,7 +503,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
 
-			cards.forEach(card => {
+            cards.forEach(card => {
                 const teamName = card.getAttribute('data-team-name');
                 if (teamName.includes(query)) {
                     card.style.display = 'block';
