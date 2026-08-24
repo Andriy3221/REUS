@@ -3,606 +3,532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | REUS</title>
+    <title>Reus Championship Teams | REUS</title>
     <style>
         :root {
-            --bg-color: #0b0e14;
-            --card-bg: #131820;
-            --border-color: #1f2937;
-            --accent-color: #00ff88;
-            --text-color: #ffffff;
-            --text-muted: #8a99ad;
-            --danger-color: #ff4444;
-            --edit-color: #ffaa00;
+            --bg-color: #07090e;
+            --card-bg: #0d121b;
+            --card-hover: #131a26;
+            --header-bg: #101622;
+            --border-color: #1a2332;
+            --border-hover: #3b82f6;
+            --accent-primary: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.25);
+            --accent-gold: #fbbf24;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --shadow-custom: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --neon-glow: 0 0 20px rgba(59, 130, 246, 0.15);
         }
+
+        [data-theme="light"] {
+            --bg-color: #f1f3f6;
+            --card-bg: #ffffff;
+            --card-hover: #f8fafc;
+            --header-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --border-hover: #2563eb;
+            --accent-primary: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-gold: #d97706;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --shadow-custom: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --neon-glow: 0 0 20px rgba(37, 99, 235, 0.1);
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 24px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .main-container {
-            max-width: 900px;
+            max-width: 1240px;
             margin: 0 auto;
         }
-        h1, h2 {
-            color: var(--text-color);
-        }
-        .section-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 15px;
-            background: #1a222f;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            color: var(--text-color);
-            font-size: 1rem;
-            margin-bottom: 15px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-        button {
-            background: var(--accent-color);
-            color: #000;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            width: 100%;
-        }
-        button:hover {
-            opacity: 0.9;
-        }
-        .btn-danger {
-            background: var(--danger-color);
-            color: #fff;
-            width: auto;
-            padding: 6px 10px;
-            font-size: 0.85rem;
-        }
-        .btn-edit {
-            background: var(--edit-color);
-            color: #000;
-            width: auto;
-            padding: 6px 10px;
-            font-size: 0.85rem;
-            margin-right: 5px;
-        }
-        .item-row {
+        
+        .site-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1a222f;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 10px;
+            margin-bottom: 24px;
+            padding: 18px 28px;
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-custom), var(--neon-glow);
+            transition: all 0.3s ease;
         }
-        .item-buttons {
-            display: flex;
-            gap: 5px;
-        }
-        .status-msg {
-            margin-top: 10px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .preview-img {
-            max-width: 32px;
-            max-height: 32px;
-            margin-left: 10px;
-            object-fit: contain;
-            vertical-align: middle;
-        }
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 10px;
-            background: #1a222f;
-            padding: 15px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 15px;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-        .checkbox-label {
+
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
+            gap: 16px;
+        }
+
+        .site-logo {
+            height: 42px;
+            width: auto;
+            max-width: 150px;
+            object-fit: contain;
+            border-radius: 6px;
+            filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.3));
+        }
+
+        .site-title {
+            margin: 0;
+            font-size: 1.35rem;
+            color: var(--text-color);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--card-hover);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
-            background: #131820;
-            padding: 8px 12px;
-            border-radius: 4px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent-primary);
+            background: var(--accent-glow);
+            box-shadow: 0 0 12px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            box-sizing: border-box;
+            box-shadow: var(--shadow-custom);
+            transition: all 0.2s ease;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px var(--accent-glow), 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .content-layout {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .left-column {
+            flex: 1;
+            min-width: 320px;
+        }
+
+        .right-column {
+            width: 340px;
+        }
+
+        .team-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: var(--shadow-custom);
+            transition: all 0.25s ease;
+        }
+
+        .team-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.12);
+        }
+
+        .team-header {
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--header-bg);
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .team-header:hover {
+            background: var(--card-hover);
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .team-rank {
+            color: var(--accent-gold);
+            font-weight: 900;
+            font-size: 0.95rem;
+            min-width: 32px;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .team-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px;
+        }
+
+        .team-name-link {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .team-name-link:hover {
+            color: var(--accent-primary);
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .team-players {
+            display: none;
+            padding: 20px;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            gap: 12px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .team-card.open .team-players {
+            display: flex;
+        }
+
+        .player-box {
+            text-align: center;
+            background: var(--card-hover);
+            padding: 12px 8px;
+            border-radius: 10px;
+            width: 18%;
+            min-width: 110px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
             border: 1px solid var(--border-color);
         }
-        .checkbox-label input {
-            width: auto;
-            margin: 0;
-            cursor: pointer;
+
+        .player-box:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-primary);
+            box-shadow: 0 6px 20px var(--accent-glow), 0 0 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .player-box img {
+            width: 100%;
+            height: 105px;
+            object-fit: contain;
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .player-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .player-flag {
+            width: 18px !important;
+            height: 12px !important;
+            min-width: 18px !important;
+            max-width: 18px !important;
+            object-fit: cover !important;
+            border-radius: 2px !important;
+            display: inline-block !important;
+            background: none !important;
+            margin: 0 !important;
+        }
+
+        .transfers-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: var(--shadow-custom);
+            transition: all 0.3s ease;
+        }
+
+        .transfers-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        }
+
+        .transfer-item {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.5;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 12px;
+            transition: color 0.2s;
+        }
+
+        .transfer-item:hover {
+            color: var(--text-color);
+        }
+
+        .transfer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .arrow-icon {
+            transition: transform 0.3s ease;
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .team-card.open .arrow-icon {
+            transform: rotate(180deg);
+        }
+
+        .loading {
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
     <div class="main-container">
-        <h1>⚙️ Панель керування REUS</h1>
-        <div id="globalStatus" class="status-msg" style="color: var(--accent-color);"></div>
-
-        <!-- 1. ОКРЕМА ВКЛАДКА: База трофеїв -->
-        <div class="section-box" style="border-color: var(--edit-color);">
-            <h2 id="trophyFormTitle">🏆 1. База трофеїв (Створити трофей)</h2>
-            <input type="hidden" id="editTrophyIndex" value="">
-            <input type="text" id="trophyName" placeholder="Назва трофею (наприклад, BLAST Premier Final)">
-            <input type="text" id="trophyIcon" placeholder="Посилання на іконку трофею (URL PNG/SVG)">
-            <button id="trophySaveBtn" onclick="saveGlobalTrophy()">Додати трофей у базу</button>
-            <button id="trophyCancelBtn" onclick="resetTrophyForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
-            
-            <div style="margin-top: 20px;">
-                <h3 style="font-size: 1rem; color: var(--text-muted);">Існуючі трофеї в системі:</h3>
-                <div id="globalTrophiesList">Завантаження...</div>
+        <header class="site-header">
+            <div class="header-left">
+                <img src="REUS.png" alt="REUS Logo" class="site-logo" onerror="this.style.display='none'">
+                <h1 class="site-title">Reus Championship Teams</h1>
             </div>
-        </div>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="themeIcon">☀️</span> <span id="themeText">Світла тема</span>
+            </button>
+        </header>
 
-        <!-- 2. Керування командою -->
-        <div class="section-box">
-            <h2 id="teamFormTitle">2. Керування командою</h2>
-            <input type="hidden" id="editTeamIndex" value="">
-            <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
-            <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: 1 або #1)">
-            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: 1 або #1)">
-            <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 (наприклад: 12)">
-            <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
-            
-            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Оберіть трофеї для команди:</label>
-            <div id="teamTrophiesCheckboxes" class="checkbox-group"></div>
+        <!-- Пошук тепер шукає і по команді, і по гравцях -->
+        <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
 
-            <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
-            <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
-        </div>
+        <div class="content-layout">
+            <div class="left-column" id="teamsContainer">
+                <div class="loading">Завантаження з хмари...</div>
+            </div>
 
-        <!-- 3. Керування гравцем -->
-        <div class="section-box">
-            <h2 id="playerFormTitle">3. Керування гравцем</h2>
-            <input type="hidden" id="editPlayerIndex" value="">
-            <select id="playerTeamSelect">
-                <option value="">Оберіть команду</option>
-            </select>
-            <input type="text" id="playerName" placeholder="Нікнейм гравця (наприклад, oz1k)">
-            <input type="text" id="playerPhoto" placeholder="Посилання на фото гравця (URL)">
-            
-            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Країна гравця:</label>
-            <select id="playerCountrySelect">
-                <option value="ua">🇺🇦 Україна (UA)</option>
-                <option value="pl">🇵🇱 Польща (PL)</option>
-                <option value="dk">🇩🇰 Данія (DK)</option>
-                <option value="se">🇸🇪 Швеція (SE)</option>
-                <option value="fr">🇫🇷 Франція (FR)</option>
-                <option value="de">🇩🇪 Німеччина (DE)</option>
-                <option value="it">🇮🇹 Італія (IT)</option>
-                <option value="fi">🇫🇮 Фінляндія (FI)</option>
-                <option value="no">🇳🇴 Норвегія (NO)</option>
-                <option value="us">🇺🇸 США (US)</option>
-                <option value="gb">🇬🇧 Велика Британія (GB)</option>
-            </select>
-
-            <input type="text" id="playerKd" placeholder="K/D Ratio (наприклад: 1.15)">
-            <input type="text" id="playerRating" placeholder="Rating 2.0 (наприклад: 1.12)">
-            <input type="text" id="playerHs" placeholder="Headshot % (наприклад: 55%)">
-            <input type="text" id="playerMaps" placeholder="Maps played (наприклад: 142)">
-
-            <label style="color: var(--text-muted); font-size: 0.9rem; display: block; margin-bottom: 5px;">Оберіть трофеї для гравця:</label>
-            <div id="playerTrophiesCheckboxes" class="checkbox-group"></div>
-
-            <button id="playerSaveBtn" onclick="savePlayer()">Зберегти гравця</button>
-            <button id="playerCancelBtn" onclick="resetPlayerForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
-        </div>
-
-        <!-- 4. Трансфери -->
-        <div class="section-box">
-            <h2>4. Додати трансфер</h2>
-            <input type="text" id="transferText" placeholder="Текст трансферу">
-            <button onclick="addTransfer()">Додати трансфер</button>
-        </div>
-
-        <!-- Загальний список -->
-        <div class="section-box">
-            <h2>Поточні дані в базі</h2>
-            <div id="dbList">Завантаження...</div>
+            <div class="right-column">
+                <div class="transfers-box">
+                    <div class="transfers-title">⚡ Top Transfers</div>
+                    <div id="transfersListContainer">
+                        <div class="transfer-item">Завантаження...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                localStorage.setItem('reus_theme', 'light');
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Темна тема';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('reus_theme', 'dark');
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Світла тема';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('reus_theme') || 'dark';
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+
+            body.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                themeIcon.innerText = '🌙';
+                themeText.innerText = 'Темна тема';
+            } else {
+                themeIcon.innerText = '☀️';
+                themeText.innerText = 'Світла тема';
+            }
+        });
+
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
-        let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
-
-        // Функція для автоматичного сортування команд за числовим рангом
-        function sortTeamsByRank() {
-            if (cloudData.teams && cloudData.teams.length > 0) {
-                cloudData.teams.sort((a, b) => {
-                    let rA = parseRank(a.worldRank);
-                    let rB = parseRank(b.worldRank);
-                    return rA - rB;
-                });
-            }
-        }
-
-        async function fetchCloudData() {
-            setSt("Завантаження даних із хмари...", "#8a99ad");
+        async function loadCloudData() {
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                const result = await res.json();
-                
-                const rawRecord = result.record || result;
-                cloudData = rawRecord.record || rawRecord;
-                
-                if(!cloudData.teams) cloudData.teams = [];
-                if(!cloudData.players) cloudData.players = [];
-                if(!cloudData.transfers) cloudData.transfers = [];
-                if(!cloudData.trophies) cloudData.trophies = [];
-
-                sortTeamsByRank(); // Автоматично сортуємо при завантаженні
-                updateUI();
-                setSt("Дані успішно завантажено!", "var(--accent-color)");
-            } catch (err) {
-                console.error(err);
-                setSt("Помилка завантаження з хмари!", "var(--danger-color)");
-            }
-        }
-
-        async function saveCloudData() {
-            setSt("Збереження у хмару...", "#ffaa00");
-            sortTeamsByRank(); // Автоматично сортуємо перед збереженням у хмару
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
-                    method: 'PUT',
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     headers: {
-                        'Content-Type': 'application/json',
                         'X-Master-Key': API_KEY
-                    },
-                    body: JSON.stringify(cloudData)
+                    }
                 });
-                if (res.ok) {
-                    setSt("Успішно збережено у хмару!", "var(--accent-color)");
-                    updateUI();
-                } else {
-                    setSt("Помилка збереження!", "var(--danger-color)");
-                }
-            } catch (err) {
-                console.error(err);
-                setSt("Помилка мережі при збереженні!", "var(--danger-color)");
+                const result = await response.json();
+                const data = result.record || {};
+                
+                renderIndexTeams(data.teams || [], data.players || []);
+                renderTransfers(data.transfers || []);
+            } catch (error) {
+                console.error("Помилка завантаження:", error);
+                document.getElementById('teamsContainer').innerHTML = '<div class="loading" style="color: #ef4444;">Помилка підключення до бази даних.</div>';
             }
         }
 
-        function setSt(text, color) {
-            const el = document.getElementById('globalStatus');
-            el.innerText = text;
-            el.style.color = color;
-        }
-
-        function parseRank(rankStr) {
-            if (!rankStr) return 999;
-            const match = String(rankStr).replace('#', '').trim();
-            const num = parseInt(match, 10);
-            return isNaN(num) ? 999 : num;
-        }
-
-        // --- ГЛОБАЛЬНІ ТРОФЕЇ ---
-        function saveGlobalTrophy() {
-            const editIndex = document.getElementById('editTrophyIndex').value;
-            const name = document.getElementById('trophyName').value.trim();
-            const icon = document.getElementById('trophyIcon').value.trim();
-
-            if (!name || !icon) {
-                alert('Введіть назву та посилання на іконку трофею!');
+        function renderTransfers(transfers) {
+            const container = document.getElementById('transfersListContainer');
+            if (!transfers || transfers.length === 0) {
+                container.innerHTML = '<div class="transfer-item">Трансфери поки відсутні.</div>';
                 return;
             }
 
-            const trophyObj = { name, icon };
-
-            if (editIndex === "") {
-                cloudData.trophies.push(trophyObj);
-            } else {
-                cloudData.trophies[editIndex] = trophyObj;
-            }
-
-            saveCloudData();
-            resetTrophyForm();
-        }
-
-        function editTrophy(index) {
-            const tr = cloudData.trophies[index];
-            document.getElementById('editTrophyIndex').value = index;
-            document.getElementById('trophyName').value = tr.name;
-            document.getElementById('trophyIcon').value = tr.icon;
-
-            document.getElementById('trophyFormTitle').innerText = `Редагувати трофей: ${tr.name}`;
-            document.getElementById('trophySaveBtn').innerText = 'Оновити трофей';
-            document.getElementById('trophyCancelBtn').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function resetTrophyForm() {
-            document.getElementById('editTrophyIndex').value = '';
-            document.getElementById('trophyName').value = '';
-            document.getElementById('trophyIcon').value = '';
-            document.getElementById('trophyFormTitle').innerText = '🏆 1. База трофеїв (Створити трофей)';
-            document.getElementById('trophySaveBtn').innerText = 'Додати трофей у базу';
-            document.getElementById('trophyCancelBtn').style.display = 'none';
-        }
-
-        function deleteGlobalTrophy(index) {
-            if (confirm("Видалити цей трофей із бази?")) {
-                cloudData.trophies.splice(index, 1);
-                saveCloudData();
-            }
-        }
-
-        // --- КОМАНДИ ---
-        function saveTeam() {
-            const editIndex = document.getElementById('editTeamIndex').value;
-            const name = document.getElementById('teamName').value.trim();
-            const logo = document.getElementById('teamLogo').value.trim();
-            let valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
-            let worldRank = document.getElementById('teamWorldRank').value.trim() || '#1';
-            const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim() || '0';
-            const avgAge = document.getElementById('teamAvgAge').value.trim() || '20.0';
-            
-            if (!valveRank.startsWith('#')) valveRank = '#' + valveRank;
-            if (!worldRank.startsWith('#')) worldRank = '#' + worldRank;
-
-            const checkboxes = document.querySelectorAll('#teamTrophiesCheckboxes input[type="checkbox"]:checked');
-            const trophies = Array.from(checkboxes).map(cb => cb.value);
-
-            if (!name) {
-                alert('Введіть назву команди!');
-                return;
-            }
-
-            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
-
-            let oldWorldRankNum = 999;
-            if (existingIndex !== -1) {
-                oldWorldRankNum = parseRank(cloudData.teams[existingIndex].worldRank);
-            }
-            const newWorldRankNum = parseRank(worldRank);
-
-            cloudData.teams.forEach((t, index) => {
-                if (existingIndex !== -1 && index === existingIndex) return;
-
-                let curRankNum = parseRank(t.worldRank);
-
-                if (newWorldRankNum <= curRankNum && curRankNum < oldWorldRankNum) {
-                    t.worldRank = `#${curRankNum + 1}`;
-                } else if (oldWorldRankNum < curRankNum && curRankNum <= newWorldRankNum) {
-                    t.worldRank = `#${curRankNum - 1}`;
-                } else if (curRankNum === newWorldRankNum) {
-                    t.worldRank = `#${curRankNum + 1}`;
-                }
-            });
-
-            const teamData = { name, logo, valveRank, worldRank, weeksTop30, avgAge, trophies };
-
-            if (existingIndex === -1) {
-                cloudData.teams.push(teamData);
-            } else {
-                const oldName = cloudData.teams[existingIndex].name;
-                cloudData.teams[existingIndex] = teamData;
-                if (oldName !== name) {
-                    cloudData.players.forEach(p => { if (p.team === oldName) p.team = name; });
-                }
-            }
-
-            sortTeamsByRank(); // Сортуємо масив за рангом перед відправкою у хмару
-            saveCloudData();
-            resetTeamForm();
-        }
-
-        function editTeam(index) {
-            const t = cloudData.teams[index];
-            document.getElementById('editTeamIndex').value = index;
-            document.getElementById('teamName').value = t.name;
-            document.getElementById('teamLogo').value = t.logo || '';
-            document.getElementById('teamValveRank').value = t.valveRank || '';
-            document.getElementById('teamWorldRank').value = t.worldRank || '';
-            document.getElementById('teamWeeksTop30').value = t.weeksTop30 || '';
-            document.getElementById('teamAvgAge').value = t.avgAge || '';
-
-            renderCheckboxes('teamTrophiesCheckboxes', t.trophies || []);
-
-            document.getElementById('teamFormTitle').innerText = `Редагувати команду: ${t.name}`;
-            document.getElementById('teamSaveBtn').innerText = 'Оновити команду';
-            document.getElementById('teamCancelBtn').style.display = 'block';
-            document.getElementById('teamFormTitle').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function resetTeamForm() {
-            document.getElementById('editTeamIndex').value = '';
-            document.getElementById('teamName').value = '';
-            document.getElementById('teamLogo').value = '';
-            document.getElementById('teamValveRank').value = '';
-            document.getElementById('teamWorldRank').value = '';
-            document.getElementById('teamWeeksTop30').value = '';
-            document.getElementById('teamAvgAge').value = '';
-            renderCheckboxes('teamTrophiesCheckboxes', []);
-
-            document.getElementById('teamFormTitle').innerText = '2. Керування командою';
-            document.getElementById('teamSaveBtn').innerText = 'Зберегти команду';
-            document.getElementById('teamCancelBtn').style.display = 'none';
-        }
-
-        // --- ГРАВЦІ ---
-        function savePlayer() {
-            const editIndex = document.getElementById('editPlayerIndex').value;
-            const team = document.getElementById('playerTeamSelect').value;
-            const name = document.getElementById('playerName').value.trim();
-            const photo = document.getElementById('playerPhoto').value.trim();
-            const country = document.getElementById('playerCountrySelect').value;
-            
-            const kd = document.getElementById('playerKd').value.trim() || '1.00';
-            const rating = document.getElementById('playerRating').value.trim() || '1.00';
-            const hs = document.getElementById('playerHs').value.trim() || '50%';
-            const maps = document.getElementById('playerMaps').value.trim() || '100';
-
-            const checkboxes = document.querySelectorAll('#playerTrophiesCheckboxes input[type="checkbox"]:checked');
-            const trophies = Array.from(checkboxes).map(cb => cb.value);
-
-            if (!team || !name) {
-                alert('Оберіть команду та введіть нікнейм гравця!');
-                return;
-            }
-
-            const playerData = { team, name, photo, country, kd, rating, hs, maps, trophies };
-
-            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
-
-            if (existingIndex === -1) {
-                cloudData.players.push(playerData);
-            } else {
-                cloudData.players[existingIndex] = playerData;
-            }
-
-            saveCloudData();
-            resetPlayerForm();
-        }
-
-        function editPlayer(index) {
-            const p = cloudData.players[index];
-            document.getElementById('editPlayerIndex').value = index;
-            document.getElementById('playerTeamSelect').value = p.team;
-            document.getElementById('playerName').value = p.name;
-            document.getElementById('playerPhoto').value = p.photo || '';
-            document.getElementById('playerCountrySelect').value = p.country || 'ua';
-            
-            document.getElementById('playerKd').value = p.kd || '';
-            document.getElementById('playerRating').value = p.rating || '';
-            document.getElementById('playerHs').value = p.hs || '';
-            document.getElementById('playerMaps').value = p.maps || '';
-
-            renderCheckboxes('playerTrophiesCheckboxes', p.trophies || []);
-
-            document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
-            document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
-            document.getElementById('playerCancelBtn').style.display = 'block';
-            document.getElementById('playerFormTitle').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function resetPlayerForm() {
-            document.getElementById('editPlayerIndex').value = '';
-            document.getElementById('playerName').value = '';
-            document.getElementById('playerPhoto').value = '';
-            document.getElementById('playerCountrySelect').value = 'ua';
-            document.getElementById('playerTeamSelect').value = '';
-            document.getElementById('playerKd').value = '';
-            document.getElementById('playerRating').value = '';
-            document.getElementById('playerHs').value = '';
-            document.getElementById('playerMaps').value = '';
-            renderCheckboxes('playerTrophiesCheckboxes', []);
-
-            document.getElementById('playerFormTitle').innerText = '3. Керування гравцем';
-            document.getElementById('playerSaveBtn').innerText = 'Зберегти гравця';
-            document.getElementById('playerCancelBtn').style.display = 'none';
-        }
-
-        function renderCheckboxes(containerId, selectedUrls) {
-            const container = document.getElementById(containerId);
-            if (!cloudData.trophies || cloudData.trophies.length === 0) {
-                container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">Спочатку створіть трофеї у верхній вкладці "База трофеїв".</span>';
-                return;
-            }
             container.innerHTML = '';
-            cloudData.trophies.forEach(tr => {
-                const isChecked = (selectedUrls && selectedUrls.includes(tr.icon)) ? 'checked' : '';
+            transfers.forEach(tr => {
+                container.innerHTML += `<div class="transfer-item">${tr}</div>`;
+            });
+        }
+
+        function renderIndexTeams(teams, players) {
+            const container = document.getElementById('teamsContainer');
+
+            if (!teams || teams.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Немає команд у рейтингу.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            teams.forEach((t, index) => {
+                const teamId = 'team_' + index;
+                const teamPlayers = (players || []).filter(p => p.team === t.name);
+
+                let playersHtml = '';
+                if (teamPlayers.length === 0) {
+                    playersHtml = '<p style="color: var(--text-muted); width: 100%; text-align: center; margin: 0;">У цій команді поки немає гравців</p>';
+                } else {
+                    teamPlayers.forEach(p => {
+                        const countryCode = (p.country || 'ua').toLowerCase();
+                        
+                        playersHtml += `
+                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}&team=${encodeURIComponent(t.name)}" class="player-box" data-player-name="${p.name.toLowerCase()}">
+                                <img src="${p.photo}" alt="${p.name}" onerror="this.src='default_player.png'">
+                                <div class="player-footer">
+                                    <img src="https://flagcdn.com/w20/${countryCode}.png" alt="${countryCode}" class="player-flag">
+                                    ${p.name}
+                                </div>
+                            </a>
+                        `;
+                    });
+                }
+
                 container.innerHTML += `
-                    <label class="checkbox-label">
-                        <input type="checkbox" value="${tr.icon}" ${isChecked}>
-                        <img src="${tr.icon}" style="width: 22px; height: 22px; object-fit: contain;" onerror="this.style.display='none'">
-                        <span>${tr.name}</span>
-                    </label>
+                    <div class="team-card" id="${teamId}" data-team-name="${t.name.toLowerCase()}">
+                        <div class="team-header" onclick="toggleTeam('${teamId}')">
+                            <div class="team-info">
+                                <span class="team-rank">${t.valveRank || '#1'}</span>
+                                <img src="${t.logo}" alt="${t.name}" class="team-logo" onerror="this.style.display='none'">
+                                <a href="team.html?name=${encodeURIComponent(t.name)}" class="team-name-link" onclick="event.stopPropagation()">${t.name}</a>
+                            </div>
+                            <div style="color: var(--text-muted);">
+                                <span class="arrow-icon">▾</span>
+                            </div>
+                        </div>
+                        <div class="team-players">
+                            ${playersHtml}
+                        </div>
+                    </div>
                 `;
             });
         }
 
-        function addTransfer() {
-            const text = document.getElementById('transferText').value.trim();
-            if (!text) return;
-            cloudData.transfers.unshift(text);
-            saveCloudData();
-            document.getElementById('transferText').value = '';
+        function toggleTeam(teamId) {
+            const card = document.getElementById(teamId);
+            card.classList.toggle('open');
         }
 
-        function deleteTeam(i) { if(confirm("Видалити команду?")) { cloudData.teams.splice(i, 1); saveCloudData(); } }
-        function deletePlayer(i) { if(confirm("Видалити гравця?")) { cloudData.players.splice(i, 1); saveCloudData(); } }
-        function deleteTransfer(i) { cloudData.transfers.splice(i, 1); saveCloudData(); }
+        // ВИПРАВЛЕНИЙ ПОШУК: шукає і по назві команди, і всередині гравців (автоматично розгортає картку, якщо знайдено гравця)
+        function filterRanking() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.team-card');
 
-        function updateUI() {
-            const select = document.getElementById('playerTeamSelect');
-            select.innerHTML = '<option value="">Оберіть команду</option>';
-            cloudData.teams.forEach(t => { select.innerHTML += `<option value="${t.name}">${t.name}</option>`; });
+            cards.forEach(card => {
+                const teamName = card.getAttribute('data-team-name') || '';
+                const playerBoxes = card.querySelectorAll('.player-box');
+                let foundPlayer = false;
 
-            if (!document.getElementById('editTeamIndex').value) {
-                renderCheckboxes('teamTrophiesCheckboxes', []);
-            }
-            if (!document.getElementById('editPlayerIndex').value) {
-                renderCheckboxes('playerTrophiesCheckboxes', []);
-            }
-
-            const tList = document.getElementById('globalTrophiesList');
-            if (cloudData.trophies.length === 0) {
-                tList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.9rem;">Ще немає жодного трофею. Створіть перший вище.</span>';
-            } else {
-                tList.innerHTML = '';
-                cloudData.trophies.forEach((tr, i) => {
-                    tList.innerHTML += `
-                        <div class="item-row">
-                            <span><img src="${tr.icon}" class="preview-img" onerror="this.style.display='none'"> <b>${tr.name}</b></span>
-                            <div class="item-buttons">
-                                <button class="btn-edit" onclick="editTrophy(${i})">Редагувати</button>
-                                <button class="btn-danger" onclick="deleteGlobalTrophy(${i})">Видалити</button>
-                            </div>
-                        </div>
-                    `;
+                playerBoxes.forEach(box => {
+                    const playerName = box.getAttribute('data-player-name') || '';
+                    if (query !== '' && playerName.includes(query)) {
+                        foundPlayer = true;
+                    }
                 });
-            }
 
-            const list = document.getElementById('dbList');
-            let html = '<h3>Команди:</h3>';
-            cloudData.teams.forEach((t, i) => {
-                const count = t.trophies ? t.trophies.length : 0;
-                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Ранг: ${t.worldRank}, Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
+                if (query === '' || teamName.includes(query) || foundPlayer) {
+                    card.style.display = 'block';
+                    if (foundPlayer && query !== '') {
+                        card.classList.add('open'); // автоматично відкриваємо команду, якщо знайдено гравця
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
             });
-
-            html += '<h3>Гравці:</h3>';
-            cloudData.players.forEach((p, i) => {
-                const count = p.trophies ? p.trophies.length : 0;
-                html += `<div class="item-row"><span><b>${p.name}</b> [${p.team}] <span style="color:var(--text-muted); font-size:0.85rem;">(Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button><button class="btn-danger" onclick="deletePlayer(${i})">Видалити</button></div></div>`;
-            });
-
-            html += '<h3>Трансфери:</h3>';
-            cloudData.transfers.forEach((tr, i) => {
-                html += `<div class="item-row"><span>${tr}</span> <button class="btn-danger" onclick="deleteTransfer(${i})">Видалити</button></div>`;
-            });
-
-            list.innerHTML = html;
         }
 
-        fetchCloudData();
+        loadCloudData();
     </script>
+
 </body>
 </html>
