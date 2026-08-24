@@ -461,9 +461,9 @@
                     teamPlayers.forEach(p => {
                         const countryCode = (p.country || 'ua').toLowerCase();
                         
-                        // ВИПРАВЛЕННЯ: Додали передачу &country= в посилання на гравця
+                        // ТУТ ПЕРЕДАЄТЬСЯ НАЗВА КОМАНДИ (t.name) у посилання player.html
                         playersHtml += `
-                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}" class="player-box">
+                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}&team=${encodeURIComponent(t.name)}" class="player-box">
                                 <img src="${p.photo}" alt="${p.name}" onerror="this.src='default_player.png'">
                                 <div class="player-footer">
                                     <img src="https://flagcdn.com/w20/${countryCode}.png" alt="${countryCode}" class="player-flag">
