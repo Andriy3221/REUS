@@ -205,6 +205,18 @@
                 <span class="stat-label">Valve ranking</span>
                 <span class="stat-value" id="valveRank">#1</span>
             </div>
+            <div class="stat-row">
+                <span class="stat-label">World ranking</span>
+                <span class="stat-value" id="worldRank">#1</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Weeks in top30 for core</span>
+                <span class="stat-value" id="weeksTop30">12</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">Average player age</span>
+                <span class="stat-value" id="avgAge">19.4</span>
+            </div>
         </div>
     </div>
 
@@ -212,11 +224,9 @@
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
-        // Відновлюємо тему з localStorage
         const savedTheme = localStorage.getItem('reus_theme') || 'dark';
         document.body.setAttribute('data-theme', savedTheme);
 
-        // Отримуємо назву команды з URL (наприклад: team.html?name=ONYX)
         const urlParams = new URLSearchParams(window.location.search);
         const targetTeamName = urlParams.get('name');
 
@@ -236,12 +246,14 @@
                 const teams = data.teams || [];
                 const players = data.players || [];
 
-                // Знаходимо потрібну команду
                 const team = teams.find(t => t.name.toLowerCase() === targetTeamName.toLowerCase());
 
                 if (team) {
                     document.getElementById('teamName').innerText = team.name;
                     document.getElementById('valveRank').innerText = team.valveRank || '#1';
+                    document.getElementById('worldRank').innerText = team.worldRank || '#1';
+                    document.getElementById('weeksTop30').innerText = team.weeksTop30 || '0';
+                    document.getElementById('avgAge').innerText = team.avgAge || '20.0';
                     
                     const logoImg = document.getElementById('teamLogo');
                     if (team.logo && team.logo.trim() !== '') {
@@ -254,7 +266,6 @@
                     document.getElementById('teamName').innerText = targetTeamName;
                 }
 
-                // Шукаємо гравців для цієї команди
                 const teamPlayers = players.filter(p => p.team.toLowerCase() === targetTeamName.toLowerCase());
                 const playersContainer = document.getElementById('playersList');
 
