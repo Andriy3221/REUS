@@ -176,7 +176,7 @@
                 <h1 id="playerName">Завантаження...</h1>
                 <div class="profile-meta">
                     <img id="playerFlag" src="" alt="" class="player-flag" style="display: none;">
-                    <span id="playerTeam" class="player-team">REUS TEAM</span>
+                    <span id="playerTeam" class="player-team">REUS CHAMPIONSHIP</span>
                 </div>
             </div>
         </div>
@@ -203,16 +203,16 @@
     </div>
 
     <script>
-        // Автоматичне застосування теми при завантаженні
         window.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('reus_theme') || 'dark';
             document.body.setAttribute('data-theme', savedTheme);
 
-            // Отримуємо параметри з URL (name, img, country)
+            // Отримуємо параметри з URL (name, img, country, team)
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('name');
             const img = urlParams.get('img');
             const country = urlParams.get('country');
+            const team = urlParams.get('team');
 
             if (name) {
                 document.getElementById('playerName').innerText = name;
@@ -223,6 +223,14 @@
 
             if (img) {
                 document.getElementById('playerImg').src = img;
+            }
+
+            // Виведення реальної команди гравця
+            const teamElement = document.getElementById('playerTeam');
+            if (team && team !== 'null' && team !== 'undefined' && team.trim() !== '') {
+                teamElement.innerText = team;
+            } else {
+                teamElement.innerText = 'REUS CHAMPIONSHIP';
             }
 
             // Налаштування прапора
