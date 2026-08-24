@@ -13,6 +13,7 @@
             --text-color: #ffffff;
             --text-muted: #8a99ad;
             --danger-color: #ff4444;
+            --edit-color: #ffaa00;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -65,6 +66,16 @@
             background: var(--danger-color);
             color: #fff;
             width: auto;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        .btn-edit {
+            background: var(--edit-color);
+            color: #000;
+            width: auto;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            margin-right: 5px;
         }
         .item-row {
             display: flex;
@@ -75,6 +86,10 @@
             border-radius: 6px;
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
+        }
+        .item-buttons {
+            display: flex;
+            gap: 5px;
         }
         .status-msg {
             margin-top: 10px;
@@ -106,16 +121,18 @@
         <h1>⚙️ Панель керування REUS</h1>
         <div id="globalStatus" class="status-msg" style="color: var(--accent-color);"></div>
 
-        <!-- Додавання команди -->
+        <!-- Додавання / Редагування команди -->
         <div class="section-box">
-            <h2>Додати команду та статистику (HLTV style)</h2>
+            <h2 id="teamFormTitle">Додати команду та статистику (HLTV style)</h2>
+            <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
             <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #4)">
             <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
             <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 for core (наприклад: 12)">
             <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
-            <button onclick="addTeam()">Зберегти команду</button>
+            <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
+            <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
         </div>
 
         <!-- Додавання гравця -->
@@ -218,7 +235,8 @@
             el.style.color = color;
         }
 
-        function addTeam() {
+        function saveTeam() {
+            const editIndex = document.getElementById('editTeamIndex').value;
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
             const valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
@@ -231,15 +249,54 @@
                 return;
             }
 
-            cloudData.teams.push({ name, logo, valveRank, worldRank, weeksTop30, avgAge });
-            saveCloudData();
+            if (editIndex === "") {
+                // Додавання нової команди
+                cloudData.teams.push({ name, logo, valveRank, worldRank, weeksTop30, avgAge });
+            } else {
+                // Оновлення існуючої команди
+                const oldName = cloudData.teams[editIndex].name;
+                cloudData.teams[editIndex] = { name, logo, valveRank, worldRank, weeksTop30, avgAge };
 
+                // Якщо назва команди змінилася, оновлюємо її і у гравців, щоб вони не загубилися
+                if (oldName !== name) {
+                    cloudData.players.forEach(p => {
+                        if (p.team === oldName) p.team = name;
+                    });
+                }
+            }
+
+            saveCloudData();
+            resetTeamForm();
+        }
+
+        function editTeam(index) {
+            const t = cloudData.teams[index];
+            document.getElementById('editTeamIndex').value = index;
+            document.getElementById('teamName').value = t.name;
+            document.getElementById('teamLogo').value = t.logo || '';
+            document.getElementById('teamValveRank').value = t.valveRank || '';
+            document.getElementById('teamWorldRank').value = t.worldRank || '';
+            document.getElementById('teamWeeksTop30').value = t.weeksTop30 || '';
+            document.getElementById('teamAvgAge').value = t.avgAge || '';
+
+            document.getElementById('teamFormTitle').innerText = `Редагувати команду: ${t.name}`;
+            document.getElementById('teamSaveBtn').innerText = 'Оновити команду';
+            document.getElementById('teamCancelBtn').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetTeamForm() {
+            document.getElementById('editTeamIndex').value = '';
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
             document.getElementById('teamValveRank').value = '';
             document.getElementById('teamWorldRank').value = '';
             document.getElementById('teamWeeksTop30').value = '';
             document.getElementById('teamAvgAge').value = '';
+
+            document.getElementById('teamFormTitle').innerText = 'Додати команду та статистику (HLTV style)';
+            document.getElementById('teamSaveBtn').innerText = 'Зберегти команду';
+            document.getElementById('teamCancelBtn').style.display = 'none';
         }
 
         function addPlayer() {
@@ -273,8 +330,10 @@
         }
 
         function deleteTeam(index) {
-            cloudData.teams.splice(index, 1);
-            saveCloudData();
+            if (confirm("Видалити цю команду?")) {
+                cloudData.teams.splice(index, 1);
+                saveCloudData();
+            }
         }
 
         function deletePlayer(index) {
@@ -303,7 +362,14 @@
             let html = '<h3>Команди:</h3>';
             cloudData.teams.forEach((t, i) => {
                 const imgTag = t.logo ? `<img src="${t.logo}" class="preview-img" onerror="this.style.display='none'">` : '';
-                html += `<div class="item-row"><span><b>${t.name}</b> (Valve: ${t.valveRank}, World: ${t.worldRank}) ${imgTag}</span> <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div>`;
+                html += `
+                    <div class="item-row">
+                        <span><b>${t.name}</b> (Valve: ${t.valveRank}, World: ${t.worldRank}) ${imgTag}</span> 
+                        <div class="item-buttons">
+                            <button class="btn-edit" onclick="editTeam(${i})">Редагувати</button>
+                            <button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button>
+                        </div>
+                    </div>`;
             });
 
             html += '<h3>Гравці:</h3>';
