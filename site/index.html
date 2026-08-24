@@ -207,10 +207,15 @@
             font-weight: bold;
         }
         .player-flag {
-            width: 18px;
-            height: 12px;
-            object-fit: cover;
-            border-radius: 2px;
+            width: 20px !important;
+            height: 14px !important;
+            min-width: 20px !important;
+            max-width: 20px !important;
+            object-fit: cover !important;
+            border-radius: 2px !important;
+            display: inline-block !important;
+            background: none !important;
+            margin: 0 !important;
         }
         .transfers-box {
             background: var(--card-bg);
@@ -373,7 +378,6 @@
                     playersHtml = '<p style="color: var(--text-muted); width: 100%; text-align: center; margin: 0;">У цій команді поки немає гравців</p>';
                 } else {
                     teamPlayers.forEach(p => {
-                        // Беремо країну з бази, а якщо її там нема — ставимо 'ua' за замовчуванням
                         const countryCode = (p.country || 'ua').toLowerCase();
                         
                         playersHtml += `
@@ -398,7 +402,7 @@
                             </div>
                             <div style="color: var(--text-muted);">
                                 <span class="arrow-icon">▾</span>
-        </div>
+                            </div>
                         </div>
                         <div class="team-players">
                             ${playersHtml}
@@ -417,7 +421,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.team-card');
 
-            cards.forEach(card, index => {
+            cards.forEach(card => {
                 const teamName = card.getAttribute('data-team-name');
                 if (teamName.includes(query)) {
                     card.style.display = 'block';
