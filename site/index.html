@@ -161,7 +161,8 @@
             <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="number" id="teamPoints" placeholder="Очки HLTV (наприклад: 1200)">
+            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: 1 або #1)">
+            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: 1 або #1)">
             <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 (наприклад: 12)">
             <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
             
@@ -229,13 +230,13 @@
 
         let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
 
-        // Сортування команд за очками (від найбільшої кількості до найменшої)
-        function sortTeamsByPoints() {
+        // Функція для автоматичного сортування команд за числовим рангом
+        function sortTeamsByRank() {
             if (cloudData.teams && cloudData.teams.length > 0) {
                 cloudData.teams.sort((a, b) => {
-                    let pA = parseInt(a.points) || 0;
-                    let pB = parseInt(b.points) || 0;
-                    return pB - pA; // У кого більше очок — той вище (в топі)
+                    let rA = parseRank(a.worldRank);
+                    let rB = parseRank(b.worldRank);
+                    return rA - rB;
                 });
             }
         }
@@ -256,7 +257,7 @@
                 if(!cloudData.transfers) cloudData.transfers = [];
                 if(!cloudData.trophies) cloudData.trophies = [];
 
-                sortTeamsByPoints();
+                sortTeamsByRank(); // Автоматично сортуємо при завантаженні
                 updateUI();
                 setSt("Дані успішно завантажено!", "var(--accent-color)");
             } catch (err) {
@@ -267,7 +268,7 @@
 
         async function saveCloudData() {
             setSt("Збереження у хмару...", "#ffaa00");
-            sortTeamsByPoints();
+            sortTeamsByRank(); // Автоматично сортуємо перед збереженням у хмару
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
@@ -293,6 +294,13 @@
             const el = document.getElementById('globalStatus');
             el.innerText = text;
             el.style.color = color;
+        }
+
+        function parseRank(rankStr) {
+            if (!rankStr) return 999;
+            const match = String(rankStr).replace('#', '').trim();
+            const num = parseInt(match, 10);
+            return isNaN(num) ? 999 : num;
         }
 
         // --- ГЛОБАЛЬНІ ТРОФЕЇ ---
@@ -351,9 +359,13 @@
             const editIndex = document.getElementById('editTeamIndex').value;
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
-            const points = document.getElementById('teamPoints').value.trim() || '0';
+            let valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
+            let worldRank = document.getElementById('teamWorldRank').value.trim() || '#1';
             const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim() || '0';
             const avgAge = document.getElementById('teamAvgAge').value.trim() || '20.0';
+            
+            if (!valveRank.startsWith('#')) valveRank = '#' + valveRank;
+            if (!worldRank.startsWith('#')) worldRank = '#' + worldRank;
 
             const checkboxes = document.querySelectorAll('#teamTrophiesCheckboxes input[type="checkbox"]:checked');
             const trophies = Array.from(checkboxes).map(cb => cb.value);
@@ -363,9 +375,29 @@
                 return;
             }
 
-            const teamData = { name, logo, points, weeksTop30, avgAge, trophies };
-
             let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+
+            let oldWorldRankNum = 999;
+            if (existingIndex !== -1) {
+                oldWorldRankNum = parseRank(cloudData.teams[existingIndex].worldRank);
+            }
+            const newWorldRankNum = parseRank(worldRank);
+
+            cloudData.teams.forEach((t, index) => {
+                if (existingIndex !== -1 && index === existingIndex) return;
+
+                let curRankNum = parseRank(t.worldRank);
+
+                if (newWorldRankNum <= curRankNum && curRankNum < oldWorldRankNum) {
+                    t.worldRank = `#${curRankNum + 1}`;
+                } else if (oldWorldRankNum < curRankNum && curRankNum <= newWorldRankNum) {
+                    t.worldRank = `#${curRankNum - 1}`;
+                } else if (curRankNum === newWorldRankNum) {
+                    t.worldRank = `#${curRankNum + 1}`;
+                }
+            });
+
+            const teamData = { name, logo, valveRank, worldRank, weeksTop30, avgAge, trophies };
 
             if (existingIndex === -1) {
                 cloudData.teams.push(teamData);
@@ -377,7 +409,7 @@
                 }
             }
 
-            sortTeamsByPoints();
+            sortTeamsByRank(); // Сортуємо масив за рангом перед відправкою у хмару
             saveCloudData();
             resetTeamForm();
         }
@@ -387,7 +419,8 @@
             document.getElementById('editTeamIndex').value = index;
             document.getElementById('teamName').value = t.name;
             document.getElementById('teamLogo').value = t.logo || '';
-            document.getElementById('teamPoints').value = t.points || '';
+            document.getElementById('teamValveRank').value = t.valveRank || '';
+            document.getElementById('teamWorldRank').value = t.worldRank || '';
             document.getElementById('teamWeeksTop30').value = t.weeksTop30 || '';
             document.getElementById('teamAvgAge').value = t.avgAge || '';
 
@@ -403,7 +436,8 @@
             document.getElementById('editTeamIndex').value = '';
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
-            document.getElementById('teamPoints').value = '';
+            document.getElementById('teamValveRank').value = '';
+            document.getElementById('teamWorldRank').value = '';
             document.getElementById('teamWeeksTop30').value = '';
             document.getElementById('teamAvgAge').value = '';
             renderCheckboxes('teamTrophiesCheckboxes', []);
@@ -551,7 +585,7 @@
             let html = '<h3>Команди:</h3>';
             cloudData.teams.forEach((t, i) => {
                 const count = t.trophies ? t.trophies.length : 0;
-                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Очки: ${t.points || 0}, Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
+                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Ранг: ${t.worldRank}, Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
             });
 
             html += '<h3>Гравці:</h3>';
