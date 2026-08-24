@@ -354,6 +354,7 @@
             </button>
         </header>
 
+        <!-- Пошук тепер шукає і по команді, і по гравцях -->
         <input type="text" id="searchInput" class="search-bar" placeholder="Пошук команд або гравців..." oninput="filterRanking()">
 
         <div class="content-layout">
@@ -445,7 +446,7 @@
             const container = document.getElementById('teamsContainer');
 
             if (!teams || teams.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Немає команд у рейтингу. Додайте їх через адмін-панель.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center;">Немає команд у рейтингу.</p>';
                 return;
             }
 
@@ -461,9 +462,8 @@
                     teamPlayers.forEach(p => {
                         const countryCode = (p.country || 'ua').toLowerCase();
                         
-                        // ТУТ ПЕРЕДАЄТЬСЯ НАЗВА КОМАНДИ (t.name) у посилання player.html
                         playersHtml += `
-                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}&team=${encodeURIComponent(t.name)}" class="player-box">
+                            <a href="player.html?name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.photo)}&country=${encodeURIComponent(countryCode)}&team=${encodeURIComponent(t.name)}" class="player-box" data-player-name="${p.name.toLowerCase()}">
                                 <img src="${p.photo}" alt="${p.name}" onerror="this.src='default_player.png'">
                                 <div class="player-footer">
                                     <img src="https://flagcdn.com/w20/${countryCode}.png" alt="${countryCode}" class="player-flag">
@@ -499,14 +499,28 @@
             card.classList.toggle('open');
         }
 
+        // ВИПРАВЛЕНИЙ ПОШУК: шукає і по назві команди, і всередині гравців (автоматично розгортає картку, якщо знайдено гравця)
         function filterRanking() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.team-card');
 
             cards.forEach(card => {
-                const teamName = card.getAttribute('data-team-name');
-                if (teamName.includes(query)) {
+                const teamName = card.getAttribute('data-team-name') || '';
+                const playerBoxes = card.querySelectorAll('.player-box');
+                let foundPlayer = false;
+
+                playerBoxes.forEach(box => {
+                    const playerName = box.getAttribute('data-player-name') || '';
+                    if (query !== '' && playerName.includes(query)) {
+                        foundPlayer = true;
+                    }
+                });
+
+                if (query === '' || teamName.includes(query) || foundPlayer) {
                     card.style.display = 'block';
+                    if (foundPlayer && query !== '') {
+                        card.classList.add('open'); // автоматично відкриваємо команду, якщо знайдено гравця
+                    }
                 } else {
                     card.style.display = 'none';
                 }
