@@ -28,7 +28,7 @@
             text-align: center;
             margin-bottom: 30px;
         }
-        /* Стиль блоку команди, як на твоєму скріншоті */
+        /* Стиль блоку команди як на твойму першому скріншоті */
         .team-card {
             display: flex;
             align-items: center;
@@ -69,16 +69,6 @@
             font-size: 1.1rem;
             letter-spacing: 0.5px;
         }
-        .team-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .team-points {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
         .arrow-icon {
             color: var(--text-muted);
             font-size: 0.8rem;
@@ -96,7 +86,7 @@
     <div class="container">
         <h1>Світовий рейтинг команд</h1>
         
-        <!-- Сюди автоматично завантажаться команди з бази -->
+        <!-- Сюди завантажуються команди -->
         <div id="teams-container">
             <div class="loading">Завантаження команд...</div>
         </div>
@@ -117,7 +107,7 @@
 
                 let teams = cloudData.teams || [];
 
-                // Автоматично сортуємо за очками від найбільших до найменших (хто вище — той лідер)
+                // Сортуємо за очками від найбільших до найменших (щоб топ будувався правильно)
                 teams.sort((a, b) => (parseInt(b.points) || 0) - (parseInt(a.points) || 0));
 
                 const container = document.getElementById('teams-container');
@@ -129,9 +119,9 @@
 
                 container.innerHTML = '';
 
-                // Виводимо кожну команду в цитаті з автоматичним порядковим номером від 1 до ∞
+                // Виводимо команди: зліва жовтий номер по порядку (1, 2, 3 і до нескінченності), справа стрілочка
                 teams.forEach((team, index) => {
-                    const rank = index + 1; // 1, 2, 3, 4, 5... до нескінченності
+                    const rank = index + 1;
 
                     container.innerHTML += `
                         <div class="team-card">
@@ -143,7 +133,6 @@
                                 </div>
                             </div>
                             <div class="team-right">
-                                <span class="team-points">${team.points || 0} pts</span>
                                 <span class="arrow-icon">▼</span>
                             </div>
                         </div>
@@ -156,7 +145,6 @@
             }
         }
 
-        // Завантажуємо команди при відкритті сторінки
         loadPublicTeams();
     </script>
 </body>
