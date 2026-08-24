@@ -65,57 +65,100 @@
             color: var(--accent-primary);
         }
 
-        .profile-card {
+        /* Стиль профілю у форматі oz1k */
+        .profile-layout {
+            display: flex;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-custom), var(--neon-glow);
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar-box {
+            width: 320px;
+            background: rgba(0, 0, 0, 0.2);
+            border-right: 1px solid var(--border-color);
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-custom), var(--neon-glow);
-            transition: all 0.3s ease;
+            justify-content: center;
+            padding: 20px;
         }
 
         .profile-avatar {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 320px;
             object-fit: cover;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid var(--border-color);
+            border-radius: 8px;
         }
 
-        .profile-info h1 {
-            margin: 0 0 8px 0;
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+        .profile-details {
+            flex: 1;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .profile-meta {
+        .player-header-top {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 6px;
         }
 
         .player-flag {
-            width: 24px;
-            height: 16px;
+            width: 28px;
+            height: 20px;
             object-fit: cover;
             border-radius: 3px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .player-team {
-            color: var(--accent-green);
-            font-weight: 700;
+        .profile-details h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .player-sub {
+            color: var(--text-muted);
             font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .info-item label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.82rem;
             text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
             letter-spacing: 0.5px;
         }
 
+        .info-item span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .info-item .team-name-val {
+            color: var(--accent-green);
+        }
+
+        /* Блок статистики (HLTV style) внизу */
         .stats-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -163,6 +206,19 @@
             font-weight: 800;
             font-size: 1.1rem;
         }
+
+        @media(max-width: 768px) {
+            .profile-layout {
+                flex-direction: column;
+            }
+            .profile-avatar-box {
+                width: 100%;
+                height: 250px;
+            }
+            .profile-avatar {
+                height: 220px;
+            }
+        }
     </style>
 </head>
 <body data-theme="dark">
@@ -170,17 +226,33 @@
     <div class="main-container">
         <a href="index.html" class="back-link">← Назад до рейтингу</a>
 
-        <div class="profile-card">
-            <img id="playerImg" src="" alt="Player Avatar" class="profile-avatar" onerror="this.src='default_player.png'">
-            <div class="profile-info">
-                <h1 id="playerName">Завантаження...</h1>
-                <div class="profile-meta">
+        <!-- Профіль у стилі oz1k -->
+        <div class="profile-layout">
+            <div class="profile-avatar-box">
+                <img id="playerImg" src="" alt="Player Avatar" class="profile-avatar" onerror="this.src='default_player.png'">
+            </div>
+            <div class="profile-details">
+                <div class="player-header-top">
                     <img id="playerFlag" src="" alt="" class="player-flag" style="display: none;">
-                    <span id="playerTeam" class="player-team">REUS CHAMPIONSHIP</span>
+                    <span class="player-sub" style="margin:0;">Pro Player</span>
+                </div>
+                <h1 id="playerName">Завантаження...</h1>
+                <div class="player-sub" style="margin-top: 4px; margin-bottom: 20px;">Reus Championship Participant</div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Current team</label>
+                        <span id="playerTeam" class="team-name-val">No team</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Prize money</label>
+                        <span>0 ₴</span>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Статистика внизу -->
         <div class="stats-box">
             <div class="stats-header">Статистика гравця (HLTV style)</div>
             <div class="stat-row">
@@ -207,7 +279,6 @@
             const savedTheme = localStorage.getItem('reus_theme') || 'dark';
             document.body.setAttribute('data-theme', savedTheme);
 
-            // Отримуємо параметри з URL (name, img, country, team)
             const urlParams = new URLSearchParams(window.location.search);
             const name = urlParams.get('name');
             const img = urlParams.get('img');
@@ -225,15 +296,13 @@
                 document.getElementById('playerImg').src = img;
             }
 
-            // Виведення реальної команди гравця
             const teamElement = document.getElementById('playerTeam');
             if (team && team !== 'null' && team !== 'undefined' && team.trim() !== '') {
                 teamElement.innerText = team;
             } else {
-                teamElement.innerText = 'REUS CHAMPIONSHIP';
+                teamElement.innerText = 'No team';
             }
 
-            // Налаштування прапора
             const flagElement = document.getElementById('playerFlag');
             if (country && country !== 'null' && country !== 'undefined') {
                 const cleanCountry = country.toLowerCase();
