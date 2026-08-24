@@ -74,7 +74,7 @@
             text-decoration: underline;
         }
 
-        /* КРУТИЙ І ЧІТКИЙ БЛОК ТРОФЕЇВ */
+        /* БЛОК ТРОФЕЇВ З ГОРИЗОНТАЛЬНИМ СКРОЛОМ ТА ТЕКСТОМ ЗНИЗУ */
         .trophies-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -90,29 +90,46 @@
             padding-bottom: 12px;
             margin-bottom: 15px;
         }
-        .trophies-grid {
+        .trophies-scroll-container {
             display: flex;
             gap: 15px;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
         }
-        .trophy-badge-card {
+        .trophies-scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .trophies-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+        .trophy-card-vertical {
             background: #1a222f;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px 18px;
+            padding: 15px;
+            min-width: 120px;
+            max-width: 130px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 15px;
+            text-align: center;
+            flex-shrink: 0;
         }
-        .trophy-badge-card img {
-            width: 50px;
-            height: 50px;
+        .trophy-card-vertical img {
+            width: 60px;
+            height: 60px;
             object-fit: contain;
+            margin-bottom: 10px;
         }
-        .trophy-name {
-            font-weight: bold;
-            font-size: 1.05rem;
+        .trophy-name-vertical {
+            font-size: 0.85rem;
             color: var(--text-color);
+            font-weight: 500;
+            word-break: break-word;
+            line-height: 1.2;
         }
 
         .stats-box {
@@ -191,7 +208,7 @@
                     return;
                 }
 
-                // Великий та чіткий блок трофеїв
+                // Вертикальні картки трофеїв із текстом знизу та прокруткою
                 let trophiesHtml = '';
                 if (player.trophies && Array.isArray(player.trophies) && player.trophies.length > 0) {
                     let cards = '';
@@ -199,16 +216,16 @@
                         const foundTr = globalTrophies.find(tr => tr.icon === iconUrl);
                         const title = foundTr ? foundTr.name : 'Трофей';
                         cards += `
-                            <div class="trophy-badge-card">
+                            <div class="trophy-card-vertical">
                                 <img src="${iconUrl}" alt="${title}" onerror="this.style.display='none'">
-                                <div class="trophy-name">${title}</div>
+                                <div class="trophy-name-vertical">${title}</div>
                             </div>
                         `;
                     });
                     trophiesHtml = `
                         <div class="trophies-section">
                             <h3>ДОСЯГНЕННЯ ТА ТРОФЕЇ</h3>
-                            <div class="trophies-grid">${cards}</div>
+                            <div class="trophies-scroll-container">${cards}</div>
                         </div>
                     `;
                 }
