@@ -161,8 +161,8 @@
             <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #4)">
-            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
+            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: 1 або #1)">
+            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: 1 або #1)">
             <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 (наприклад: 12)">
             <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 19.4)">
             
@@ -237,7 +237,10 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                cloudData = result.record || {};
+                
+                // Виправлено: підтримуємо як структуру з .record, так і прямий об'єкт
+                const rawRecord = result.record || result;
+                cloudData = rawRecord.record || rawRecord;
                 
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
@@ -279,6 +282,13 @@
             const el = document.getElementById('globalStatus');
             el.innerText = text;
             el.style.color = color;
+        }
+
+        function parseRank(rankStr) {
+            if (!rankStr) return 999;
+            const match = String(rankStr).replace('#', '').trim();
+            const num = parseInt(match, 10);
+            return isNaN(num) ? 999 : num;
         }
 
         // --- ГЛОБАЛЬНІ ТРОФЕЇ ---
@@ -337,11 +347,14 @@
             const editIndex = document.getElementById('editTeamIndex').value;
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
-            const valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
-            const worldRank = document.getElementById('teamWorldRank').value.trim() || '#1';
+            let valveRank = document.getElementById('teamValveRank').value.trim() || '#1';
+            let worldRank = document.getElementById('teamWorldRank').value.trim() || '#1';
             const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim() || '0';
             const avgAge = document.getElementById('teamAvgAge').value.trim() || '20.0';
             
+            if (!valveRank.startsWith('#')) valveRank = '#' + valveRank;
+            if (!worldRank.startsWith('#')) worldRank = '#' + worldRank;
+
             const checkboxes = document.querySelectorAll('#teamTrophiesCheckboxes input[type="checkbox"]:checked');
             const trophies = Array.from(checkboxes).map(cb => cb.value);
 
@@ -350,13 +363,26 @@
                 return;
             }
 
+            // Виправлено: каскадний зсув рангів без дублікатів (суворо унікальні позиції)
+            const targetWorldRankNum = parseRank(worldRank);
+            cloudData.teams.forEach(t => {
+                if (t.name.toLowerCase() !== name.toLowerCase()) {
+                    let curRankNum = parseRank(t.worldRank);
+                    if (curRankNum === targetWorldRankNum) {
+                        t.worldRank = `#${curRankNum + 1}`;
+                    }
+                }
+            });
+
             const teamData = { name, logo, valveRank, worldRank, weeksTop30, avgAge, trophies };
 
-            if (editIndex === "") {
+            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.teams.findIndex(t => t.name.toLowerCase() === name.toLowerCase());
+
+            if (existingIndex === -1) {
                 cloudData.teams.push(teamData);
             } else {
-                const oldName = cloudData.teams[editIndex].name;
-                cloudData.teams[editIndex] = teamData;
+                const oldName = cloudData.teams[existingIndex].name;
+                cloudData.teams[existingIndex] = teamData;
                 if (oldName !== name) {
                     cloudData.players.forEach(p => { if (p.team === oldName) p.team = name; });
                 }
@@ -422,10 +448,12 @@
 
             const playerData = { team, name, photo, country, kd, rating, hs, maps, trophies };
 
-            if (editIndex === "") {
+            let existingIndex = editIndex !== "" ? parseInt(editIndex) : cloudData.players.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+
+            if (existingIndex === -1) {
                 cloudData.players.push(playerData);
             } else {
-                cloudData.players[editIndex] = playerData;
+                cloudData.players[existingIndex] = playerData;
             }
 
             saveCloudData();
@@ -506,7 +534,6 @@
             select.innerHTML = '<option value="">Оберіть команду</option>';
             cloudData.teams.forEach(t => { select.innerHTML += `<option value="${t.name}">${t.name}</option>`; });
 
-            // Оновлюємо чекбокси тільки якщо не йде режим редагування конкретної форми
             if (!document.getElementById('editTeamIndex').value) {
                 renderCheckboxes('teamTrophiesCheckboxes', []);
             }
@@ -514,7 +541,6 @@
                 renderCheckboxes('playerTrophiesCheckboxes', []);
             }
 
-            // Список глобальних трофеїв
             const tList = document.getElementById('globalTrophiesList');
             if (cloudData.trophies.length === 0) {
                 tList.innerHTML = '<span style="color: var(--text-muted); font-size: 0.9rem;">Ще немає жодного трофею. Створіть перший вище.</span>';
@@ -533,12 +559,11 @@
                 });
             }
 
-            // Загальний огляд бази
             const list = document.getElementById('dbList');
             let html = '<h3>Команди:</h3>';
             cloudData.teams.forEach((t, i) => {
                 const count = t.trophies ? t.trophies.length : 0;
-                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
+                html += `<div class="item-row"><span><b>${t.name}</b> <span style="color:var(--text-muted); font-size:0.85rem;">(Ранг: ${t.worldRank}, Трофеїв: ${count})</span></span> <div class="item-buttons"><button class="btn-edit" onclick="editTeam(${i})">Редагувати</button><button class="btn-danger" onclick="deleteTeam(${i})">Видалити</button></div></div>`;
             });
 
             html += '<h3>Гравці:</h3>';
