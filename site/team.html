@@ -81,6 +81,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .player-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
         }
         /* БЕЗ РАМОК: фото виводяться напряму */
         .player-avatar {
@@ -211,7 +217,6 @@
             
             const defaultSvg = `<svg width="45" height="45" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
             
-            // Якщо є фото (наприклад, посилання на PNG), виводимо його безпосередньо без рамок
             const avatarContent = p.photo && p.photo.trim() !== '' 
                 ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
                 : defaultSvg;
@@ -219,7 +224,7 @@
             const retiredBlock = p.retired ? '<span class="retired-badge">RETIRED</span>' : '';
 
             return `
-                <div class="player-card">
+                <div class="player-card" onclick="window.location.href='player.html?name=${encodeURIComponent(p.name)}'">
                     <div class="player-avatar">
                         ${avatarContent}
                     </div>
@@ -248,7 +253,6 @@
 
             const teamPlayers = players.filter(p => p.team && p.team.trim().toLowerCase() === team.name.trim().toLowerCase());
 
-            // Розподіл за новими слотами з адмінки
             const mainRoster = teamPlayers.filter(p => !p.roleSlot || p.roleSlot === 'main');
             const benchRoster = teamPlayers.filter(p => p.roleSlot === 'bench');
             const coachRoster = teamPlayers.filter(p => p.roleSlot === 'coach');
@@ -284,7 +288,6 @@
                 `;
             }
 
-            // Трофеї конкретно для цієї команди
             const teamTrophies = trophies.filter(tr => tr.team && tr.team.trim().toLowerCase() === team.name.trim().toLowerCase());
             let trophiesHtml = '';
             if (teamTrophies.length > 0) {
