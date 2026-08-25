@@ -130,7 +130,8 @@
             <input type="hidden" id="editPlayerIndex" value="">
             <input type="text" id="playerName" placeholder="Ім'я гравця (Нікнейм)">
             <select id="playerTeamSelect">
-                <Оберіть команду></select>
+                <option value="">Оберіть команду</option>
+            </select>
             <input type="text" id="playerRole" placeholder="Роль / Позиція (наприклад, AWPer, Rifler)">
             <input type="text" id="playerPhoto" placeholder="Фото гравця (URL необов'язково)">
 
@@ -141,8 +142,10 @@
         <!-- 3. Видача трофеїв -->
         <div class="section-box">
             <h2>Видати трофей команді</h2>
-            <select id="trophyTeamSelect"></select>
-            <input type="text" id="trophyName" placeholder="Назва турніру / трофею (наприклад, BLAST Premier Fall)">
+            <select id="trophyTeamSelect">
+                <option value="">Оберіть команду</option>
+            </select>
+            <input type="text" id="trophyName" placeholder="Назва турніру / трофею (наприклад, BLAST Premier)">
             <input type="text" id="trophyIcon" placeholder="Іконка кубка (URL або emoji 🏆)">
             
             <button onclick="saveTrophy()">Додати трофей</button>
@@ -190,6 +193,7 @@
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
                 if(!cloudData.trophies) cloudData.trophies = [];
+                if(!cloudData.transfers) cloudData.transfers = [];
 
                 sortTeams();
                 updateUI();
@@ -315,12 +319,13 @@
             document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
             document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
             document.getElementById('playerCancelBtn').style.display = 'block';
-            window.scrollTo({ top: 500, behavior: 'smooth' });
+            window.scrollTo({ top: 400, behavior: 'smooth' });
         }
 
         function resetPlayerForm() {
             document.getElementById('editPlayerIndex').value = '';
             document.getElementById('playerName').value = '';
+            document.getElementById('playerTeamSelect').value = '';
             document.getElementById('playerRole').value = '';
             document.getElementById('playerPhoto').value = '';
             document.getElementById('playerFormTitle').innerText = 'Керування гравцем';
@@ -343,10 +348,16 @@
 
             if (!name) { alert("Введіть назву трофею!"); return; }
 
+            if (!cloudData.trophies) {
+                cloudData.trophies = [];
+            }
+
             cloudData.trophies.push({ team, name, icon });
             saveCloudData();
+
             document.getElementById('trophyName').value = '';
             document.getElementById('trophyIcon').value = '';
+            document.getElementById('trophyTeamSelect').value = '';
         }
 
         function deleteTrophy(index) {
@@ -358,7 +369,6 @@
 
         // --- ОНОВЛЕННЯ ІНТЕРФЕЙСУ ---
         function updateUI() {
-            // Оновлюємо випадаючі списки команд для гравців і трофеїв
             let teamOptions = '<option value="">(Без команди / вільний агент)</option>';
             cloudData.teams.forEach(t => {
                 teamOptions += `<option value="${t.name}">${t.name}</option>`;
@@ -416,7 +426,7 @@
 
             // Список трофеїв
             const trophyList = document.getElementById('dbTrophyList');
-            if (cloudData.trophies.length === 0) {
+            if (!cloudData.trophies || cloudData.trophies.length === 0) {
                 trophyList.innerHTML = '<span style="color: var(--text-muted);">Ще немає трофеїв.</span>';
             } else {
                 let html = '';
