@@ -109,12 +109,11 @@
             padding: 2px 7px;
             border-radius: 10px;
         }
-        /* ВЕЛИКА ТА ЗАОКРУГЛЕНА КАРТИНКА КУБКА */
         .trophy-card-vertical img {
             width: 95px;
             height: 95px;
-            object-fit: cover; /* Заповнює гарно область */
-            border-radius: 14px; /* Заокруглення самій картинці */
+            object-fit: cover;
+            border-radius: 14px;
             margin-top: 10px;
             margin-bottom: 12px;
             border: 1px solid var(--border-color);
@@ -284,6 +283,7 @@
                     playersHtml += '</div>';
                 }
 
+                // Повертаємо виведення всіх рейтингів та статистики назад!
                 document.getElementById('teamContainer').innerHTML = `
                     <div class="team-header">
                         <div class="team-title-area">
@@ -299,7 +299,7 @@
                     </div>
 
                     <div class="section-box">
-                        <h3>Статистика</h3>
+                        <h3>Статистика та рейтинги</h3>
                         <div class="stats-row"><span>Valve ranking</span><span class="stats-val">${team.valveRank || '#1'}</span></div>
                         <div class="stats-row"><span>World ranking</span><span class="stats-val">${team.worldRank || '#1'}</span></div>
                         <div class="stats-row"><span>Weeks in top30 for core</span><span class="stats-val">${team.weeksTop30 || '0'}</span></div>
