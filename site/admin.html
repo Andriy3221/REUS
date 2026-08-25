@@ -199,7 +199,6 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
-        let hasRecordWrapper = false; // Зберігаємо інформацію про структуру бази
 
         function sortTeams() {
             if (cloudData.teams) {
@@ -215,14 +214,9 @@
                 });
                 const result = await res.json();
                 
-                // Перевіряємо та коректно витягуємо дані залежно від наявності обгортки record
-                if (result.record && result.record.teams) {
-                    hasRecordWrapper = true;
-                    cloudData = result.record;
-                } else {
-                    hasRecordWrapper = false;
-                    cloudData = result.record || result;
-                }
+                // Чітко витягуємо дані з обгортки record на JSONBin
+                const rawRecord = result.record || result;
+                cloudData = rawRecord.record || rawRecord;
                 
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
@@ -242,8 +236,8 @@
             setSt("Збереження у хмару...", "#ffaa00");
             sortTeams();
             try {
-                // Зберігаємо структуру такою, якою вона була при завантаженні
-                const bodyData = hasRecordWrapper ? { record: cloudData } : cloudData;
+                // ЗАВЖДИ огортаємо в { record: cloudData }, щоб JSONBin зберігав правильну структуру
+                const bodyData = { record: cloudData };
 
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
@@ -345,7 +339,7 @@
             const team = document.getElementById('playerTeamSelect').value;
             const role = document.getElementById('playerRole').value.trim();
             const photo = document.getElementById('playerPhoto').value.trim();
-            const retired = document.getElementById('playerRetired').checked; // Зберігаємо стан чекбокса
+            const retired = document.getElementById('playerRetired').checked; // Стан чекбокса
 
             if (!name) { alert("Введіть ім'я гравця!"); return; }
 
@@ -457,7 +451,7 @@
                 teamList.innerHTML = html;
             }
 
-            // Список гравців (з відображенням Retired у списку)
+            // Список гравців
             const playerList = document.getElementById('dbPlayerList');
             if (cloudData.players.length === 0) {
                 playerList.innerHTML = '<span style="color: var(--text-muted);">Ще немає гравців.</span>';
