@@ -199,6 +199,7 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
+        let hasRecordWrapper = false; // Зберігаємо інформацію про структуру бази
 
         function sortTeams() {
             if (cloudData.teams) {
@@ -213,8 +214,15 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const rawRecord = result.record || result;
-                cloudData = rawRecord.record || rawRecord;
+                
+                // Перевіряємо та коректно витягуємо дані залежно від наявності обгортки record
+                if (result.record && result.record.teams) {
+                    hasRecordWrapper = true;
+                    cloudData = result.record;
+                } else {
+                    hasRecordWrapper = false;
+                    cloudData = result.record || result;
+                }
                 
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
@@ -234,13 +242,16 @@
             setSt("Збереження у хмару...", "#ffaa00");
             sortTeams();
             try {
+                // Зберігаємо структуру такою, якою вона була при завантаженні
+                const bodyData = hasRecordWrapper ? { record: cloudData } : cloudData;
+
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Master-Key': API_KEY
                     },
-                    body: JSON.stringify(cloudData)
+                    body: JSON.stringify(bodyData)
                 });
                 if (res.ok) {
                     setSt("Успішно збережено!", "var(--accent-color)");
