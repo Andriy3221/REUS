@@ -224,7 +224,11 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const data = result.record || {};
+                
+                // Безпечне зчитування структури JSONBin (враховує можливу вкладеність)
+                const rawRecord = result.record || result;
+                const data = rawRecord.record || rawRecord;
+
                 const teams = data.teams || [];
                 const players = data.players || [];
                 const allTrophies = data.trophies || [];
@@ -283,7 +287,6 @@
                     playersHtml += '</div>';
                 }
 
-                // Повертаємо виведення всіх рейтингів та статистики назад!
                 document.getElementById('teamContainer').innerHTML = `
                     <div class="team-header">
                         <div class="team-title-area">
