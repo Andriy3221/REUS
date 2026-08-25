@@ -12,6 +12,7 @@
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
+            --danger-color: #ff4444;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,6 +59,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
         .player-role {
             color: var(--text-muted);
@@ -72,6 +74,17 @@
         }
         .player-team:hover {
             text-decoration: underline;
+        }
+        .retired-badge {
+            background-color: rgba(255, 68, 68, 0.15);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            font-size: 0.85rem;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
         }
 
         /* БЛОК ТРОФЕЇВ З ГОРИЗОНТАЛЬНИМ СКРОЛОМ ТА ТЕКСТОМ ЗНИЗУ */
@@ -234,17 +247,34 @@
                 const flagTag = `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag-icon" alt="${countryCode}">`;
                 const photoSrc = player.photo || 'https://via.placeholder.com/180';
 
+                // Форматування статусу Retired та команди
+                let teamInfoHtml = '';
+                if (player.retired) {
+                    teamInfoHtml = `
+                        <div style="margin-top: 15px;">
+                            <div class="player-role">STATUS</div>
+                            <span style="color: var(--danger-color); font-weight: bold;">Retired (Завершив кар'єру)</span>
+                        </div>
+                    `;
+                } else if (player.team) {
+                    teamInfoHtml = `
+                        <div style="margin-top: 15px;">
+                            <div class="player-role">CURRENT TEAM</div>
+                            <a href="team.html?name=${encodeURIComponent(player.team)}" class="player-team">${player.team}</a>
+                        </div>
+                    `;
+                }
+
+                const retiredHeaderBadge = player.retired ? '<span class="retired-badge">RETIRED</span>' : '';
+
                 document.getElementById('playerContent').innerHTML = `
                     <div class="profile-card">
                         <img src="${photoSrc}" class="player-photo" alt="${player.name}" onerror="this.src='https://via.placeholder.com/180'">
                         <div class="player-info" style="width: 100%;">
                             <div class="player-role">Pro Player</div>
-                            <h1>${flagTag} ${player.name}</h1>
+                            <h1>${flagTag} ${player.name} ${retiredHeaderBadge}</h1>
                             
-                            <div style="margin-top: 15px;">
-                                <div class="player-role">CURRENT TEAM</div>
-                                <a href="team.html?name=${encodeURIComponent(player.team)}" class="player-team">${player.team}</a>
-                            </div>
+                            ${teamInfoHtml}
                         </div>
                     </div>
 
