@@ -13,6 +13,20 @@
             --text-color: #ffffff;
             --text-muted: #8a99ad;
             --danger-color: #ff4444;
+            --hover-border: #2d3748;
+            --mini-card-bg: #1a222f;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-color: #00b359;
+            --text-color: #1a202c;
+            --text-muted: #718096;
+            --danger-color: #e53e3e;
+            --hover-border: #cbd5e0;
+            --mini-card-bg: #f8fafc;
         }
 
         body {
@@ -21,6 +35,7 @@
             color: var(--text-color);
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .main-container {
@@ -38,6 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: background-color 0.3s, border-color 0.3s;
         }
 
         .logo-area {
@@ -49,11 +65,30 @@
         }
 
         .logo-badge {
-            background: #1a222f;
+            background: var(--mini-card-bg);
             padding: 6px 10px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
             font-size: 0.9rem;
+        }
+
+        /* Кнопка перемикання теми */
+        .theme-toggle-btn {
+            background: var(--mini-card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: border-color 0.2s, background-color 0.3s;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent-color);
         }
 
         /* Пошук */
@@ -68,7 +103,7 @@
             margin-bottom: 25px;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
         }
 
         .search-box:focus {
@@ -82,11 +117,11 @@
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background-color 0.3s;
         }
 
         .team-card:hover {
-            border-color: #2d3748;
+            border-color: var(--hover-border);
         }
 
         .team-header {
@@ -109,7 +144,7 @@
             width: 32px;
             height: 32px;
             object-fit: contain;
-            background: #1a222f;
+            background: var(--mini-card-bg);
             border-radius: 4px;
             padding: 2px;
         }
@@ -137,7 +172,7 @@
             margin-left: 15px;
             cursor: pointer;
             color: var(--text-muted);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, color 0.2s;
             display: flex;
             align-items: center;
             padding: 5px;
@@ -163,7 +198,7 @@
         }
 
         .player-mini-card {
-            background: #1a222f;
+            background: var(--mini-card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 10px;
@@ -172,7 +207,7 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            transition: border-color 0.2s, transform 0.2s;
+            transition: border-color 0.2s, transform 0.2s, background-color 0.3s;
         }
 
         .player-mini-card:hover {
@@ -271,6 +306,9 @@
                 <span class="logo-badge">REUS</span> 
                 <span>Reus Championship Teams</span>
             </div>
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+                ☀️ Світла тема
+            </button>
         </div>
 
         <!-- Пошук -->
@@ -295,6 +333,32 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         let globalCloudData = { teams: [], players: [] };
+
+        // ЛОГІКА ТЕМИ (Світла / Темна)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('reus_theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButtonText(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('reus_theme', newTheme);
+            updateThemeButtonText(newTheme);
+        }
+
+        function updateThemeButtonText(theme) {
+            const btn = document.getElementById('themeBtn');
+            if (theme === 'light') {
+                btn.innerHTML = '🌙 Темна тема';
+            } else {
+                btn.innerHTML = '☀️ Світла тема';
+            }
+        }
+
+        initTheme();
 
         async function fetchMainData() {
             try {
@@ -337,13 +401,12 @@
                 } else {
                     teamPlayers.forEach(p => {
                         const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
-                        const defaultSvg = `<svg width="35" height="35" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+                        const defaultSvg = `<svg width="35" height="35" fill="var(--text-muted)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
                         
                         const avatarContent = p.photo && p.photo.trim() !== '' 
                             ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
                             : defaultSvg;
 
-                        // БЕЗПЕЧНА ПЕРЕДАЧА ІМЕНІ ГРАВЦЯ У ФУНКЦІЮ
                         const safePlayerName = encodeURIComponent(p.name);
 
                         playersHtml += `
@@ -382,7 +445,6 @@
             container.innerHTML = html;
         }
 
-        /* НАДІЙНІ ФУНКЦІЇ ПЕРЕХОДУ */
         function openPlayerPage(encodedName) {
             window.location.href = `player.html?name=${encodedName}`;
         }
