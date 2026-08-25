@@ -430,7 +430,10 @@
                     }
                 });
                 const result = await response.json();
-                const data = result.record || {};
+                
+                // Виправляємо зчитування структури JSONBin з урахуванням обгортки record
+                const rawRecord = result.record || result;
+                const data = rawRecord.record || rawRecord;
                 
                 renderIndexTeams(data.teams || [], data.players || []);
                 renderTransfers(data.transfers || []);
@@ -461,14 +464,13 @@
                 return;
             }
 
-            // Сортуємо команди за очками: у кого більше очок (points), той вище (1, 2, 3...)
             teams.sort((a, b) => (parseInt(b.points) || 0) - (parseInt(a.points) || 0));
 
             container.innerHTML = '';
             teams.forEach((t, index) => {
                 const teamId = 'team_' + index;
                 const teamPlayers = (players || []).filter(p => p.team === t.name);
-                const rankNumber = index + 1; // Автоматичний порядковий номер (#1, #2, #3 і т.д.)
+                const rankNumber = index + 1;
 
                 let playersHtml = '';
                 if (teamPlayers.length === 0) {
