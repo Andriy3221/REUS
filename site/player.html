@@ -87,7 +87,6 @@
             vertical-align: middle;
         }
 
-        /* БЛОК ТРОФЕЇВ З ГОРИЗОНТАЛЬНИМ СКРОЛОМ ТА ТЕКСТОМ ЗНИЗУ */
         .trophies-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -210,7 +209,11 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const data = result.record || {};
+                
+                // Виправляємо читання структури даних JSONBin
+                const rawRecord = result.record || result;
+                const data = rawRecord.record || rawRecord;
+                
                 const players = data.players || [];
                 const globalTrophies = data.trophies || [];
 
@@ -221,7 +224,6 @@
                     return;
                 }
 
-                // Вертикальні картки трофеїв із текстом знизу та прокруткою
                 let trophiesHtml = '';
                 if (player.trophies && Array.isArray(player.trophies) && player.trophies.length > 0) {
                     let cards = '';
@@ -244,10 +246,9 @@
                 }
 
                 const countryCode = (player.country || 'ua').toLowerCase();
-                const flagTag = `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag-icon" alt="${countryCode}">`;
+                const flagTag = `<img src="https://flagcdn.com/w40/${countryCode}.png" class="flag-icon" alt="${countryCode}" onerror="this.style.display='none'">`;
                 const photoSrc = player.photo || 'https://via.placeholder.com/180';
 
-                // Форматування статусу Retired та команди
                 let teamInfoHtml = '';
                 if (player.retired) {
                     teamInfoHtml = `
