@@ -50,16 +50,17 @@
             font-size: 0.95rem;
         }
 
-        /* БЛОК ТРОФЕЇВ КОМАНДИ З ГОРИЗОНТАЛЬНИМ СКРОЛОМ ТА ТЕКСТОМ ЗНИЗУ */
+        /* ПОКРАЩЕНИЙ БЛОК ТРОФЕЇВ */
         .trophies-section {
-            margin-top: 20px;
+            margin-top: 25px;
             border-top: 1px solid var(--border-color);
             padding-top: 20px;
         }
         .trophies-section h3 {
             margin: 0 0 15px 0;
             color: var(--accent-color);
-            font-size: 1.05rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
         }
         .trophies-scroll-container {
             display: flex;
@@ -77,35 +78,41 @@
             border-radius: 3px;
         }
         .trophy-card-vertical {
-            background: #1a222f;
+            background: #171f2d;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 15px;
-            min-width: 120px;
-            max-width: 130px;
+            min-width: 140px;
+            max-width: 150px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        .trophy-card-vertical:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-3px);
         }
         .trophy-card-vertical img {
-            width: 50px;
-            height: 50px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
         }
         .trophy-emoji {
-            font-size: 2.5rem;
-            margin-bottom: 5px;
+            font-size: 3rem;
+            margin-bottom: 8px;
             line-height: 1;
         }
         .trophy-name-vertical {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-color);
-            font-weight: 500;
+            font-weight: 600;
             word-break: break-word;
-            line-height: 1.2;
+            line-height: 1.3;
         }
 
         .section-box {
@@ -142,17 +149,18 @@
             gap: 15px;
         }
         .player-card {
-            background: #1a222f;
+            background: #171f2d;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: 8px;
             padding: 15px;
             text-align: center;
             text-decoration: none;
             color: inherit;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
         .player-card:hover {
             border-color: var(--accent-color);
+            transform: translateY(-3px);
         }
         .player-card img {
             width: 100px;
@@ -209,7 +217,6 @@
                     return;
                 }
 
-                // Фільтруємо трофеї саме для цієї команди
                 const teamTrophies = allTrophies.filter(tr => tr.team && tr.team.toLowerCase() === team.name.toLowerCase());
                 
                 let trophiesHtml = '';
@@ -238,7 +245,6 @@
                     `;
                 }
 
-                // Гравці команди
                 const teamPlayers = players.filter(p => p.team && p.team.toLowerCase() === team.name.toLowerCase());
                 let playersHtml = '';
                 if (teamPlayers.length === 0) {
