@@ -180,7 +180,7 @@
             transform: translateY(-2px);
         }
 
-        /* Без рамок: чистий PNG аватар */
+        /* Аватар гравця */
         .player-avatar-mini {
             width: 100%;
             height: 85px;
@@ -229,7 +229,7 @@
             font-size: 1.1rem;
         }
 
-        /* ПЛАВАЮЧА КНОПКА ТЕХПІДТРИМКИ DISCORD */
+        /* Плаваюча кнопка техпідтримки */
         .support-float-btn {
             position: fixed;
             bottom: 30px;
@@ -343,8 +343,11 @@
                             ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
                             : defaultSvg;
 
+                        // БЕЗПЕЧНА ПЕРЕДАЧА ІМЕНІ ГРАВЦЯ У ФУНКЦІЮ
+                        const safePlayerName = encodeURIComponent(p.name);
+
                         playersHtml += `
-                            <div class="player-mini-card" onclick="window.location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                            <div class="player-mini-card" onclick="openPlayerPage('${safePlayerName}')">
                                 <div class="player-avatar-mini">
                                     ${avatarContent}
                                 </div>
@@ -379,13 +382,18 @@
             container.innerHTML = html;
         }
 
-        function toggleTeam(arrowElement) {
-            const card = arrowElement.closest('.team-card');
-            card.classList.toggle('collapsed');
+        /* НАДІЙНІ ФУНКЦІЇ ПЕРЕХОДУ */
+        function openPlayerPage(encodedName) {
+            window.location.href = `player.html?name=${encodedName}`;
         }
 
         function openTeamPage(teamName) {
             window.location.href = `team.html?name=${encodeURIComponent(teamName)}`;
+        }
+
+        function toggleTeam(arrowElement) {
+            const card = arrowElement.closest('.team-card');
+            card.classList.toggle('collapsed');
         }
 
         function filterTeams() {
