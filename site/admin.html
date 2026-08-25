@@ -154,8 +154,14 @@
                 <option value="">Оберіть команду</option>
             </select>
             <input type="text" id="playerRole" placeholder="Роль / Позиція (наприклад, AWPer, Rifler)">
+            <input type="text" id="playerCountry" placeholder="Країна / Код прапора (наприклад: ua, pl, no)">
             <input type="text" id="playerPhoto" placeholder="Фото гравця (URL необов'язково)">
             
+            <input type="text" id="playerKd" placeholder="KD (наприклад: 1.00)">
+            <input type="text" id="playerRating" placeholder="Rating (наприклад: 1.00)">
+            <input type="text" id="playerHs" placeholder="HS % (наприклад: 50%)">
+            <input type="text" id="playerMaps" placeholder="Maps (наприклад: 100)">
+
             <!-- Чекбокс Retired -->
             <label class="checkbox-label">
                 <input type="checkbox" id="playerRetired"> Завершив кар'єру (Retired)
@@ -214,7 +220,6 @@
                 });
                 const result = await res.json();
                 
-                // Чітко витягуємо дані з обгортки record на JSONBin
                 const rawRecord = result.record || result;
                 cloudData = rawRecord.record || rawRecord;
                 
@@ -236,7 +241,6 @@
             setSt("Збереження у хмару...", "#ffaa00");
             sortTeams();
             try {
-                // ЗАВЖДИ огортаємо в { record: cloudData }, щоб JSONBin зберігав правильну структуру
                 const bodyData = { record: cloudData };
 
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
@@ -338,12 +342,19 @@
             const name = document.getElementById('playerName').value.trim();
             const team = document.getElementById('playerTeamSelect').value;
             const role = document.getElementById('playerRole').value.trim();
+            const country = document.getElementById('playerCountry').value.trim();
             const photo = document.getElementById('playerPhoto').value.trim();
-            const retired = document.getElementById('playerRetired').checked; // Стан чекбокса
+            
+            const kd = document.getElementById('playerKd').value.trim();
+            const rating = document.getElementById('playerRating').value.trim();
+            const hs = document.getElementById('playerHs').value.trim();
+            const maps = document.getElementById('playerMaps').value.trim();
+            
+            const retired = document.getElementById('playerRetired').checked;
 
             if (!name) { alert("Введіть ім'я гравця!"); return; }
 
-            const playerData = { name, team, role, photo, retired };
+            const playerData = { name, team, role, country, photo, kd, rating, hs, maps, retired };
 
             if (editIndex === "") {
                 cloudData.players.push(playerData);
@@ -361,8 +372,15 @@
             document.getElementById('playerName').value = p.name;
             document.getElementById('playerTeamSelect').value = p.team || '';
             document.getElementById('playerRole').value = p.role || '';
+            document.getElementById('playerCountry').value = p.country || '';
             document.getElementById('playerPhoto').value = p.photo || '';
-            document.getElementById('playerRetired').checked = !!p.retired; // Підтягуємо статус retired
+            
+            document.getElementById('playerKd').value = p.kd || '';
+            document.getElementById('playerRating').value = p.rating || '';
+            document.getElementById('playerHs').value = p.hs || '';
+            document.getElementById('playerMaps').value = p.maps || '';
+            
+            document.getElementById('playerRetired').checked = !!p.retired;
 
             document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
             document.getElementById('playerSaveBtn').innerText = 'Оновити гравця';
@@ -375,7 +393,12 @@
             document.getElementById('playerName').value = '';
             document.getElementById('playerTeamSelect').value = '';
             document.getElementById('playerRole').value = '';
+            document.getElementById('playerCountry').value = '';
             document.getElementById('playerPhoto').value = '';
+            document.getElementById('playerKd').value = '';
+            document.getElementById('playerRating').value = '';
+            document.getElementById('playerHs').value = '';
+            document.getElementById('playerMaps').value = '';
             document.getElementById('playerRetired').checked = false;
             
             document.getElementById('playerFormTitle').innerText = 'Керування гравцем';
@@ -463,7 +486,7 @@
                         <div class="item-row">
                             <span>
                                 <b>${p.name}</b> ${retiredBadge}
-                                <span style="color:var(--text-muted); font-size:0.85rem;">[${p.team || 'Без команди'} | ${p.role || 'Гравець'}]</span>
+                                <span style="color:var(--text-muted); font-size:0.85rem;">[${p.team || 'Без команди'} | ${p.role || 'Гравець'} | Країна: ${p.country || '-'}]</span>
                             </span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button>
