@@ -119,6 +119,12 @@
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
             <input type="number" id="teamPoints" placeholder="Очки / pts (наприклад: 1000)">
+            
+            <!-- Поля для рейтингів та статистики -->
+            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #1)">
+            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
+            <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 for core (наприклад: 45)">
+            <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 22.4)">
 
             <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
             <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
@@ -240,10 +246,16 @@
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
             const points = document.getElementById('teamPoints').value.trim() || '0';
+            
+            // Збираємо нові поля рейтингу
+            const valveRank = document.getElementById('teamValveRank').value.trim();
+            const worldRank = document.getElementById('teamWorldRank').value.trim();
+            const weeksTop30 = document.getElementById('teamWeeksTop30').value.trim();
+            const avgAge = document.getElementById('teamAvgAge').value.trim();
 
             if (!name) { alert('Введіть назву команди!'); return; }
 
-            const teamData = { name, logo, points };
+            const teamData = { name, logo, points, valveRank, worldRank, weeksTop30, avgAge };
 
             if (editIndex === "") {
                 cloudData.teams.push(teamData);
@@ -262,6 +274,12 @@
             document.getElementById('teamName').value = t.name;
             document.getElementById('teamLogo').value = t.logo || '';
             document.getElementById('teamPoints').value = t.points || '';
+            
+            // Підтягуємо значення рейтингів у форму
+            document.getElementById('teamValveRank').value = t.valveRank || '';
+            document.getElementById('teamWorldRank').value = t.worldRank || '';
+            document.getElementById('teamWeeksTop30').value = t.weeksTop30 || '';
+            document.getElementById('teamAvgAge').value = t.avgAge || '';
 
             document.getElementById('teamFormTitle').innerText = `Редагувати команду: ${t.name}`;
             document.getElementById('teamSaveBtn').innerText = 'Оновити команду';
@@ -274,6 +292,11 @@
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
             document.getElementById('teamPoints').value = '';
+            document.getElementById('teamValveRank').value = '';
+            document.getElementById('teamWorldRank').value = '';
+            document.getElementById('teamWeeksTop30').value = '';
+            document.getElementById('teamAvgAge').value = '';
+
             document.getElementById('teamFormTitle').innerText = 'Керування командою';
             document.getElementById('teamSaveBtn').innerText = 'Зберегти команду';
             document.getElementById('teamCancelBtn').style.display = 'none';
@@ -389,7 +412,7 @@
                                 <b style="color: #f39c12;">#${i + 1}</b> 
                                 ${t.logo ? `<img src="${t.logo}" class="preview-img" onerror="this.style.display='none'">` : ''} 
                                 <b>${t.name}</b> 
-                                <span style="color:var(--text-muted); font-size:0.85rem;">(${t.points || 0} pts)</span>
+                                <span style="color:var(--text-muted); font-size:0.85rem;">(${t.points || 0} pts | Valve: ${t.valveRank || '-'} | World: ${t.worldRank || '-'})</span>
                             </span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editTeam(${i})">Редагувати</button>
