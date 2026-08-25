@@ -12,6 +12,7 @@
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
+            --danger-color: #ff4444;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -194,6 +195,18 @@
             font-size: 1.1rem;
             margin-bottom: 5px;
         }
+        .retired-card-badge {
+            display: inline-block;
+            background-color: rgba(255, 68, 68, 0.15);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -225,7 +238,6 @@
                 });
                 const result = await res.json();
                 
-                // Безпечне зчитування структури JSONBin (враховує можливу вкладеність)
                 const rawRecord = result.record || result;
                 const data = rawRecord.record || rawRecord;
 
@@ -277,10 +289,13 @@
                     playersHtml = '<div class="players-grid">';
                     teamPlayers.forEach(p => {
                         const pPhoto = p.photo || 'https://via.placeholder.com/100';
+                        const retiredBadge = p.retired ? '<div><span class="retired-card-badge">RETIRED</span></div>' : '';
+
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(p.name)}" class="player-card">
                                 <img src="${pPhoto}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/100'">
                                 <div class="player-name">${p.name}</div>
+                                ${retiredBadge}
                             </a>
                         `;
                     });
