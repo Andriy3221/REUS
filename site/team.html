@@ -64,36 +64,42 @@
             font-weight: bold;
             margin-bottom: 20px;
             color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
         }
         .players-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
         }
         .player-card {
             background: #1a222f;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+        /* Змінено: прямокутна рамка для PNG без обрізки */
         .player-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
+            width: 100%;
+            height: 140px;
             background: #11161d;
-            margin: 0 auto 15px auto;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
         .player-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; 
         }
         .player-name {
             font-size: 1.1rem;
@@ -107,7 +113,7 @@
         .player-role {
             font-size: 0.85rem;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         .retired-badge {
             background: rgba(255, 68, 68, 0.15);
@@ -149,6 +155,26 @@
             color: var(--accent-color);
             font-weight: bold;
         }
+        .trophies-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .trophy-badge {
+            background: #1a222f;
+            border: 1px solid var(--border-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .trophy-icon {
+            font-size: 1.5rem;
+            max-width: 32px;
+            max-height: 32px;
+            object-fit: contain;
+        }
         .loading {
             text-align: center;
             color: var(--text-muted);
@@ -166,9 +192,8 @@
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
-        // Отримуємо назву команди з URL (наприклад: team.html?name=YAMI)
         const urlParams = new URLSearchParams(window.location.search);
-        const teamNameParam = urlParams.get('name') || 'YAMI'; // За замовчуванням YAMI, якщо не вказано
+        const teamNameParam = urlParams.get('name') || 'YAMI';
 
         async function fetchTeamData() {
             try {
@@ -186,11 +211,34 @@
             }
         }
 
+        function renderPlayerCard(p) {
+            const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
+            
+            // Заглушка, якщо фото немає
+            const defaultAvatar = `<svg width="50" height="50" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+            const avatarContent = p.photo ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultAvatar.replace(/'/g, "\\'")}'">` : defaultAvatar;
+            
+            const retiredBlock = p.retired ? '<span class="retired-badge">RETIRED</span>' : '';
+
+            return `
+                <div class="player-card">
+                    <div class="player-avatar">
+                        ${avatarContent}
+                    </div>
+                    <div class="player-name">
+                        ${flagImg} <span>${p.name}</span>
+                    </div>
+                    <div class="player-role">${p.role || 'Гравець'}</div>
+                    ${retiredBlock}
+                </div>
+            `;
+        }
+
         function renderTeamPage(data) {
             const teams = data.teams || [];
             const players = data.players || [];
+            const trophies = data.trophies || [];
 
-            // Шукаємо команду за назвою
             const team = teams.find(t => t.name.toLowerCase() === teamNameParam.toLowerCase()) || {
                 name: teamNameParam,
                 logo: '',
@@ -200,37 +248,83 @@
                 avgAge: '0'
             };
 
-            // Фільтруємо гравців цієї команди
-            const teamPlayers = players.filter(p => p.team && p.team.toLowerCase() === team.name.toLowerCase());
+            // Фільтрація гравців саме за цією командою (з врахуванням регістру / пробілів)
+            const teamPlayers = players.filter(p => p.team && p.team.trim().toLowerCase() === team.name.trim().toLowerCase());
 
-            // Генерація HTML для гравців
-            let playersHtml = '';
-            if (teamPlayers.length === 0) {
-                playersHtml = '<div style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 20px;">У цій команді поки немає гравців</div>';
+            // Розподіл на основний склад, бенч та тренерів
+            const mainRoster = teamPlayers.filter(p => {
+                const r = (p.role || '').toLowerCase();
+                return !r.includes('bench') && !r.includes('запас') && !r.includes('coach') && !r.includes('тренер');
+            });
+
+            const benchRoster = teamPlayers.filter(p => {
+                const r = (p.role || '').toLowerCase();
+                return r.includes('bench') || r.includes('запас');
+            });
+
+            const coachRoster = teamPlayers.filter(p => {
+                const r = (p.role || '').toLowerCase();
+                return r.includes('coach') || r.includes('тренер');
+            });
+
+            // Рендер основного складу
+            let mainHtml = '';
+            if (mainRoster.length === 0) {
+                mainHtml = '<div style="color: var(--text-muted); grid-column: 1 / -1; text-align: center; padding: 10px;">Основний склад порожній</div>';
             } else {
-                teamPlayers.forEach(p => {
-                    const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
-                    const defaultAvatar = `<svg width="40" height="40" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
-                    const avatarContent = p.photo ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultAvatar.replace(/'/g, "\\'")}'">` : defaultAvatar;
-                    
-                    const retiredBlock = p.retired ? '<br><span class="retired-badge">RETIRED</span>' : '';
+                mainRoster.forEach(p => { mainHtml += renderPlayerCard(p); });
+            }
 
-                    playersHtml += `
-                        <div class="player-card">
-                            <div class="player-avatar">
-                                ${avatarContent}
-                            </div>
-                            <div class="player-name">
-                                ${flagImg} <span>${p.name}</span>
-                            </div>
-                            <div class="player-role">${p.role || 'Гравець'}</div>
-                            ${retiredBlock}
+            // Рендер замін (Bench)
+            let benchHtml = '';
+            if (benchRoster.length > 0) {
+                let cards = '';
+                benchRoster.forEach(p => { cards += renderPlayerCard(p); });
+                benchHtml = `
+                    <div class="section-box">
+                        <div class="section-title">Запасні гравці (Bench)</div>
+                        <div class="players-grid">${cards}</div>
+                    </div>
+                `;
+            }
+
+            // Рендер тренерів
+            let coachHtml = '';
+            if (coachRoster.length > 0) {
+                let cards = '';
+                coachRoster.forEach(p => { cards += renderPlayerCard(p); });
+                coachHtml = `
+                    <div class="section-box">
+                        <div class="section-title">Тренерський штаб</div>
+                        <div class="players-grid">${cards}</div>
+                    </div>
+                `;
+            }
+
+            // Фільтрація трофеїв для цієї команди
+            const teamTrophies = trophies.filter(tr => !tr.team || tr.team.trim().toLowerCase() === team.name.trim().toLowerCase());
+            let trophiesHtml = '';
+            if (teamTrophies.length > 0) {
+                let tCards = '';
+                teamTrophies.forEach(tr => {
+                    const isImg = tr.icon && (tr.icon.startsWith('http') || tr.icon.startsWith('data:'));
+                    const iconEl = isImg ? `<img src="${tr.icon}" class="trophy-icon" onerror="this.style.display='none'">` : `<span class="trophy-icon">${tr.icon || '🏆'}</span>`;
+                    tCards += `
+                        <div class="trophy-badge">
+                            ${iconEl}
+                            <div><b>${tr.name}</b></div>
                         </div>
                     `;
                 });
+                trophiesHtml = `
+                    <div class="section-box">
+                        <div class="section-title">Трофеї команди</div>
+                        <div class="trophies-container">${tCards}</div>
+                    </div>
+                `;
             }
 
-            // Збираємо повний макет сторінки
+            // Збирання загального HTML
             const html = `
                 <div class="header-card">
                     <img src="${team.logo || 'https://via.placeholder.com/80'}" class="header-logo" onerror="this.style.display='none'">
@@ -243,9 +337,13 @@
                 <div class="section-box">
                     <div class="section-title">Склад команди</div>
                     <div class="players-grid">
-                        ${playersHtml}
+                        ${mainHtml}
                     </div>
                 </div>
+
+                ${benchHtml}
+                ${coachHtml}
+                ${trophiesHtml}
 
                 <div class="section-box">
                     <div class="section-title">Статистика та рейтинги</div>
@@ -273,7 +371,6 @@
             document.getElementById('app').innerHTML = html;
         }
 
-        // Запуск при завантаженні
         fetchTeamData();
     </script>
 </body>
