@@ -37,7 +37,7 @@
         .team-header {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 30px;
             margin-bottom: 25px;
         }
@@ -50,7 +50,7 @@
             font-size: 0.95rem;
         }
 
-        /* ПОКРАЩЕНИЙ БЛОК ТРОФЕЇВ */
+        /* КРУТІ ЗАОКРУГЛЕНІ ТРОФЕЇ З НУМЕРАЦІЄЮ ТА СКРОЛОМ */
         .trophies-section {
             margin-top: 25px;
             border-top: 1px solid var(--border-color);
@@ -66,49 +66,66 @@
             display: flex;
             gap: 15px;
             overflow-x: auto;
-            padding-bottom: 10px;
+            padding: 10px 5px 15px 5px;
             scrollbar-width: thin;
-            scrollbar-color: var(--border-color) transparent;
+            scrollbar-color: var(--accent-color) var(--border-color);
         }
         .trophies-scroll-container::-webkit-scrollbar {
-            height: 6px;
+            height: 8px;
         }
         .trophies-scroll-container::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 3px;
+            background: var(--accent-color);
+            border-radius: 4px;
         }
         .trophy-card-vertical {
+            position: relative;
             background: #171f2d;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            min-width: 140px;
-            max-width: 150px;
+            border-radius: 20px; /* Сильне заокруглення */
+            padding: 20px 15px 15px 15px;
+            min-width: 130px;
+            max-width: 140px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         .trophy-card-vertical:hover {
             border-color: var(--accent-color);
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,255,136,0.15);
+        }
+        /* Номер трофея (1, 2, 3...) зверху */
+        .trophy-number {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
         }
         .trophy-card-vertical img {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             object-fit: contain;
+            margin-top: 8px;
             margin-bottom: 12px;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
         }
         .trophy-emoji {
             font-size: 3rem;
-            margin-bottom: 8px;
+            margin-top: 8px;
+            margin-bottom: 10px;
             line-height: 1;
         }
         .trophy-name-vertical {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-color);
             font-weight: 600;
             word-break: break-word;
@@ -118,7 +135,7 @@
         .section-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
         }
@@ -151,7 +168,7 @@
         .player-card {
             background: #171f2d;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 15px;
             text-align: center;
             text-decoration: none;
@@ -222,7 +239,7 @@
                 let trophiesHtml = '';
                 if (teamTrophies.length > 0) {
                     let cards = '';
-                    teamTrophies.forEach(tr => {
+                    teamTrophies.forEach((tr, index) => {
                         let iconMarkup = '';
                         if (tr.icon && tr.icon.startsWith('http')) {
                             iconMarkup = `<img src="${tr.icon}" alt="${tr.name}" onerror="this.style.display='none'">`;
@@ -232,6 +249,7 @@
 
                         cards += `
                             <div class="trophy-card-vertical">
+                                <div class="trophy-number">#${index + 1}</div>
                                 ${iconMarkup}
                                 <div class="trophy-name-vertical">${tr.name}</div>
                             </div>
