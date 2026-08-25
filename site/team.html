@@ -69,7 +69,7 @@
         }
         .players-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 20px;
         }
         .player-card {
@@ -78,27 +78,23 @@
             border-radius: 10px;
             padding: 15px;
             text-align: center;
-            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+        /* БЕЗ РАМОК: фото виводяться напряму */
         .player-avatar {
             width: 100%;
-            height: 140px;
-            background: #11161d;
-            margin-bottom: 12px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
         }
         .player-avatar img {
             max-width: 100%;
             max-height: 100%;
-            object-fit: contain; 
+            object-fit: contain;
         }
         .player-name {
             font-size: 1.1rem;
@@ -213,9 +209,9 @@
         function renderPlayerCard(p) {
             const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
             
-            const defaultSvg = `<svg width="50" height="50" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+            const defaultSvg = `<svg width="45" height="45" fill="#8a99ad" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
             
-            // Якщо фото є, виводимо img з обробником помилки, який замінює весь вміст блоку на SVG-заглушку без зайвих символів
+            // Якщо є фото (наприклад, посилання на PNG), виводимо його безпосередньо без рамок
             const avatarContent = p.photo && p.photo.trim() !== '' 
                 ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
                 : defaultSvg;
@@ -252,20 +248,10 @@
 
             const teamPlayers = players.filter(p => p.team && p.team.trim().toLowerCase() === team.name.trim().toLowerCase());
 
-            const mainRoster = teamPlayers.filter(p => {
-                const r = (p.role || '').toLowerCase();
-                return !r.includes('bench') && !r.includes('запас') && !r.includes('coach') && !r.includes('тренер');
-            });
-
-            const benchRoster = teamPlayers.filter(p => {
-                const r = (p.role || '').toLowerCase();
-                return r.includes('bench') || r.includes('запас');
-            });
-
-            const coachRoster = teamPlayers.filter(p => {
-                const r = (p.role || '').toLowerCase();
-                return r.includes('coach') || r.includes('тренер');
-            });
+            // Розподіл за новими слотами з адмінки
+            const mainRoster = teamPlayers.filter(p => !p.roleSlot || p.roleSlot === 'main');
+            const benchRoster = teamPlayers.filter(p => p.roleSlot === 'bench');
+            const coachRoster = teamPlayers.filter(p => p.roleSlot === 'coach');
 
             let mainHtml = '';
             if (mainRoster.length === 0) {
@@ -292,13 +278,14 @@
                 coachRoster.forEach(p => { cards += renderPlayerCard(p); });
                 coachHtml = `
                     <div class="section-box">
-                        <div class="section-title">Тренерський штаб</div>
+                        <div class="section-title">Тренерський штаб (Coach)</div>
                         <div class="players-grid">${cards}</div>
                     </div>
                 `;
             }
 
-            const teamTrophies = trophies.filter(tr => !tr.team || tr.team.trim().toLowerCase() === team.name.trim().toLowerCase());
+            // Трофеї конкретно для цієї команди
+            const teamTrophies = trophies.filter(tr => tr.team && tr.team.trim().toLowerCase() === team.name.trim().toLowerCase());
             let trophiesHtml = '';
             if (teamTrophies.length > 0) {
                 let tCards = '';
