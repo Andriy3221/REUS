@@ -294,8 +294,10 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const rawRecord = result.record || result;
-                cloudData = rawRecord.record || rawRecord;
+                
+                // Зберігаємо структуру даних коректно з урахуванням обгортки JSONBin
+                const actualRecord = result.record || result;
+                cloudData = actualRecord.record ? actualRecord.record : actualRecord;
                 
                 if(!cloudData.teams) cloudData.teams = [];
                 if(!cloudData.players) cloudData.players = [];
