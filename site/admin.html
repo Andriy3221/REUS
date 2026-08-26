@@ -48,6 +48,21 @@
             box-sizing: border-box;
             font-family: inherit;
         }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .form-row-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        @media(max-width: 768px) {
+            .form-row, .form-row-4 {
+                grid-template-columns: 1fr;
+            }
+        }
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -103,6 +118,8 @@
             border-radius: 6px;
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .item-buttons {
             display: flex;
@@ -129,6 +146,15 @@
             margin-right: 6px;
             box-shadow: 0 0 2px rgba(0,0,0,0.5);
         }
+        .stats-tag {
+            background: #131820;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body>
@@ -145,10 +171,14 @@
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
             <input type="number" id="teamPoints" placeholder="Очки / pts (наприклад: 1000)">
             
-            <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #1)">
-            <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
-            <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 for core (наприклад: 45)">
-            <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 22.4)">
+            <div class="form-row">
+                <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #1)">
+                <input type="text" id="teamWorldRank" placeholder="World ranking (наприклад: #1)">
+            </div>
+            <div class="form-row">
+                <input type="text" id="teamWeeksTop30" placeholder="Weeks in top30 for core (наприклад: 45)">
+                <input type="text" id="teamAvgAge" placeholder="Average player age (наприклад: 22.4)">
+            </div>
 
             <button id="teamSaveBtn" onclick="saveTeam()">Зберегти команду</button>
             <button id="teamCancelBtn" onclick="resetTeamForm()" style="background: var(--border-color); color: var(--text-color); margin-top: 10px; display: none;">Скасувати редагування</button>
@@ -158,27 +188,54 @@
         <div class="section-box">
             <h2 id="playerFormTitle">Керування гравцем / тренером</h2>
             <input type="hidden" id="editPlayerIndex" value="">
-            <input type="text" id="playerName" placeholder="Ім'я гравця / нікнейм">
-            <select id="playerTeamSelect">
-                <option value="">Оберіть команду</option>
-            </select>
             
-            <!-- Вибір слота (Основний, Бенч, Тренер або своя роль) -->
-            <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Слот / Роль в команді:</label>
-            <select id="playerRoleSlot" onchange="onRoleSlotChange()">
-                <option value="main">Основний гравець (Star, Rifler, AWPer тощо)</option>
-                <option value="bench">Запасний гравець (Bench)</option>
-                <option value="coach">Тренер (Coach)</option>
-            </select>
+            <div class="form-row">
+                <input type="text" id="playerName" placeholder="Ім'я гравця / нікнейм">
+                <select id="playerTeamSelect">
+                    <option value="">Оберіть команду</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Слот / Роль в команді:</label>
+                    <select id="playerRoleSlot" onchange="onRoleSlotChange()">
+                        <option value="main">Основний гравець</option>
+                        <option value="bench">Запасний гравець (Bench)</option>
+                        <option value="coach">Тренер (Coach)</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Країна гравця:</label>
+                    <select id="playerCountry">
+                        <option value="">-- Оберіть країну --</option>
+                    </select>
+                </div>
+            </div>
+
             <input type="text" id="playerRole" placeholder="Вкажіть конкретну роль (наприклад: AWPer, IGL, Головний тренер)">
-
-            <!-- Вибір країни зі списку -->
-            <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Країна гравця:</label>
-            <select id="playerCountry">
-                <option value="">-- Оберіть країну --</option>
-            </select>
-
             <input type="text" id="playerPhoto" placeholder="Пряме посилання на PNG фото гравця (URL)">
+
+            <!-- Секція статистики гравця -->
+            <h3 style="font-size: 1.1rem; color: var(--accent-color); margin-top: 20px; margin-bottom: 10px;">📊 Статистика гравця (CS2)</h3>
+            <div class="form-row-4">
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Рейтинг (Rating 2.0)</label>
+                    <input type="text" id="playerRating" placeholder="1.15">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Кілли/Смерті (K/D)</label>
+                    <input type="text" id="playerKD" placeholder="1.12">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Вплив (Impact)</label>
+                    <input type="text" id="playerImpact" placeholder="1.18">
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Шкода за раунд (ADR)</label>
+                    <input type="text" id="playerADR" placeholder="82.4">
+                </div>
+            </div>
 
             <!-- Чекбокс Retired -->
             <label class="checkbox-label" style="margin-top: 15px;">
@@ -192,10 +249,12 @@
         <!-- 3. Видача трофеїв -->
         <div class="section-box">
             <h2>Видати трофей команді</h2>
-            <select id="trophyTeamSelect">
-                <option value="">Оберіть команду</option>
-            </select>
-            <input type="text" id="trophyName" placeholder="Назва турніру / трофею (наприклад, BLAST Premier)">
+            <div class="form-row">
+                <select id="trophyTeamSelect">
+                    <option value="">Оберіть команду</option>
+                </select>
+                <input type="text" id="trophyName" placeholder="Назва турніру (наприклад, BLAST Premier)">
+            </div>
             <input type="text" id="trophyIcon" placeholder="Іконка кубка (URL посилання або emoji 🏆)">
             
             <button onclick="saveTrophy()">Додати трофей</button>
@@ -295,7 +354,6 @@
                 });
                 const result = await res.json();
                 
-                // Зберігаємо структуру даних коректно з урахуванням обгортки JSONBin
                 const actualRecord = result.record || result;
                 cloudData = actualRecord.record ? actualRecord.record : actualRecord;
                 
@@ -419,11 +477,22 @@
             const role = document.getElementById('playerRole').value.trim();
             const country = document.getElementById('playerCountry').value;
             const photo = document.getElementById('playerPhoto').value.trim();
+            
+            // Статистика
+            const rating = document.getElementById('playerRating').value.trim();
+            const kd = document.getElementById('playerKD').value.trim();
+            const impact = document.getElementById('playerImpact').value.trim();
+            const adr = document.getElementById('playerADR').value.trim();
+
             const retired = document.getElementById('playerRetired').checked;
 
             if (!name) { alert("Введіть ім'я гравця!"); return; }
 
-            const playerData = { name, team, roleSlot, role, country, photo, retired };
+            const playerData = { 
+                name, team, roleSlot, role, country, photo, 
+                stats: { rating, kd, impact, adr }, 
+                retired 
+            };
 
             if (editIndex === "") {
                 cloudData.players.push(playerData);
@@ -444,6 +513,14 @@
             document.getElementById('playerRole').value = p.role || '';
             document.getElementById('playerCountry').value = p.country || '';
             document.getElementById('playerPhoto').value = p.photo || '';
+            
+            // Заповнення статистики (підтримка як нового об'єкта stats, так і старих даних)
+            const stats = p.stats || {};
+            document.getElementById('playerRating').value = stats.rating || p.rating || '';
+            document.getElementById('playerKD').value = stats.kd || p.kd || '';
+            document.getElementById('playerImpact').value = stats.impact || p.impact || '';
+            document.getElementById('playerADR').value = stats.adr || p.adr || '';
+
             document.getElementById('playerRetired').checked = !!p.retired;
 
             document.getElementById('playerFormTitle').innerText = `Редагувати гравця: ${p.name}`;
@@ -460,6 +537,12 @@
             document.getElementById('playerRole').value = '';
             document.getElementById('playerCountry').value = '';
             document.getElementById('playerPhoto').value = '';
+            
+            document.getElementById('playerRating').value = '';
+            document.getElementById('playerKD').value = '';
+            document.getElementById('playerImpact').value = '';
+            document.getElementById('playerADR').value = '';
+
             document.getElementById('playerRetired').checked = false;
             
             document.getElementById('playerFormTitle').innerText = 'Керування гравцем / тренером';
@@ -544,11 +627,16 @@
                     const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
                     const slotLabel = p.roleSlot === 'bench' ? '[Bench]' : (p.roleSlot === 'coach' ? '[Coach]' : '[Main]');
                     
+                    const st = p.stats || {};
+                    const ratingStr = st.rating ? `<span class="stats-tag">Rating: ${st.rating}</span>` : '';
+                    const kdStr = st.kd ? `<span class="stats-tag">K/D: ${st.kd}</span>` : '';
+
                     html += `
                         <div class="item-row">
                             <span>
                                 ${flagImg}<b>${p.name}</b> ${retiredBadge}
                                 <span style="color:var(--text-muted); font-size:0.85rem;">[${p.team || 'Без команди'} | ${slotLabel} ${p.role || ''}]</span>
+                                ${ratingStr} ${kdStr}
                             </span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button>
