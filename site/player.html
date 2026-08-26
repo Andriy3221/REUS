@@ -210,7 +210,6 @@
                 });
                 const result = await res.json();
                 
-                // Виправляємо читання структури даних JSONBin
                 const rawRecord = result.record || result;
                 const data = rawRecord.record || rawRecord;
                 
@@ -268,6 +267,13 @@
 
                 const retiredHeaderBadge = player.retired ? '<span class="retired-badge">RETIRED</span>' : '';
 
+                // Безпечне отримання статистики з об'єкта stats (абоfallback на старі поля, якщо вони є)
+                const st = player.stats || {};
+                const kdVal = st.kd || player.kd || '1.00';
+                const ratingVal = st.rating || player.rating || '1.00';
+                const impactVal = st.impact || '1.00';
+                const adrVal = st.adr || '0.0';
+
                 document.getElementById('playerContent').innerHTML = `
                     <div class="profile-card">
                         <img src="${photoSrc}" class="player-photo" alt="${player.name}" onerror="this.src='https://via.placeholder.com/180'">
@@ -283,10 +289,10 @@
 
                     <div class="stats-box">
                         <h3>СТАТИСТИКА ГРАВЦЯ</h3>
-                        <div class="stat-row"><span>K/D Ratio</span><span class="stat-value">${player.kd || '1.00'}</span></div>
-                        <div class="stat-row"><span>Rating 2.0</span><span class="stat-value">${player.rating || '1.00'}</span></div>
-                        <div class="stat-row"><span>Headshot %</span><span class="stat-value">${player.hs || '50%'}</span></div>
-                        <div class="stat-row"><span>Maps played</span><span class="stat-value">${player.maps || '100'}</span></div>
+                        <div class="stat-row"><span>K/D Ratio</span><span class="stat-value">${kdVal}</span></div>
+                        <div class="stat-row"><span>Rating 2.0</span><span class="stat-value">${ratingVal}</span></div>
+                        <div class="stat-row"><span>Impact</span><span class="stat-value">${impactVal}</span></div>
+                        <div class="stat-row"><span>ADR</span><span class="stat-value">${adrVal}</span></div>
                     </div>
                 `;
             } catch (err) {
