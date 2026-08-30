@@ -169,7 +169,17 @@
             <input type="hidden" id="editTeamIndex" value="">
             <input type="text" id="teamName" placeholder="Назва команди (наприклад, ONYX)">
             <input type="text" id="teamLogo" placeholder="Посилання на логотип команди (URL)">
-            <input type="number" id="teamPoints" placeholder="Очки / pts (наприклад: 1000)">
+            
+            <div class="form-row">
+                <input type="number" id="teamPoints" placeholder="Очки / pts (наприклад: 1000)">
+                <div>
+                    <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Тип команди в списку:</label>
+                    <select id="teamType">
+                        <option value="ranked">Рейтингова (Ranked)</option>
+                        <option value="unranked">Не рейтингова (Unranked)</option>
+                    </select>
+                </div>
+            </div>
             
             <div class="form-row">
                 <input type="text" id="teamValveRank" placeholder="Valve ranking (наприклад: #1)">
@@ -283,7 +293,7 @@
 
         let cloudData = { teams: [], players: [], transfers: [], trophies: [] };
 
-     const countriesList = [
+        const countriesList = [
             { code: 'ua', name: 'Ukraine (Україна)' },
             { code: 'ru', name: 'Russia (Росія)' },
             { code: 'by', name: 'Belarus (Білорусь)' },
@@ -303,7 +313,7 @@
             { code: 'me', name: 'Montenegro (Чорногорія)' },
             { code: 'es', name: 'Spain (Іспанія)' },
             { code: 'pt', name: 'Portugal (Португалія)' },
-            { code: 'it', name: 'Italy (Італія)' }, // <-- ДОДАНО ТУТ
+            { code: 'it', name: 'Italy (Італія)' },
             { code: 'cz', name: 'Czech Republic (Чехія)' },
             { code: 'sk', name: 'Slovakia (Словаччина)' },
             { code: 'ro', name: 'Romania (Румунія)' },
@@ -409,6 +419,7 @@
             const name = document.getElementById('teamName').value.trim();
             const logo = document.getElementById('teamLogo').value.trim();
             const points = document.getElementById('teamPoints').value.trim() || '0';
+            const type = document.getElementById('teamType').value;
             
             const valveRank = document.getElementById('teamValveRank').value.trim();
             const worldRank = document.getElementById('teamWorldRank').value.trim();
@@ -417,7 +428,7 @@
 
             if (!name) { alert('Введіть назву команди!'); return; }
 
-            const teamData = { name, logo, points, valveRank, worldRank, weeksTop30, avgAge };
+            const teamData = { name, logo, points, type, valveRank, worldRank, weeksTop30, avgAge };
 
             if (editIndex === "") {
                 cloudData.teams.push(teamData);
@@ -436,6 +447,7 @@
             document.getElementById('teamName').value = t.name;
             document.getElementById('teamLogo').value = t.logo || '';
             document.getElementById('teamPoints').value = t.points || '';
+            document.getElementById('teamType').value = t.type || 'ranked';
             document.getElementById('teamValveRank').value = t.valveRank || '';
             document.getElementById('teamWorldRank').value = t.worldRank || '';
             document.getElementById('teamWeeksTop30').value = t.weeksTop30 || '';
@@ -452,6 +464,7 @@
             document.getElementById('teamName').value = '';
             document.getElementById('teamLogo').value = '';
             document.getElementById('teamPoints').value = '';
+            document.getElementById('teamType').value = 'ranked';
             document.getElementById('teamValveRank').value = '';
             document.getElementById('teamWorldRank').value = '';
             document.getElementById('teamWeeksTop30').value = '';
@@ -479,7 +492,6 @@
             const country = document.getElementById('playerCountry').value;
             const photo = document.getElementById('playerPhoto').value.trim();
             
-            // Статистика
             const rating = document.getElementById('playerRating').value.trim();
             const kd = document.getElementById('playerKD').value.trim();
             const impact = document.getElementById('playerImpact').value.trim();
@@ -515,7 +527,6 @@
             document.getElementById('playerCountry').value = p.country || '';
             document.getElementById('playerPhoto').value = p.photo || '';
             
-            // Заповнення статистики (підтримка як нового об'єкта stats, так і старих даних)
             const stats = p.stats || {};
             document.getElementById('playerRating').value = stats.rating || p.rating || '';
             document.getElementById('playerKD').value = stats.kd || p.kd || '';
@@ -599,6 +610,9 @@
             } else {
                 let html = '';
                 cloudData.teams.forEach((t, i) => {
+                    const isUnranked = t.type === 'unranked';
+                    const badgeType = isUnranked ? '<span style="color:var(--text-muted); font-size:0.75rem; background:#1f2937; padding:2px 6px; border-radius:4px;">Unranked</span>' : '<span style="color:var(--accent-color); font-size:0.75rem; background:#1f2937; padding:2px 6px; border-radius:4px;">Ranked</span>';
+                    
                     html += `
                         <div class="item-row">
                             <span>
@@ -606,6 +620,7 @@
                                 ${t.logo ? `<img src="${t.logo}" class="preview-img" onerror="this.style.display='none'">` : ''} 
                                 <b>${t.name}</b> 
                                 <span style="color:var(--text-muted); font-size:0.85rem;">(${t.points || 0} pts)</span>
+                                ${badgeType}
                             </span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editTeam(${i})">Редагувати</button>
