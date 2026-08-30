@@ -64,12 +64,14 @@
             font-weight: bold;
         }
 
-        .logo-badge {
-            background: var(--mini-card-bg);
-            padding: 6px 10px;
-            border-radius: 6px;
+        /* Стилі для нового логотипа з заокругленими кутами */
+        .logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
-            font-size: 0.9rem;
+            background: var(--mini-card-bg);
         }
 
         /* Кнопка перемикання теми */
@@ -323,7 +325,7 @@
         <!-- Шапка сайту -->
         <div class="navbar">
             <div class="logo-area">
-                <span class="logo-badge">REUS</span> 
+                <img src="REUS.png" alt="REUS Logo" class="logo-img"> 
                 <span>Reus Championship Teams</span>
             </div>
             <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
