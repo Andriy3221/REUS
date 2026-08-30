@@ -110,6 +110,20 @@
             border-color: var(--accent-color);
         }
 
+        /* Заголовки секцій */
+        .section-header-title {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin: 30px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .unranked-section-title {
+            color: var(--text-muted);
+            border-bottom-color: var(--border-color);
+        }
+
         /* Блоки / Картки команд */
         .team-card {
             background: var(--card-bg);
@@ -165,6 +179,12 @@
             color: #f39c12;
             font-weight: bold;
             font-size: 1.1rem;
+        }
+
+        .unranked-badge-text {
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 0.95rem;
         }
 
         /* Стрілочка згортання */
@@ -372,6 +392,7 @@
                 if (!globalCloudData.teams) globalCloudData.teams = [];
                 if (!globalCloudData.players) globalCloudData.players = [];
 
+                // Сортуємо рейтингові команди за очками
                 globalCloudData.teams.sort((a, b) => (parseInt(b.points) || 0) - (parseInt(a.points) || 0));
 
                 renderTeams(globalCloudData.teams, globalCloudData.players);
@@ -381,6 +402,61 @@
             }
         }
 
+        function generateTeamCardHtml(team, rankDisplay, isUnranked = false, players) {
+            const teamPlayers = players.filter(p => 
+                p.team && p.team.trim().toLowerCase() === team.name.trim().toLowerCase() && 
+                (!p.roleSlot || p.roleSlot === 'main')
+            );
+
+            let playersHtml = '';
+            if (teamPlayers.length === 0) {
+                playersHtml = '<div class="no-players">Склад поки відсутній</div>';
+            } else {
+                teamPlayers.forEach(p => {
+                    const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
+                    const defaultSvg = `<svg width="35" height="35" fill="var(--text-muted)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+                    
+                    const avatarContent = p.photo && p.photo.trim() !== '' 
+                        ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
+                        : defaultSvg;
+
+                    const safePlayerName = encodeURIComponent(p.name);
+
+                    playersHtml += `
+                        <div class="player-mini-card" onclick="openPlayerPage('${safePlayerName}')">
+                            <div class="player-avatar-mini">
+                                ${avatarContent}
+                            </div>
+                            <div class="player-mini-name">
+                                ${flagImg} <span>${p.name}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const pointsDisplay = isUnranked ? '<span class="unranked-badge-text">Unranked</span>' : `${team.points || 0} pts`;
+
+            return `
+                <div class="team-card" data-team-name="${team.name.toLowerCase()}">
+                    <div class="team-header">
+                        <div class="team-title-area" onclick="openTeamPage('${team.name}')">
+                            ${rankDisplay}
+                            <img src="${team.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                            <span class="team-name">${team.name}</span>
+                        </div>
+                        <div class="team-points">${pointsDisplay}</div>
+                        <div class="collapse-arrow" onclick="toggleTeam(this)" title="Згорнути / Розгорнути">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </div>
+                    </div>
+                    <div class="players-grid">
+                        ${playersHtml}
+                    </div>
+                </div>
+            `;
+        }
+
         function renderTeams(teams, players) {
             const container = document.getElementById('teamsContainer');
             if (teams.length === 0) {
@@ -388,59 +464,29 @@
                 return;
             }
 
+            // Фільтруємо на рейтингові (ranked) та не рейтингові (unranked)
+            const rankedTeams = teams.filter(t => !t.type || t.type === 'ranked');
+            const unrankedTeams = teams.filter(t => t.type === 'unranked');
+
             let html = '';
-            teams.forEach((team, index) => {
-                const teamPlayers = players.filter(p => 
-                    p.team && p.team.trim().toLowerCase() === team.name.trim().toLowerCase() && 
-                    (!p.roleSlot || p.roleSlot === 'main')
-                );
 
-                let playersHtml = '';
-                if (teamPlayers.length === 0) {
-                    playersHtml = '<div class="no-players">Склад поки відсутній</div>';
-                } else {
-                    teamPlayers.forEach(p => {
-                        const flagImg = p.country ? `<img src="https://flagcdn.com/24x18/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
-                        const defaultSvg = `<svg width="35" height="35" fill="var(--text-muted)" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
-                        
-                        const avatarContent = p.photo && p.photo.trim() !== '' 
-                            ? `<img src="${p.photo}" onerror="this.parentElement.innerHTML='${defaultSvg.replace(/"/g, '&quot;')}'">` 
-                            : defaultSvg;
+            // --- БЛОК 1: ОСНОВНИЙ РЕЙТИНГ ---
+            if (rankedTeams.length > 0) {
+                html += `<h2 class="section-header-title">Рейтинг команд</h2>`;
+                rankedTeams.forEach((team, index) => {
+                    const rankDisplay = `<span class="rank-number">#${index + 1}</span>`;
+                    html += generateTeamCardHtml(team, rankDisplay, false, players);
+                });
+            }
 
-                        const safePlayerName = encodeURIComponent(p.name);
-
-                        playersHtml += `
-                            <div class="player-mini-card" onclick="openPlayerPage('${safePlayerName}')">
-                                <div class="player-avatar-mini">
-                                    ${avatarContent}
-                                </div>
-                                <div class="player-mini-name">
-                                    ${flagImg} <span>${p.name}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-
-                html += `
-                    <div class="team-card" data-team-name="${team.name.toLowerCase()}">
-                        <div class="team-header">
-                            <div class="team-title-area" onclick="openTeamPage('${team.name}')">
-                                <span class="rank-number">#${index + 1}</span>
-                                <img src="${team.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
-                                <span class="team-name">${team.name}</span>
-                            </div>
-                            <div class="team-points">${team.points || 0} pts</div>
-                            <div class="collapse-arrow" onclick="toggleTeam(this)" title="Згорнути / Розгорнути">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                            </div>
-                        </div>
-                        <div class="players-grid">
-                            ${playersHtml}
-                        </div>
-                    </div>
-                `;
-            });
+            // --- БЛОК 2: НЕ РЕЙТИНГОВІ КОМАНДИ (UNRANKED) ---
+            if (unrankedTeams.length > 0) {
+                html += `<h2 class="section-header-title unranked-section-title">Не рейтингові команди (Unranked)</h2>`;
+                unrankedTeams.forEach(team => {
+                    const rankDisplay = `<span class="unranked-badge-text">-</span>`;
+                    html += generateTeamCardHtml(team, rankDisplay, true, players);
+                });
+            }
 
             container.innerHTML = html;
         }
