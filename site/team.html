@@ -25,6 +25,16 @@
             max-width: 1000px;
             margin: 0 auto;
         }
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .back-link:hover {
+            color: var(--text-color);
+        }
         .header-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -88,7 +98,6 @@
             border-color: var(--accent-color);
             transform: translateY(-3px);
         }
-        /* БЕЗ РАМОК: фото виводяться напряму */
         .player-avatar {
             width: 100%;
             height: 130px;
@@ -185,8 +194,11 @@
 </head>
 <body>
 
-    <div class="main-container" id="app">
-        <div class="loading">Завантаження даних команди...</div>
+    <div class="main-container">
+        <a href="index.html" class="back-link">← Назад до рейтингу</a>
+        <div id="app">
+            <div class="loading">Завантаження даних команди...</div>
+        </div>
     </div>
 
     <script>
