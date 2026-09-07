@@ -130,39 +130,64 @@
             text-align: right;
         }
         
+        /* Стилі для випадаючого списку сіткою */
         .team-players-dropdown {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
             background: #131820;
             border-top: 1px solid transparent;
             padding: 0 20px;
         }
         .ranking-item.open .team-players-dropdown {
-            max-height: 500px;
-            padding: 15px 20px;
+            max-height: 1000px;
+            padding: 20px;
             border-top-color: var(--border-color);
         }
-        .players-title {
-            font-size: 0.85rem;
+        .players-grid-title {
+            font-size: 0.9rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
             font-weight: bold;
         }
-        .player-row {
+        
+        /* Сітка гравців як на твоєму скріншоті */
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+        .player-card {
+            background: #1a222f;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
             display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-direction: column;
+            align-items: center;
+        }
+        .player-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #2a3447;
+            margin-bottom: 10px;
+            border: 2px solid var(--border-color);
+        }
+        .player-name-row {
             font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .player-row:last-child {
-            border-bottom: none;
-        }
-        .player-role {
+        .player-role-badge {
+            font-size: 0.75rem;
             color: var(--text-muted);
-            font-size: 0.85rem;
         }
 
         .footer {
@@ -303,7 +328,6 @@
                 const cloudData = baseData.record || baseData;
                 
                 const teams = cloudData.teams || [];
-                // Шукаємо загальний масив гравців у базі (як у твоїй адмінці)
                 const allPlayers = cloudData.players || cloudData.users || cloudData.roster || [];
 
                 const container = document.getElementById('teams-ranking-list');
@@ -317,32 +341,34 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    // Фільтруємо гравців за назвою команди (шукаємо збіг у полях гравця, наприклад team або teamName)
                     let teamPlayers = allPlayers.filter(p => {
                         const playerTeam = p.team || p.teamName || p.club || '';
                         return playerTeam.toUpperCase() === t.name.toUpperCase();
                     });
 
-                    // Якщо в загальному масиві не знайшлося, перевіряємо чи є гравці всередині самої команди
                     if (teamPlayers.length === 0) {
                         teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || [];
                     }
 
                     let playersHtml = '';
                     if (teamPlayers.length > 0) {
+                        playersHtml = '<div class="players-grid">';
                         teamPlayers.forEach(p => {
                             const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
                             const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
-
+                            const playerAvatar = typeof p === 'object' && p.avatar ? p.avatar : 'https://via.placeholder.com/60';
+                            
                             playersHtml += `
-                                <div class="player-row">
-                                    <span>${playerName}</span>
-                                    <span class="player-role">${playerRole}</span>
+                                <div class="player-card">
+                                    <img src="${playerAvatar}" class="player-avatar" onerror="this.src='https://via.placeholder.com/60'">
+                                    <div class="player-name-row">${playerName}</div>
+                                    <div class="player-role-badge">${playerRole}</div>
                                 </div>
                             `;
                         });
+                        playersHtml += '</div>';
                     } else {
-                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній</div>';
+                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній у базі</div>';
                     }
 
                     html += `
@@ -359,7 +385,7 @@
                                 </div>
                             </div>
                             <div class="team-players-dropdown">
-                                <div class="players-title">Гравці команди:</div>
+                                <div class="players-grid-title">Склад команди:</div>
                                 ${playersHtml}
                             </div>
                         </div>
