@@ -173,20 +173,22 @@
         .trophy-badge {
             background: #1a222f;
             border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            min-width: 90px;
+            min-width: 110px;
         }
         .trophy-icon {
-            width: 32px;
-            height: 32px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         .loading {
             text-align: center;
@@ -309,11 +311,11 @@
                 let tCards = '';
                 teamTrophies.forEach(tr => {
                     const isImg = tr.icon && (tr.icon.startsWith('http') || tr.icon.startsWith('data:'));
-                    const iconEl = isImg ? `<img src="${tr.icon}" class="trophy-icon" onerror="this.style.display='none'">` : `<span class="trophy-icon" style="font-size: 1.5rem; display: flex; align-items: center; justify-content: center;">${tr.icon || '🏆'}</span>`;
+                    const iconEl = isImg ? `<img src="${tr.icon}" class="trophy-icon" onerror="this.style.display='none'">` : `<span class="trophy-icon" style="font-size: 2rem; display: flex; align-items: center; justify-content: center;">${tr.icon || '🏆'}</span>`;
                     tCards += `
                         <div class="trophy-badge">
                             ${iconEl}
-                            <div style="font-size: 0.85rem; color: var(--text-color);">${tr.name}</div>
+                            <div style="font-size: 0.9rem; color: var(--text-color); font-weight: 500;">${tr.name}</div>
                         </div>
                     `;
                 });
