@@ -294,14 +294,24 @@
 
         async function fetchRanking() {
             try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                const res = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+                const response = await fetch(res, {
                     headers: { 'X-Master-Key': API_KEY }
                 });
-                const result = await res.json();
+                const result = await response.json();
                 
-                const baseData = result.record || result;
-                const cloudData = baseData.record || baseData;
-                const teams = cloudData.teams || [];
+                // Витягуємо масив команд незалежно від того, як глибоко він загорнутий
+                let teams = [];
+                if (result.record && result.record.record && Array.isArray(result.record.record.teams)) {
+                    teams = result.record.record.teams;
+                } else if (result.record && Array.isArray(result.record.teams)) {
+                    teams = result.record.teams;
+                } else if (result.teams && Array.isArray(result.teams)) {
+                    teams = result.teams;
+                } else if (Array.isArray(result)) {
+                    teams = result;
+                }
+
                 const container = document.getElementById('teams-ranking-list');
 
                 if (teams.length === 0) {
@@ -313,13 +323,24 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    const teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || [];
+                    // Шукаємо масив гравців за будь-якими можливими ключами чи назвами
+                    let teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || t.users || t.list;
+                    
+                    if (!teamPlayers) {
+                        for (let key in t) {
+                            if (Array.isArray(t[key]) && key !== 'points') {
+                                teamPlayers = t[key];
+                                break;
+                            }
+                        }
+                    }
+                    teamPlayers = teamPlayers || [];
 
                     let playersHtml = '';
                     if (teamPlayers.length > 0) {
                         teamPlayers.forEach(p => {
-                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
-                            const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
+                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || p.title || 'Гравець');
+                            const playerRole = typeof p === 'object' && (p.role || p.position || p.rank) ? (p.role || p.position || p.rank) : '';
 
                             playersHtml += `
                                 <div class="player-row">
@@ -329,7 +350,7 @@
                             `;
                         });
                     } else {
-                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній у базі даних</div>';
+                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній</div>';
                     }
 
                     html += `
@@ -373,9 +394,6 @@
             }
         });
 
-        function scrollToTest() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
