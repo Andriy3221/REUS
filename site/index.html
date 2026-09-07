@@ -294,23 +294,17 @@
 
         async function fetchRanking() {
             try {
-                const res = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
-                const response = await fetch(res, {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     headers: { 'X-Master-Key': API_KEY }
                 });
-                const result = await response.json();
+                const result = await res.json();
                 
-                // Витягуємо масив команд незалежно від того, як глибоко він загорнутий
-                let teams = [];
-                if (result.record && result.record.record && Array.isArray(result.record.record.teams)) {
-                    teams = result.record.record.teams;
-                } else if (result.record && Array.isArray(result.record.teams)) {
-                    teams = result.record.teams;
-                } else if (result.teams && Array.isArray(result.teams)) {
-                    teams = result.teams;
-                } else if (Array.isArray(result)) {
-                    teams = result;
-                }
+                const baseData = result.record || result;
+                const cloudData = baseData.record || baseData;
+                
+                const teams = cloudData.teams || [];
+                // Шукаємо загальний масив гравців у базі (як у твоїй адмінці)
+                const allPlayers = cloudData.players || cloudData.users || cloudData.roster || [];
 
                 const container = document.getElementById('teams-ranking-list');
 
@@ -323,24 +317,22 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    // Шукаємо масив гравців за будь-якими можливими ключами чи назвами
-                    let teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || t.users || t.list;
-                    
-                    if (!teamPlayers) {
-                        for (let key in t) {
-                            if (Array.isArray(t[key]) && key !== 'points') {
-                                teamPlayers = t[key];
-                                break;
-                            }
-                        }
+                    // Фільтруємо гравців за назвою команди (шукаємо збіг у полях гравця, наприклад team або teamName)
+                    let teamPlayers = allPlayers.filter(p => {
+                        const playerTeam = p.team || p.teamName || p.club || '';
+                        return playerTeam.toUpperCase() === t.name.toUpperCase();
+                    });
+
+                    // Якщо в загальному масиві не знайшлося, перевіряємо чи є гравці всередині самої команди
+                    if (teamPlayers.length === 0) {
+                        teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || [];
                     }
-                    teamPlayers = teamPlayers || [];
 
                     let playersHtml = '';
                     if (teamPlayers.length > 0) {
                         teamPlayers.forEach(p => {
-                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || p.title || 'Гравець');
-                            const playerRole = typeof p === 'object' && (p.role || p.position || p.rank) ? (p.role || p.position || p.rank) : '';
+                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
+                            const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
 
                             playersHtml += `
                                 <div class="player-row">
