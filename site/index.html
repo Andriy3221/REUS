@@ -48,6 +48,20 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
+        .support-btn {
+            background: #1a222f;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .support-btn:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
         .section-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -99,22 +113,9 @@
             font-size: 1.1rem;
             font-weight: bold;
         }
-        .toggle-btn {
-            display: block;
-            width: 100%;
-            background: #1a222f;
-            color: var(--accent-color);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            margin-top: 15px;
-            transition: 0.2s;
-        }
-        .toggle-btn:hover {
-            background: var(--border-color);
+        .arrow-icon {
+            color: var(--text-muted);
+            font-size: 1.2rem;
         }
         .loading {
             text-align: center;
@@ -131,6 +132,7 @@
                 <img src="REUS.png" alt="Logo" onerror="this.style.display='none'">
                 <span>Reus Championship</span>
             </div>
+            <a href="https://t.me/your_support" target="_blank" class="support-btn">Техпідтримка</a>
         </div>
 
         <div class="section-box">
@@ -138,7 +140,6 @@
             <div id="teams-ranking-list">
                 <div class="loading">Завантаження рейтингу...</div>
             </div>
-            <div id="toggle-container"></div>
         </div>
     </div>
 
@@ -147,8 +148,7 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         let allTeams = [];
-        let isExpanded = false;
-        let clickCounts = {}; // Зберігає кількість кліків на кожну команду
+        let clickCounts = {}; // Зберігає кількість кліків для кожної команди
 
         async function fetchRanking() {
             try {
@@ -169,62 +169,47 @@
             }
         }
 
-        function handleTeamClick(e, teamName) {
-            // Ініціалізуємо лічильник кліків для команди
+        function handleTeamClick(e, teamName, targetUrl) {
+            e.preventDefault(); // Завжди зупиняємо стандартний перехід спочатку
+
             if (!clickCounts[teamName]) {
                 clickCounts[teamName] = 0;
             }
             clickCounts[teamName]++;
 
-            // Якщо клікнули менше ніж 3 рази — скасовуємо перехід і виводимо повідомлення (опціонально)
-            if (clickCounts[teamName] < 3) {
-                e.preventDefault();
-                console.log(`Кліків по команді ${teamName}: ${clickCounts[teamName]}/3`);
-            } else {
-                // На 3-й раз скидаємо лічильник і дозволяємо перехід на team.html
+            console.log(`Кліків по ${teamName}: ${clickCounts[teamName]}/3`);
+
+            // Коли роблять рівно 3 кліки — скидаємо лічильник і перенаправляємо на сторінку команди
+            if (clickCounts[teamName] >= 3) {
                 clickCounts[teamName] = 0;
+                window.location.href = targetUrl;
             }
         }
 
         function renderList() {
             const container = document.getElementById('teams-ranking-list');
-            const toggleContainer = document.getElementById('toggle-container');
 
             if (allTeams.length === 0) {
                 container.innerHTML = '<div style="color: var(--text-muted);">Команд поки немає в базі</div>';
                 return;
             }
 
-            // Показуємо перші 5 або всі залежно від стану згортання
-            const displayedTeams = isExpanded ? allTeams : allTeams.slice(0, 5);
-
             let html = '';
-            displayedTeams.forEach((t, index) => {
+            allTeams.forEach((t, index) => {
+                const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
                 html += `
-                    <a href="team.html?name=${encodeURIComponent(t.name)}" class="ranking-item" onclick="handleTeamClick(event, '${t.name}')">
+                    <div class="ranking-item" onclick="handleTeamClick(event, '${t.name}', '${targetUrl}')">
                         <div class="item-info">
                             <span class="item-rank">#${index + 1}</span>
                             <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
                             <span class="item-name">${t.name}</span>
                         </div>
-                    </a>
+                        <div class="arrow-icon">➔</div>
+                    </div>
                 `;
             });
 
             container.innerHTML = html;
-
-            if (allTeams.length > 5) {
-                toggleContainer.innerHTML = `
-                    <button class="toggle-btn" onclick="toggleExpand()">
-                        ${isExpanded ? 'Згорнути ▲' : 'Розгорнути повністю ▼'}
-                    </button>
-                `;
-            }
-        }
-
-        function toggleExpand() {
-            isExpanded = !isExpanded;
-            renderList();
         }
 
         fetchRanking();
