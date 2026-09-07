@@ -130,7 +130,6 @@
             text-align: right;
         }
         
-        /* Стилі для випадаючого списку сіткою */
         .team-players-dropdown {
             max-height: 0;
             overflow: hidden;
@@ -152,7 +151,6 @@
             font-weight: bold;
         }
         
-        /* Сітка гравців як на твоєму скріншоті */
         .players-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -356,7 +354,9 @@
                         teamPlayers.forEach(p => {
                             const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
                             const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
-                            const playerAvatar = typeof p === 'object' && p.avatar ? p.avatar : 'https://via.placeholder.com/60';
+                            
+                            // Універсальний пошук посилань на фотографію у базі даних
+                            const playerAvatar = typeof p === 'object' ? (p.avatar || p.photo || p.image || p.img || p.avatarUrl || 'https://via.placeholder.com/60') : 'https://via.placeholder.com/60';
                             
                             playersHtml += `
                                 <div class="player-card">
