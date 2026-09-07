@@ -286,7 +286,7 @@
         </div>
     </div>
 
-    <!-- Блок кнопок (стрілочка зверху, Discord знизу) -->
+    <!-- Блок кнопок -->
     <div class="fixed-buttons-container">
         <div id="scrollTopBtn" onclick="scrollToTop()">▲</div>
         <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="discord-support-btn">
@@ -322,14 +322,25 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    // Перевірка всіх можливих варіантів назви масиву гравців у базі даних
-                    const teamPlayers = t.players || t.members || t.roster || t.squad || [];
+                    // Шукаємо масив гравців за будь-яким можливим ключем або назвою в базі
+                    let teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup;
+                    
+                    if (!teamPlayers) {
+                        // Автоматичний пошук будь-якого масиву всередині об'єкта команди
+                        for (let key in t) {
+                            if (Array.isArray(t[key]) && key !== 'points') {
+                                teamPlayers = t[key];
+                                break;
+                            }
+                        }
+                    }
+                    teamPlayers = teamPlayers || [];
 
                     let playersHtml = '';
                     if (teamPlayers.length > 0) {
                         teamPlayers.forEach(p => {
-                            const playerName = typeof p === 'string' ? p : (p.name || p.username || 'Гравець');
-                            const playerRole = typeof p === 'object' && p.role ? p.role : '';
+                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
+                            const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
 
                             playersHtml += `
                                 <div class="player-row">
