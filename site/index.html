@@ -208,6 +208,7 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         let allTeams = [];
+        let allPlayers = []; // Зберігаємо загальний список гравців
         let clickCounts = {};
 
         async function fetchRanking() {
@@ -220,6 +221,8 @@
                 const cloudData = baseData.record || baseData;
                 
                 allTeams = cloudData.teams || [];
+                allPlayers = cloudData.players || []; // Завантажуємо гравців окремо з JSONBin
+                
                 allTeams.sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0));
 
                 renderList();
@@ -231,19 +234,14 @@
 
         // Обробка кліків для згортання / розгортання та переходу на team.html після 3 кліків
         function handleTeamHeaderClick(event, teamName, cardElement, targetUrl) {
-            // Якщо клікнули всередині контейнера гравців — нічого не робимо тут
             if (event.target.closest('.players-container')) return;
 
-            // Згортаємо/розгортаємо картку
             cardElement.classList.toggle('open');
 
-            // Рахуємо кліки для переходу на сторінку команди
             if (!clickCounts[teamName]) {
                 clickCounts[teamName] = 0;
             }
             clickCounts[teamName]++;
-
-            console.log(`Кліків по команді ${teamName}: ${clickCounts[teamName]}/3`);
 
             if (clickCounts[teamName] >= 3) {
                 clickCounts[teamName] = 0;
@@ -264,23 +262,30 @@
                 const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
                 const points = t.points !== undefined ? t.points : 0;
                 
-                // Формуємо список гравців (якщо вони є в базі команди, інакше порожньо)
-                let playersHtml = '';
-                const players = t.players || [];
+                // Фільтруємо гравців із загального списку по назві поточної команди
+                const teamPlayers = allPlayers.filter(p => p.team === t.name);
                 
-                // Якщо гравців менше 5, можемо доповнити пустими слотами або вивести скільки є
+                let playersHtml = '';
                 for (let i = 0; i < 5; i++) {
-                    const p = players[i];
-                    const pName = p ? (p.name || p) : `Гравець ${i+1}`;
-                    const pAvatar = p && p.avatar ? p.avatar : 'https://via.placeholder.com/55?text=👤';
-                    const pFlag = p && p.flag ? p.flag : 'https://flagcdn.com/w20/ua.png'; // За замовчуванням прапор України
+                    const p = teamPlayers[i]; // Беремо гравця за індексом із відфільтрованого масиву
+                    const pName = p ? p.name : `Гравець ${i+1}`;
+                    
+                    // Перевіряємо аватарку (якщо її немає або вона стандартна заглушка HLTV, ставимо дефолтну)
+                    const pAvatar = (p && p.photo && p.photo !== 'https://www.hltv.org/img/static/player/player_silhouette.png') 
+                        ? p.photo 
+                        : 'https://via.placeholder.com/55?text=👤';
+                    
+                    // Прапор (у тебе в JSON може зберігатися код країни типу 'ua')
+                    const pFlag = (p && p.country) 
+                        ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
+                        : 'https://flagcdn.com/w20/ua.png';
 
                     playersHtml += `
                         <div class="player-box">
                             <img src="${pAvatar}" class="player-avatar" onerror="this.src='https://via.placeholder.com/55?text=👤'">
                             <div class="player-details">
                                 <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
-                                <span>${pName}</span>
+                                    <span>${pName}</span>
                             </div>
                         </div>
                     `;
