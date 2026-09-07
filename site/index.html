@@ -12,7 +12,6 @@
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
-            --discord-color: #5865F2;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -100,12 +99,22 @@
             font-size: 1.1rem;
             font-weight: bold;
         }
-        .item-points {
+        .toggle-btn {
+            display: block;
+            width: 100%;
+            background: #1a222f;
             color: var(--accent-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+        .toggle-btn:hover {
+            background: var(--border-color);
         }
         .loading {
             text-align: center;
@@ -129,12 +138,17 @@
             <div id="teams-ranking-list">
                 <div class="loading">Завантаження рейтингу...</div>
             </div>
+            <div id="toggle-container"></div>
         </div>
     </div>
 
     <script>
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
+
+        let allTeams = [];
+        let isExpanded = false;
+        let clickCounts = {}; // Зберігає кількість кліків на кожну команду
 
         async function fetchRanking() {
             try {
@@ -145,37 +159,72 @@
                 const baseData = result.record || result;
                 const cloudData = baseData.record || baseData;
                 
-                const teams = cloudData.teams || [];
-                const container = document.getElementById('teams-ranking-list');
+                allTeams = cloudData.teams || [];
+                allTeams.sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0));
 
-                if (teams.length === 0) {
-                    container.innerHTML = '<div style="color: var(--text-muted);">Команд поки немає в базі</div>';
-                    return;
-                }
-
-                teams.sort((a, b) => (Number(b.points) || 0) - (Number(a.points) || 0));
-
-                let html = '';
-                teams.forEach((t, index) => {
-                    html += `
-                        <a href="team.html?name=${encodeURIComponent(t.name)}" class="ranking-item">
-                            <div class="item-info">
-                                <span class="item-rank">#${index + 1}</span>
-                                <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
-                                <span class="item-name">${t.name}</span>
-                            </div>
-                            <div class="item-points">
-                                🏆 ${t.points || 0}
-                            </div>
-                        </a>
-                    `;
-                });
-
-                container.innerHTML = html;
+                renderList();
             } catch (err) {
                 console.error(err);
                 document.getElementById('teams-ranking-list').innerHTML = '<div style="color: #ff4444; text-align: center;">Помилка завантаження рейтингу.</div>';
             }
+        }
+
+        function handleTeamClick(e, teamName) {
+            // Ініціалізуємо лічильник кліків для команди
+            if (!clickCounts[teamName]) {
+                clickCounts[teamName] = 0;
+            }
+            clickCounts[teamName]++;
+
+            // Якщо клікнули менше ніж 3 рази — скасовуємо перехід і виводимо повідомлення (опціонально)
+            if (clickCounts[teamName] < 3) {
+                e.preventDefault();
+                console.log(`Кліків по команді ${teamName}: ${clickCounts[teamName]}/3`);
+            } else {
+                // На 3-й раз скидаємо лічильник і дозволяємо перехід на team.html
+                clickCounts[teamName] = 0;
+            }
+        }
+
+        function renderList() {
+            const container = document.getElementById('teams-ranking-list');
+            const toggleContainer = document.getElementById('toggle-container');
+
+            if (allTeams.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Команд поки немає в базі</div>';
+                return;
+            }
+
+            // Показуємо перші 5 або всі залежно від стану згортання
+            const displayedTeams = isExpanded ? allTeams : allTeams.slice(0, 5);
+
+            let html = '';
+            displayedTeams.forEach((t, index) => {
+                html += `
+                    <a href="team.html?name=${encodeURIComponent(t.name)}" class="ranking-item" onclick="handleTeamClick(event, '${t.name}')">
+                        <div class="item-info">
+                            <span class="item-rank">#${index + 1}</span>
+                            <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
+                            <span class="item-name">${t.name}</span>
+                        </div>
+                    </a>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            if (allTeams.length > 5) {
+                toggleContainer.innerHTML = `
+                    <button class="toggle-btn" onclick="toggleExpand()">
+                        ${isExpanded ? 'Згорнути ▲' : 'Розгорнути повністю ▼'}
+                    </button>
+                `;
+            }
+        }
+
+        function toggleExpand() {
+            isExpanded = !isExpanded;
+            renderList();
         }
 
         fetchRanking();
