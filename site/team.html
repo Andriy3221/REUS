@@ -173,17 +173,20 @@
         .trophy-badge {
             background: #1a222f;
             border: 1px solid var(--border-color);
-            padding: 10px 15px;
+            padding: 12px;
             border-radius: 8px;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            text-align: center;
+            min-width: 90px;
         }
         .trophy-icon {
-            font-size: 1.5rem;
-            max-width: 32px;
-            max-height: 32px;
-            object-fit: contain;
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 6px;
         }
         .loading {
             text-align: center;
@@ -306,11 +309,11 @@
                 let tCards = '';
                 teamTrophies.forEach(tr => {
                     const isImg = tr.icon && (tr.icon.startsWith('http') || tr.icon.startsWith('data:'));
-                    const iconEl = isImg ? `<img src="${tr.icon}" class="trophy-icon" onerror="this.style.display='none'">` : `<span class="trophy-icon">${tr.icon || '🏆'}</span>`;
+                    const iconEl = isImg ? `<img src="${tr.icon}" class="trophy-icon" onerror="this.style.display='none'">` : `<span class="trophy-icon" style="font-size: 1.5rem; display: flex; align-items: center; justify-content: center;">${tr.icon || '🏆'}</span>`;
                     tCards += `
                         <div class="trophy-badge">
                             ${iconEl}
-                            <div><b>${tr.name}</b></div>
+                            <div style="font-size: 0.85rem; color: var(--text-color);">${tr.name}</div>
                         </div>
                     `;
                 });
