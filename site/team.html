@@ -110,6 +110,7 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+            border-radius: 6px;
         }
         .player-name {
             font-size: 1.1rem;
@@ -187,8 +188,6 @@
             object-fit: contain;
             border-radius: 8px;
             margin-bottom: 8px;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
         }
         .loading {
             text-align: center;
@@ -211,7 +210,7 @@
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
         const urlParams = new URLSearchParams(window.location.search);
-        const teamNameParam = urlParams.get('name') || 'YAMI';
+        const teamNameParam = urlParams.get('name') || '';
 
         async function fetchTeamData() {
             try {
@@ -258,6 +257,11 @@
             const teams = data.teams || [];
             const players = data.players || [];
             const trophies = data.trophies || [];
+
+            if (!teamNameParam) {
+                document.getElementById('app').innerHTML = '<div class="loading" style="color: var(--danger-color);">Команду не вказано у посиланні!</div>';
+                return;
+            }
 
             const team = teams.find(t => t.name.toLowerCase() === teamNameParam.toLowerCase()) || {
                 name: teamNameParam,
