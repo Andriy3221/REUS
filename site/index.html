@@ -62,6 +62,8 @@
             font-weight: bold;
             transition: 0.2s;
             text-decoration: none;
+            display: flex;
+            align-items: center;
         }
         .btn.active, .btn:hover {
             background: var(--accent-color);
@@ -143,7 +145,7 @@
         .support-link:hover {
             text-decoration: underline;
         }
-        /* Стрілочка вгору */
+        /* Покращена стрілочка вгору */
         #scrollTopBtn {
             position: fixed;
             bottom: 30px;
@@ -151,18 +153,18 @@
             background: var(--card-bg);
             color: var(--accent-color);
             border: 1px solid var(--border-color);
-            width: 45px;
-            height: 45px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             opacity: 0;
             visibility: hidden;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             z-index: 100;
         }
         #scrollTopBtn.show {
@@ -171,7 +173,10 @@
         }
         #scrollTopBtn:hover {
             background: var(--accent-color);
-            color: #000;
+            color: #0b0e14;
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.3);
         }
         .loading {
             text-align: center;
@@ -183,7 +188,7 @@
 <body>
 
     <div class="main-container">
-        <!-- Шапка сайту з навігацією -->
+        <!-- Шапка сайту -->
         <div class="nav-bar">
             <div class="logo-area">
                 <img src="REUS.png" alt="Logo" onerror="this.style.display='none'">
@@ -191,7 +196,6 @@
             </div>
             <div class="toggle-btns">
                 <button class="btn active">Рейтинг команд</button>
-                <a href="player.html" class="btn" style="text-decoration: none; display: flex; align-items: center;">Рейтинг гравців</a>
             </div>
         </div>
 
@@ -203,10 +207,10 @@
             </div>
         </div>
 
-        <!-- Підвал з техпідтримкою -->
+        <!-- Підвал сайту -->
         <div class="footer">
             <div>Reus Championship &copy; 2026. Усі права захищено.</div>
-            <div>П1дтримка та зв'язок: <a href="https://t.me/твій_телеграм" target="_blank" class="support-link">Технічна підтримка у Telegram</a></div>
+            <div>Технічна підтримка: <a href="https://t.me/твій_телеграм" target="_blank" class="support-link">Написати в Telegram</a></div>
         </div>
     </div>
 
@@ -234,7 +238,6 @@
                     return;
                 }
 
-                // Сортуємо команди за очками (якщо є поле points, або просто виводимо)
                 teams.sort((a, b) => (b.points || 0) - (a.points || 0));
 
                 let html = '';
@@ -261,7 +264,7 @@
             }
         }
 
-        // Логіка для стрілочки "Вгору"
+        // Поведінка стрілочки "Вгору"
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
