@@ -307,8 +307,10 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const rawRecord = result.record || result;
-                const cloudData = rawRecord.record || rawRecord;
+                
+                // Витягуємо дані з урахуванням подвійного рівня вкладеності record
+                const baseData = result.record || result;
+                const cloudData = baseData.record || baseData;
 
                 const teams = cloudData.teams || [];
                 const container = document.getElementById('teams-ranking-list');
@@ -322,11 +324,10 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    // Шукаємо масив гравців за будь-яким можливим ключем або назвою в базі
+                    // Перевіряємо всі можливі варіанти назв масиву гравців
                     let teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup;
                     
                     if (!teamPlayers) {
-                        // Автоматичний пошук будь-якого масиву всередині об'єкта команди
                         for (let key in t) {
                             if (Array.isArray(t[key]) && key !== 'points') {
                                 teamPlayers = t[key];
