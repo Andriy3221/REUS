@@ -49,28 +49,6 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
-        .toggle-btns {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            background: #1a222f;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-        .btn.active, .btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            border-color: var(--accent-color);
-        }
         .section-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -85,24 +63,22 @@
             color: var(--accent-color);
             text-transform: uppercase;
         }
-        
         .ranking-item {
             background: #1a222f;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             margin-bottom: 12px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-            overflow: hidden;
-        }
-        .ranking-item:hover {
-            border-color: var(--accent-color);
-        }
-        .ranking-item-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+        .ranking-item:hover {
+            border-color: var(--accent-color);
         }
         .item-info {
             display: flex;
@@ -127,147 +103,9 @@
         .item-points {
             color: var(--accent-color);
             font-weight: bold;
-            text-align: right;
-        }
-        
-        .team-players-dropdown {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease;
-            background: #131820;
-            border-top: 1px solid transparent;
-            padding: 0 20px;
-        }
-        .ranking-item.open .team-players-dropdown {
-            max-height: 1000px;
-            padding: 20px;
-            border-top-color: var(--border-color);
-        }
-        .players-grid-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        
-        .players-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-        }
-        .player-card {
-            background: #1a222f;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px 10px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .player-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #2a3447;
-            margin-bottom: 10px;
-            border: 2px solid var(--border-color);
-        }
-        .player-name-row {
-            font-size: 0.95rem;
-            font-weight: bold;
-            margin-bottom: 4px;
             display: flex;
             align-items: center;
-            gap: 5px;
-        }
-        .player-role-badge {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 30px 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 40px;
-        }
-
-        .fixed-buttons-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-end;
-            z-index: 100;
-        }
-
-        .discord-support-btn {
-            background: var(--card-bg);
-            color: #ffffff;
-            border: 1px solid var(--border-color);
-            padding: 14px 22px;
-            border-radius: 35px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
-        }
-        .discord-support-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--discord-color);
-            transition: transform 0.3s ease;
-        }
-        .discord-support-btn:hover {
-            background: var(--discord-color);
-            border-color: var(--discord-color);
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5);
-        }
-        .discord-support-btn:hover svg {
-            fill: #fff;
-            transform: scale(1.1);
-        }
-
-        #scrollTopBtn {
-            background: var(--card-bg);
-            color: var(--accent-color);
-            border: 1px solid var(--border-color);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        #scrollTopBtn.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        #scrollTopBtn:hover {
-            background: var(--accent-color);
-            color: #0b0e14;
-            border-color: var(--accent-color);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.3);
+            gap: 6px;
         }
         .loading {
             text-align: center;
@@ -284,9 +122,6 @@
                 <img src="REUS.png" alt="Logo" onerror="this.style.display='none'">
                 <span>Reus Championship</span>
             </div>
-            <div class="toggle-btns">
-                <button class="btn active">Рейтинг команд</button>
-            </div>
         </div>
 
         <div class="section-box">
@@ -295,20 +130,6 @@
                 <div class="loading">Завантаження рейтингу...</div>
             </div>
         </div>
-
-        <div class="footer">
-            <div>Reus Championship &copy; 2026. Усі права захищено.</div>
-        </div>
-    </div>
-
-    <div class="fixed-buttons-container">
-        <div id="scrollTopBtn" onclick="scrollToTop()">▲</div>
-        <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="discord-support-btn">
-            <svg viewBox="0 0 127.14 96.36">
-                <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.15c2.64-27.41-4.51-51.4-19.06-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.45-12.72S96.14,46,96.12,53,91,65.69,84.69,65.69Z"/>
-            </svg>
-            Тех підтримка
-        </a>
     </div>
 
     <script>
@@ -321,13 +142,10 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                
                 const baseData = result.record || result;
                 const cloudData = baseData.record || baseData;
                 
                 const teams = cloudData.teams || [];
-                const allPlayers = cloudData.players || cloudData.users || cloudData.roster || [];
-
                 const container = document.getElementById('teams-ranking-list');
 
                 if (teams.length === 0) {
@@ -339,56 +157,17 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    let teamPlayers = allPlayers.filter(p => {
-                        const playerTeam = p.team || p.teamName || p.club || '';
-                        return playerTeam.toUpperCase() === t.name.toUpperCase();
-                    });
-
-                    if (teamPlayers.length === 0) {
-                        teamPlayers = t.players || t.members || t.roster || t.squad || t.lineup || [];
-                    }
-
-                    let playersHtml = '';
-                    if (teamPlayers.length > 0) {
-                        playersHtml = '<div class="players-grid">';
-                        teamPlayers.forEach(p => {
-                            const playerName = typeof p === 'string' ? p : (p.name || p.username || p.nickname || p.tag || 'Гравець');
-                            const playerRole = typeof p === 'object' && (p.role || p.position) ? (p.role || p.position) : '';
-                            
-                            // Універсальний пошук посилань на фотографію у базі даних
-                            const playerAvatar = typeof p === 'object' ? (p.avatar || p.photo || p.image || p.img || p.avatarUrl || 'https://via.placeholder.com/60') : 'https://via.placeholder.com/60';
-                            
-                            playersHtml += `
-                                <div class="player-card">
-                                    <img src="${playerAvatar}" class="player-avatar" onerror="this.src='https://via.placeholder.com/60'">
-                                    <div class="player-name-row">${playerName}</div>
-                                    <div class="player-role-badge">${playerRole}</div>
-                                </div>
-                            `;
-                        });
-                        playersHtml += '</div>';
-                    } else {
-                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній у базі</div>';
-                    }
-
                     html += `
-                        <div class="ranking-item" onclick="toggleTeam(this)">
-                            <div class="ranking-item-header">
-                                <div class="item-info">
-                                    <span class="item-rank">#${index + 1}</span>
-                                    <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
-                                    <span class="item-name">${t.name}</span>
-                                </div>
-                                <div class="item-points">
-                                    <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase;">Points</span>
-                                    ${t.points || 0}
-                                </div>
+                        <a href="team.html?name=${encodeURIComponent(t.name)}" class="ranking-item">
+                            <div class="item-info">
+                                <span class="item-rank">#${index + 1}</span>
+                                <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
+                                <span class="item-name">${t.name}</span>
                             </div>
-                            <div class="team-players-dropdown">
-                                <div class="players-grid-title">Склад команди:</div>
-                                ${playersHtml}
+                            <div class="item-points">
+                                🏆 ${t.points || 0}
                             </div>
-                        </div>
+                        </a>
                     `;
                 });
 
@@ -397,23 +176,6 @@
                 console.error(err);
                 document.getElementById('teams-ranking-list').innerHTML = '<div style="color: #ff4444; text-align: center;">Помилка завантаження рейтингу.</div>';
             }
-        }
-
-        function toggleTeam(element) {
-            element.classList.toggle('open');
-        }
-
-        const scrollTopBtn = document.getElementById('scrollTopBtn');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollTopBtn.classList.add('show');
-            } else {
-                scrollTopBtn.classList.remove('show');
-            }
-        });
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         fetchRanking();
