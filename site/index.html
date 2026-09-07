@@ -85,21 +85,25 @@
             color: var(--accent-color);
             text-transform: uppercase;
         }
+        
+        /* Стилі картки команди з випадаючим списком */
         .ranking-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
             background: #1a222f;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: border-color 0.2s;
+            overflow: hidden;
         }
         .ranking-item:hover {
             border-color: var(--accent-color);
-            transform: translateY(-2px);
+        }
+        .ranking-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
         }
         .item-info {
             display: flex;
@@ -124,7 +128,45 @@
         .item-points {
             color: var(--accent-color);
             font-weight: bold;
+            text-align: right;
         }
+        
+        /* Випадаючий блок з гравцями */
+        .team-players-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background: #131820;
+            border-top: 1px solid transparent;
+            padding: 0 20px;
+        }
+        .ranking-item.open .team-players-dropdown {
+            max-height: 500px;
+            padding: 15px 20px;
+            border-top-color: var(--border-color);
+        }
+        .players-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+        .player-row:last-child {
+            border-bottom: none;
+        }
+        .player-role {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
         .footer {
             text-align: center;
             padding: 30px 0;
@@ -146,7 +188,6 @@
             z-index: 100;
         }
 
-        /* Збільшена та помітна кнопка Discord */
         .discord-support-btn {
             background: var(--card-bg);
             color: #ffffff;
@@ -180,7 +221,6 @@
             transform: scale(1.1);
         }
 
-        /* Стрілочка вгору (тепер вище) */
         #scrollTopBtn {
             background: var(--card-bg);
             color: var(--accent-color);
@@ -244,11 +284,9 @@
         </div>
     </div>
 
-    <!-- Блок кнопок: спочатку стрілочка, знизу велика кнопка Discord -->
+    <!-- Блок кнопок -->
     <div class="fixed-buttons-container">
-        <!-- Стрілочка вгору -->
         <div id="scrollTopBtn" onclick="scrollToTop()">▲</div>
-        <!-- Кнопка технічної підтримки Discord -->
         <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="discord-support-btn">
             <svg viewBox="0 0 127.14 96.36">
                 <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.15c2.64-27.41-4.51-51.4-19.06-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.45-12.72S96.14,46,96.12,53,91,65.69,84.69,65.69Z"/>
@@ -282,16 +320,37 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
+                    // Формуємо список гравців для кожної команди (якщо вони є в масиві)
+                    let playersHtml = '';
+                    if (t.players && t.players.length > 0) {
+                        t.players.forEach(p => {
+                            playersHtml += `
+                                <div class="player-row">
+                                    <span>${p.name || p}</span>
+                                    <span class="player-role">${p.role || ''}</span>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        playersHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Список гравців відсутній</div>';
+                    }
+
                     html += `
-                        <div class="ranking-item" onclick="window.location.href='team.html?name=${encodeURIComponent(t.name)}'">
-                            <div class="item-info">
-                                <span class="item-rank">#${index + 1}</span>
-                                <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
-                                <span class="item-name">${t.name}</span>
+                        <div class="ranking-item" onclick="toggleTeam(this)">
+                            <div class="ranking-item-header">
+                                <div class="item-info">
+                                    <span class="item-rank">#${index + 1}</span>
+                                    <img src="${t.logo || 'https://via.placeholder.com/35'}" class="item-logo" onerror="this.style.display='none'">
+                                    <span class="item-name">${t.name}</span>
+                                </div>
+                                <div class="item-points">
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase;">Points</span>
+                                    ${t.points || 0}
+                                </div>
                             </div>
-                            <div class="item-points">
-                                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-align: right; text-transform: uppercase;">Points</span>
-                                ${t.points || 0}
+                            <div class="team-players-dropdown">
+                                <div class="players-title">Гравці команди:</div>
+                                ${playersHtml}
                             </div>
                         </div>
                     `;
@@ -302,6 +361,11 @@
                 console.error(err);
                 document.getElementById('teams-ranking-list').innerHTML = '<div style="color: #ff4444; text-align: center;">Помилка завантаження рейтингу.</div>';
             }
+        }
+
+        // Функція для плавного згортання/розгортання команди
+        function toggleTeam(element) {
+            element.classList.toggle('open');
         }
 
         const scrollTopBtn = document.getElementById('scrollTopBtn');
