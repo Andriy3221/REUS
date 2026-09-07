@@ -8,6 +8,7 @@
         :root {
             --bg-color: #0b0e14;
             --card-bg: #131820;
+            --inner-card-bg: #1a222f;
             --border-color: #1f2937;
             --accent-color: #00ff88;
             --text-color: #ffffff;
@@ -76,44 +77,105 @@
             color: var(--accent-color);
             text-transform: uppercase;
         }
-        .ranking-item {
-            background: #1a222f;
+        .team-card {
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-bottom: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .team-card:hover {
+            border-color: var(--accent-color);
+        }
+        .team-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            padding: 15px 20px;
             cursor: pointer;
-            transition: border-color 0.2s;
+            background: #151c27;
+            user-select: none;
         }
-        .ranking-item:hover {
-            border-color: var(--accent-color);
-        }
-        .item-info {
+        .team-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        .item-rank {
+        .team-rank {
             font-weight: bold;
             font-size: 1.1rem;
             color: var(--text-muted);
             width: 30px;
         }
-        .item-logo {
+        .team-logo {
             width: 32px;
             height: 32px;
             object-fit: contain;
         }
-        .item-name {
-            font-size: 1.05rem;
+        .team-name {
+            font-size: 1.1rem;
             font-weight: bold;
         }
-        .arrow-icon {
+        .team-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .team-points {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        .toggle-arrow {
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 0.9rem;
+            transition: transform 0.3s;
+        }
+        .team-card.open .toggle-arrow {
+            transform: rotate(180deg);
+        }
+        .players-container {
+            display: none;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+        .team-card.open .players-container {
+            display: grid;
+        }
+        .player-box {
+            background: var(--inner-card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .player-avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #111;
+        }
+        .player-details {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .player-flag {
+            width: 18px;
+            height: 13px;
+            object-fit: cover;
+            border-radius: 2px;
         }
         .loading {
             text-align: center;
@@ -167,13 +229,21 @@
             }
         }
 
-        function handleTeamClick(teamName, targetUrl) {
+        // Обробка кліків для згортання / розгортання та переходу на team.html після 3 кліків
+        function handleTeamHeaderClick(event, teamName, cardElement, targetUrl) {
+            // Якщо клікнули всередині контейнера гравців — нічого не робимо тут
+            if (event.target.closest('.players-container')) return;
+
+            // Згортаємо/розгортаємо картку
+            cardElement.classList.toggle('open');
+
+            // Рахуємо кліки для переходу на сторінку команди
             if (!clickCounts[teamName]) {
                 clickCounts[teamName] = 0;
             }
             clickCounts[teamName]++;
 
-            console.log(`Кліків по ${teamName}: ${clickCounts[teamName]}/3`);
+            console.log(`Кліків по команді ${teamName}: ${clickCounts[teamName]}/3`);
 
             if (clickCounts[teamName] >= 3) {
                 clickCounts[teamName] = 0;
@@ -192,14 +262,46 @@
             let html = '';
             allTeams.forEach((t, index) => {
                 const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
-                html += `
-                    <div class="ranking-item" onclick="handleTeamClick('${t.name}', '${targetUrl}')">
-                        <div class="item-info">
-                            <span class="item-rank">#${index + 1}</span>
-                            <img src="${t.logo || 'https://via.placeholder.com/32'}" class="item-logo" onerror="this.style.display='none'">
-                            <span class="item-name">${t.name}</span>
+                const points = t.points !== undefined ? t.points : 0;
+                
+                // Формуємо список гравців (якщо вони є в базі команди, інакше порожньо)
+                let playersHtml = '';
+                const players = t.players || [];
+                
+                // Якщо гравців менше 5, можемо доповнити пустими слотами або вивести скільки є
+                for (let i = 0; i < 5; i++) {
+                    const p = players[i];
+                    const pName = p ? (p.name || p) : `Гравець ${i+1}`;
+                    const pAvatar = p && p.avatar ? p.avatar : 'https://via.placeholder.com/55?text=👤';
+                    const pFlag = p && p.flag ? p.flag : 'https://flagcdn.com/w20/ua.png'; // За замовчуванням прапор України
+
+                    playersHtml += `
+                        <div class="player-box">
+                            <img src="${pAvatar}" class="player-avatar" onerror="this.src='https://via.placeholder.com/55?text=👤'">
+                            <div class="player-details">
+                                <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
+                                <span>${pName}</span>
+                            </div>
                         </div>
-                        <div class="arrow-icon">➔</div>
+                    `;
+                }
+
+                html += `
+                    <div class="team-card" id="team-card-${index}">
+                        <div class="team-header" onclick="handleTeamHeaderClick(event, '${t.name}', document.getElementById('team-card-${index}'), '${targetUrl}')">
+                            <div class="team-info">
+                                <span class="team-rank">#${index + 1}</span>
+                                <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                                <span class="team-name">${t.name}</span>
+                            </div>
+                            <div class="team-meta">
+                                <span class="team-points">${points} pts</span>
+                                <span class="toggle-arrow">▼</span>
+                            </div>
+                        </div>
+                        <div class="players-container">
+                            ${playersHtml}
+                        </div>
                     </div>
                 `;
             });
