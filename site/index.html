@@ -86,7 +86,7 @@
             text-transform: uppercase;
         }
         
-        /* Стилі картки команди з випадаючим списком */
+        /* Стилі картки команди (акордеон) */
         .ranking-item {
             background: #1a222f;
             border: 1px solid var(--border-color);
@@ -188,6 +188,7 @@
             z-index: 100;
         }
 
+        /* Кнопка Discord */
         .discord-support-btn {
             background: var(--card-bg);
             color: #ffffff;
@@ -221,6 +222,7 @@
             transform: scale(1.1);
         }
 
+        /* Стрілочка вгору */
         #scrollTopBtn {
             background: var(--card-bg);
             color: var(--accent-color);
@@ -284,7 +286,7 @@
         </div>
     </div>
 
-    <!-- Блок кнопок -->
+    <!-- Блок кнопок (стрілочка зверху, Discord знизу) -->
     <div class="fixed-buttons-container">
         <div id="scrollTopBtn" onclick="scrollToTop()">▲</div>
         <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="discord-support-btn">
@@ -320,14 +322,19 @@
 
                 let html = '';
                 teams.forEach((t, index) => {
-                    // Формуємо список гравців для кожної команди (якщо вони є в масиві)
+                    // Перевірка всіх можливих варіантів назви масиву гравців у базі даних
+                    const teamPlayers = t.players || t.members || t.roster || t.squad || [];
+
                     let playersHtml = '';
-                    if (t.players && t.players.length > 0) {
-                        t.players.forEach(p => {
+                    if (teamPlayers.length > 0) {
+                        teamPlayers.forEach(p => {
+                            const playerName = typeof p === 'string' ? p : (p.name || p.username || 'Гравець');
+                            const playerRole = typeof p === 'object' && p.role ? p.role : '';
+
                             playersHtml += `
                                 <div class="player-row">
-                                    <span>${p.name || p}</span>
-                                    <span class="player-role">${p.role || ''}</span>
+                                    <span>${playerName}</span>
+                                    <span class="player-role">${playerRole}</span>
                                 </div>
                             `;
                         });
@@ -363,7 +370,6 @@
             }
         }
 
-        // Функція для плавного згортання/розгортання команди
         function toggleTeam(element) {
             element.classList.toggle('open');
         }
