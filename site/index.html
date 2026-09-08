@@ -452,31 +452,30 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Фільтруємо гравців команди, виключаючи запасних та тренерів
                         const teamPlayers = allPlayers.filter(p => {
                             const pTeam = p.team || p.teamName || p.club || p.group || '';
                             const isTeamMatch = pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
-                            
                             const pRole = (p.role || p.slot || '').toLowerCase();
                             const isNotBench = !pRole.includes('запасний') && !pRole.includes('bench') && !pRole.includes('тренер');
-                            
                             return isTeamMatch && isNotBench;
                         });
 
-                        // Оновлена перевірка за полем status з адмін-панелі
-                        const teamStatus = t.status || 'Активна';
-                        const isRanked = teamStatus === 'Активна';
+                        // Чітка перевірка статусу з урахуванням регістру
+                        const teamStatus = (t.status || '').trim();
+                        const lowerStatus = teamStatus.toLowerCase();
+                        const isDisbandOrUnranked = lowerStatus.includes('дизбанд') || 
+                                                    lowerStatus.includes('нерейтинг') || 
+                                                    lowerStatus.includes('unranked');
+                        
+                        const isRanked = !isDisbandOrUnranked;
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
 
                         let playersListHtml = '';
                         if (teamPlayers.length > 0) {
-                            const limitedPlayers = teamPlayers.slice(0, 5);
-                            limitedPlayers.forEach(tp => {
+                            teamPlayers.slice(0, 5).forEach(tp => {
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
-                                
-                                const rawFlag = tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '';
-                                const playerFlag = getFlagUrl(rawFlag);
+                                const playerFlag = getFlagUrl(tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '');
                                 let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
 
                                 let extraClass = '';
@@ -501,6 +500,9 @@
                             playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">У команді немає активних основних гравців</div>';
                         }
 
+                        // Отримуємо актуальні бали (ПТС)
+                        const teamPoints = t.points !== undefined && t.points !== null ? t.points : (t.rating || 0);
+
                         const cardHtml = `
                             <div class="team-card ${isRanked ? '' : 'unranked'}">
                                 <div class="team-header" onclick="toggleTeam(event, this)">
@@ -510,7 +512,7 @@
                                         <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
-                                        ${isRanked ? `<span class="team-value">${t.points || t.rating || '0'}</span>` : `<span class="unranked-badge">${teamStatus}</span>`}
+                                        ${isRanked ? `<span class="team-value">${teamPoints}</span>` : `<span class="unranked-badge">${teamStatus || 'Нерейтингова'}</span>`}
                                         <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
                                     </div>
                                 </div>
