@@ -235,9 +235,9 @@
             </div>
 
             <div class="form-group">
-                <label>Статус команди</label>
+                <label>Статус команди (для відображення на сайті)</label>
                 <select id="editTeamStatus">
-                    <option value="ЄВРОПА">ЄВРОПА</option>
+                    <option value="Активна">Активна</option>
                     <option value="Дизбанд">Дизбанд</option>
                     <option value="Нерейтингові команди">Нерейтингові команди</option>
                 </select>
@@ -394,7 +394,7 @@
             teams.forEach((t, index) => {
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: ${t.status || 'ЄВРОПА'}</span>
+                        <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: <b>${t.status || 'Активна'}</b></span>
                         <div class="row-actions">
                             <button onclick="openTeamModalForEdit(${index})">Редагувати</button>
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
@@ -411,7 +411,7 @@
             document.getElementById('editTeamLogo').value = '';
             document.getElementById('editTeamRank').value = '1';
             document.getElementById('editTeamPoints').value = '0';
-            document.getElementById('editTeamStatus').value = 'ЄВРОПА';
+            document.getElementById('editTeamStatus').value = 'Активна';
             document.getElementById('teamModalOverlay').style.display = 'flex';
         }
 
@@ -423,7 +423,7 @@
             document.getElementById('editTeamLogo').value = t.logo || '';
             document.getElementById('editTeamRank').value = t.rank || 1;
             document.getElementById('editTeamPoints').value = t.points || 0;
-            document.getElementById('editTeamStatus').value = t.status || 'ЄВРОПА';
+            document.getElementById('editTeamStatus').value = t.status || 'Активна';
             document.getElementById('teamModalOverlay').style.display = 'flex';
         }
 
@@ -585,7 +585,7 @@
             const playerData = {
                 name: document.getElementById('editPlayerName').value.trim(),
                 nickname: document.getElementById('editPlayerName').value.trim(),
-                team: document.getElementById('editPlayerTeam').value.trim(),
+                team: document.getElementById('editPlayerTeam.value' || 'editPlayerTeam').value.trim(),
                 role: document.getElementById('editPlayerRole').value.trim(),
                 country: document.getElementById('editPlayerCountry').value,
                 photo: document.getElementById('editPlayerPhoto').value.trim(),
