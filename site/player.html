@@ -11,7 +11,7 @@
             --inner-card-bg: #111620;
             --border-color: #21262d;
             --accent-color: #00ff88;
-            --accent-glow: rgba(0, 255, 136, 0.15);
+            --accent-glow: rgba(0, 255, 136, 0.2);
             --text-color: #ffffff;
             --text-muted: #8b949e;
             --danger-color: #ff4444;
@@ -95,24 +95,41 @@
             display: flex;
             align-items: center;
             gap: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Декоративне світіння на фоні картки гравця */
+        .header-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 150px;
+            height: 150px;
+            background: var(--accent-color);
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 0;
         }
         .player-avatar {
             width: 130px;
             height: 150px;
             background: var(--inner-card-bg);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--accent-color);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             flex-shrink: 0;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 15px rgba(0,255,136,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
         .player-avatar:hover {
-            transform: scale(1.03);
-            border-color: var(--accent-color);
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), inset 0 0 20px rgba(0,255,136,0.4);
         }
         .player-avatar img {
             width: 100%;
@@ -124,6 +141,8 @@
             display: flex;
             flex-direction: column;
             width: 100%;
+            position: relative;
+            z-index: 1;
         }
         .player-type {
             color: var(--accent-color);
@@ -132,7 +151,7 @@
             letter-spacing: 1.5px;
             margin-bottom: 5px;
             font-weight: 700;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
         }
         .player-title-row {
             display: flex;
@@ -145,6 +164,7 @@
             font-size: 2.3rem;
             font-weight: 800;
             letter-spacing: 0.5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         .flag-icon {
             width: 32px;
@@ -183,6 +203,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
         }
         .stats-list {
             display: flex;
@@ -216,7 +237,6 @@
             font-size: 1.1rem;
             text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
         }
-        /* Стилі для трофеїв / кубків у 3D стилі */
         .trophies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -333,7 +353,6 @@
 
             const teamLink = p.team ? `<a href="team.html?name=${encodeURIComponent(p.team)}" class="team-name">${p.team}</a>` : '<span style="color: var(--text-muted);">Без команди</span>';
 
-            // Блок для кубків/трофеїв (якщо у базі є масив p.trophies або p.cups)
             let trophiesHtml = '';
             const trophies = p.trophies || p.cups || [];
             if (trophies.length > 0) {
