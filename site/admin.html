@@ -501,10 +501,17 @@
 
             if (!name) { alert("Введіть ім'я гравця!"); return; }
 
+            // Зберігаємо старі трофеї гравця, якщо він вже існував
+            let existingTrophies = [];
+            if (editIndex !== "" && cloudData.players[editIndex] && cloudData.players[editIndex].trophies) {
+                existingTrophies = cloudData.players[editIndex].trophies;
+            }
+
             const playerData = { 
                 name, team, roleSlot, role, country, photo, 
                 stats: { rating, kd, impact, adr }, 
-                retired 
+                retired,
+                trophies: existingTrophies 
             };
 
             if (editIndex === "") {
@@ -569,17 +576,32 @@
             }
         }
 
-        // --- ТРОФЕЇ ---
+        // --- ТРОФЕЇ (ОНОВЛЕНО: видача команді + автоматично всім її гравцям) ---
         function saveTrophy() {
             const team = document.getElementById('trophyTeamSelect').value;
             const name = document.getElementById('trophyName').value.trim();
             const icon = document.getElementById('trophyIcon').value.trim() || '🏆';
 
             if (!name) { alert("Введіть назву трофею!"); return; }
+            if (!team) { alert("Оберіть команду для видачі трофея!"); return; }
 
             if (!cloudData.trophies) cloudData.trophies = [];
 
-            cloudData.trophies.push({ team, name, icon });
+            // 1. Додаємо трофей у загальний список / список команди
+            const newTrophy = { team, name, icon };
+            cloudData.trophies.push(newTrophy);
+
+            // 2. Автоматично роздаємо цей трофей усім гравцям, які зараз перебувають у цій команді
+            if (cloudData.players) {
+                cloudData.players.forEach(player => {
+                    if (player.team === team) {
+                        if (!player.trophies) player.trophies = [];
+                        // Перевіряємо, щоб не було дублікатів (опціонально)
+                        player.trophies.push(newTrophy);
+                    }
+                });
+            }
+
             saveCloudData();
 
             document.getElementById('trophyName').value = '';
@@ -646,13 +668,15 @@
                     const st = p.stats || {};
                     const ratingStr = st.rating ? `<span class="stats-tag">Rating: ${st.rating}</span>` : '';
                     const kdStr = st.kd ? `<span class="stats-tag">K/D: ${st.kd}</span>` : '';
+                    const trophiesCount = p.trophies ? p.trophies.length : 0;
+                    const trophiesStr = trophiesCount > 0 ? `<span class="stats-tag" style="color: #f39c12;">🏆 ${trophiesCount}</span>` : '';
 
                     html += `
                         <div class="item-row">
                             <span>
                                 ${flagImg}<b>${p.name}</b> ${retiredBadge}
                                 <span style="color:var(--text-muted); font-size:0.85rem;">[${p.team || 'Без команди'} | ${slotLabel} ${p.role || ''}]</span>
-                                ${ratingStr} ${kdStr}
+                                ${ratingStr} ${kdStr} ${trophiesStr}
                             </span>
                             <div class="item-buttons">
                                 <button class="btn-edit" onclick="editPlayer(${i})">Редагувати</button>
