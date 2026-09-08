@@ -261,15 +261,15 @@
             transition: transform 0.3s ease;
         }
 
-        /* Індивідуальне позиціонування для перших трьох гравців */
+        /* Піднімаємо перших трьох гравців, щоб були видні голови */
         .player-avatar.pos-yokirito {
-            object-position: 50% 75% !important;
+            object-position: 50% 15% !important;
         }
         .player-avatar.pos-fexum {
-            object-position: 50% 75% !important;
+            object-position: 50% 15% !important;
         }
         .player-avatar.pos-darkprince9 {
-            object-position: 50% 80% !important;
+            object-position: 50% 15% !important;
         }
 
         .team-player-card:hover .player-avatar {
@@ -438,7 +438,6 @@
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
                                 
-                                // Визначаємо додатковий клас залежно від імені гравця
                                 let extraClass = '';
                                 const lowerName = playerName.toLowerCase();
                                 if (lowerName.includes('yokirito')) extraClass = 'pos-yokirito';
