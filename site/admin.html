@@ -235,8 +235,12 @@
             </div>
 
             <div class="form-group">
-                <label>Статус (напр. ЄВРОПА)</label>
-                <input type="text" id="editTeamStatus" placeholder="ЄВРОПА">
+                <label>Статус команди</label>
+                <select id="editTeamStatus">
+                    <option value="ЄВРОПА">ЄВРОПА</option>
+                    <option value="Дизбанд">Дизбанд</option>
+                    <option value="Нерейтингові команди">Нерейтингові команди</option>
+                </select>
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 25px;">
@@ -269,8 +273,22 @@
                     <input type="text" id="editPlayerRole" placeholder="Rifler / IGL тощо">
                 </div>
                 <div class="form-group">
-                    <label>Країна (код, напр. ua)</label>
-                    <input type="text" id="editPlayerCountry" placeholder="ua">
+                    <label>Країна</label>
+                    <select id="editPlayerCountry">
+                        <option value="ua">Україна (ua)</option>
+                        <option value="pl">Польща (pl)</option>
+                        <option value="ee">Естонія (ee)</option>
+                        <option value="ru">росія (ru)</option>
+                        <option value="by">біларусь (by)</option>
+                        <option value="kz">Казахстан (kz)</option>
+                        <option value="se">Швеція (se)</option>
+                        <option value="dk">Данія (dk)</option>
+                        <option value="fi">Фінляндія (fi)</option>
+                        <option value="de">Німеччина (de)</option>
+                        <option value="fr">Франція (fr)</option>
+                        <option value="uk">Велика Британія (uk)</option>
+                        <option value="us">США (us)</option>
+                    </select>
                 </div>
             </div>
 
@@ -364,7 +382,7 @@
             });
         }
 
-        // Керування командами (через модальне вікно для зручності)
+        // Керування командами
         function renderTeamsList() {
             const teams = globalData.teams || [];
             const container = document.getElementById('teamsList');
@@ -376,7 +394,7 @@
             teams.forEach((t, index) => {
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: ${t.status || '-'}</span>
+                        <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: ${t.status || 'ЄВРОПА'}</span>
                         <div class="row-actions">
                             <button onclick="openTeamModalForEdit(${index})">Редагувати</button>
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
@@ -393,7 +411,7 @@
             document.getElementById('editTeamLogo').value = '';
             document.getElementById('editTeamRank').value = '1';
             document.getElementById('editTeamPoints').value = '0';
-            document.getElementById('editTeamStatus').value = '';
+            document.getElementById('editTeamStatus').value = 'ЄВРОПА';
             document.getElementById('teamModalOverlay').style.display = 'flex';
         }
 
@@ -405,7 +423,7 @@
             document.getElementById('editTeamLogo').value = t.logo || '';
             document.getElementById('editTeamRank').value = t.rank || 1;
             document.getElementById('editTeamPoints').value = t.points || 0;
-            document.getElementById('editTeamStatus').value = t.status || '';
+            document.getElementById('editTeamStatus').value = t.status || 'ЄВРОПА';
             document.getElementById('teamModalOverlay').style.display = 'flex';
         }
 
@@ -420,7 +438,7 @@
                 logo: document.getElementById('editTeamLogo').value.trim(),
                 rank: parseInt(document.getElementById('editTeamRank').value) || 1,
                 points: parseInt(document.getElementById('editTeamPoints').value) || 0,
-                status: document.getElementById('editTeamStatus').value.trim(),
+                status: document.getElementById('editTeamStatus').value,
                 trophies: []
             };
 
@@ -431,7 +449,6 @@
             if (indexStr === '') {
                 globalData.teams.push(teamData);
             } else {
-                // Зберігаємо старі трофеї при редагуванні
                 teamData.trophies = globalData.teams[parseInt(indexStr)].trophies || [];
                 globalData.teams[parseInt(indexStr)] = teamData;
             }
@@ -484,7 +501,7 @@
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'}</span>
+                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | Країна: ${p.country || 'ua'} | K/D: ${p.kd || '-'}</span>
                         <div class="row-actions">
                             <button onclick="openPlayerModalForEdit(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
@@ -514,7 +531,7 @@
             document.getElementById('editPlayerName').value = '';
             document.getElementById('editPlayerTeam').value = '';
             document.getElementById('editPlayerRole').value = '';
-            document.getElementById('editPlayerCountry').value = '';
+            document.getElementById('editPlayerCountry').value = 'ua';
             document.getElementById('editPlayerPhoto').value = '';
             document.getElementById('editPlayerRating').value = '';
             document.getElementById('editPlayerKd').value = '';
@@ -533,7 +550,7 @@
             document.getElementById('editPlayerName').value = p.name || p.nickname || '';
             document.getElementById('editPlayerTeam').value = p.team || '';
             document.getElementById('editPlayerRole').value = p.role || '';
-            document.getElementById('editPlayerCountry').value = p.country || '';
+            document.getElementById('editPlayerCountry').value = p.country || 'ua';
             document.getElementById('editPlayerPhoto').value = p.photo || '';
             document.getElementById('editPlayerRating').value = p.rating || '';
             document.getElementById('editPlayerKd').value = p.kd || '';
@@ -570,7 +587,7 @@
                 nickname: document.getElementById('editPlayerName').value.trim(),
                 team: document.getElementById('editPlayerTeam').value.trim(),
                 role: document.getElementById('editPlayerRole').value.trim(),
-                country: document.getElementById('editPlayerCountry').value.trim().toLowerCase(),
+                country: document.getElementById('editPlayerCountry').value,
                 photo: document.getElementById('editPlayerPhoto').value.trim(),
                 rating: document.getElementById('editPlayerRating').value.trim(),
                 kd: document.getElementById('editPlayerKd').value.trim(),
