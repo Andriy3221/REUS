@@ -180,8 +180,11 @@
             height: 55px;
             border-radius: 8px;
             object-fit: cover;
-            object-position: top center; /* Зміщено вище, щоб було видно зачіску */
+            object-position: top center; /* Зміщено вище, щоб завжди було видно зачіску */
             background: #111;
+            -webkit-font-smoothing: antialiased;
+            image-rendering: -webkit-optimize-contrast; /* Максимальна різкість */
+            image-rendering: high-quality;
         }
         .player-details {
             display: flex;
