@@ -350,7 +350,8 @@
             </a>
             <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="support-btn">
                 <span>💬</span> Техпідтримка
-            </a>        </div>
+            </a>
+        </div>
 
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
@@ -411,7 +412,6 @@
             return `https://flagcdn.com/24x18/${cleanCode}.png`;
         }
 
-        // Чиста функція для діставання значення рейтингу у вигляді числа (або null)
         function getRawRating(p) {
             const val = p.stats?.rating || p.stats?.kd || p.rating || p.kd || p.score;
             if (val !== undefined && val !== null && val !== '' && val !== '—') {
@@ -526,21 +526,20 @@
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
-                    // ЖОРСТКЕ СОРТУВАННЯ: гравці з рейтингом — нагору (від більшого до меншого), без рейтингу — вниз
                     allPlayers.sort((a, b) => {
                         const rA = getRawRating(a);
                         const rB = getRawRating(b);
 
                         if (rA !== null && rB !== null) {
-                            return rB - rA; // У кого більше, той вище (наприклад, 3.08 вище ніж 2.26)
+                            return rB - rA;
                         }
                         if (rA !== null && rB === null) {
-                            return -1; // A йде вище, бо у нього є рейтинг
+                            return -1;
                         }
                         if (rA === null && rB !== null) {
-                            return 1; // B йде вище
+                            return 1;
                         }
-                        return 0; // Обидва без рейтингу — залишаємо як є
+                        return 0;
                     });
 
                     let playersHtml = '';
