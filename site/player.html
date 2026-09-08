@@ -6,8 +6,7 @@
     <title>Player Profile | REUS</title>
     <style>
         :root {
-            --bg-color: #07090e;
-            --card-bg: rgba(13, 17, 23, 0.95);
+            --card-bg: rgba(13, 17, 23, 0.92);
             --inner-card-bg: #111620;
             --border-color: #21262d;
             --accent-color: #00ff88;
@@ -16,31 +15,26 @@
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 30px;
             position: relative;
-            overflow-x: hidden;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
-        .bg-animation {
+
+        /* ВІДЕО-ФОН НА ЗАДНЬОМУ ПЛАНІ */
+        .bg-video {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #111b33 0%, #07090e 100%);
+            pointer-events: none;
         }
-        .particle {
-            position: absolute;
-            background: rgba(0, 255, 136, 0.15);
-            border-radius: 50%;
-            animation: float 15s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
-        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -53,7 +47,8 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
         }
         .profile-header {
             display: flex;
@@ -92,14 +87,19 @@
             object-fit: contain;
         }
         .back-link {
-            color: var(--accent-color);
+            color: var(--text-color);
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
             text-decoration: none;
             font-weight: bold;
             display: inline-block;
             margin-bottom: 20px;
+            border-radius: 8px;
+            transition: border-color 0.2s;
         }
         .back-link:hover {
-            text-decoration: underline;
+            border-color: var(--accent-color);
         }
         .stat-row {
             display: flex;
@@ -112,12 +112,18 @@
         }
         h2 {
             color: var(--accent-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-animation" id="bgAnimation"></div>
+    <!-- ВІДЕО ФОН (файл fon.mp4 має лежати в тій самій папці) -->
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="fon.mp4" type="video/mp4">
+    </video>
 
     <div class="container">
         <a href="index.html" class="back-link">← Назад до рейтингу</a>
@@ -127,20 +133,6 @@
     </div>
 
     <script>
-        const bg = document.getElementById('bgAnimation');
-        for (let i = 0; i < 25; i++) {
-            const p = document.createElement('div');
-            p.classList.add('particle');
-            const size = Math.random() * 4 + 2;
-            p.style.width = `${size}px`;
-            p.style.height = `${size}px`;
-            p.style.left = `${Math.random() * 100}%`;
-            p.style.bottom = `${Math.random() * -100}px`;
-            p.style.animationDuration = `${Math.random() * 10 + 10}s`;
-            p.style.animationDelay = `${Math.random() * 5}s`;
-            bg.appendChild(p);
-        }
-
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
@@ -218,7 +210,7 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 15px;">Статистика гравця</h2>
+                    <h2>Статистика гравця</h2>
                     <div class="stat-row">
                         <span>K/D Ratio</span>
                         <b style="color: var(--accent-color);">${p.kd || '-'}</b>
@@ -238,7 +230,7 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 10px;">Досягнення та кубки</h2>
+                    <h2>Досягнення та кубки</h2>
                     <div class="trophies-grid">
                         ${trophiesHTML}
                     </div>
