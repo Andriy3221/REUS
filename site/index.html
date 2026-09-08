@@ -443,6 +443,13 @@
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
+                    // СОРТУВАННЯ КОМАНД ЗА ПТС (від більшого до меншого)
+                    teams.sort((a, b) => {
+                        const pointsA = parseFloat(a.points !== undefined && a.points !== null ? a.points : (a.rating || 0)) || 0;
+                        const pointsB = parseFloat(b.points !== undefined && b.points !== null ? b.points : (b.rating || 0)) || 0;
+                        return pointsB - pointsA;
+                    });
+
                     let rankedHtml = '';
                     let unrankedHtml = '';
                     let rankedCounter = 1;
@@ -460,7 +467,6 @@
                             return isTeamMatch && isNotBench;
                         });
 
-                        // Чітка перевірка статусу з урахуванням регістру
                         const teamStatus = (t.status || '').trim();
                         const lowerStatus = teamStatus.toLowerCase();
                         const isDisbandOrUnranked = lowerStatus.includes('дизбанд') || 
@@ -500,7 +506,6 @@
                             playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">У команді немає активних основних гравців</div>';
                         }
 
-                        // Отримуємо актуальні бали (ПТС)
                         const teamPoints = t.points !== undefined && t.points !== null ? t.points : (t.rating || 0);
 
                         const cardHtml = `
