@@ -7,10 +7,10 @@
     <style>
         :root {
             --bg-color: #07090e;
-            --card-bg: rgba(13, 17, 23, 0.85); /* Глибоке темне скло */
+            --card-bg: rgba(13, 17, 23, 0.85);
             --inner-card-bg: #111620;
             --border-color: #21262d;
-            --accent-color: #00ff88; /* Яскравий кіберспортивний зелений */
+            --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8b949e;
             --inactive-bg: rgba(13, 17, 23, 0.5);
@@ -25,7 +25,6 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-        /* Безкінечне відео-фон */
         .bg-video {
             position: fixed;
             right: 0;
@@ -37,7 +36,6 @@
             z-index: -2;
             object-fit: cover;
         }
-        /* Темне затемнення для ідеального контрасту */
         .bg-overlay {
             position: fixed;
             top: 0;
@@ -149,9 +147,22 @@
             color: var(--text-muted);
             width: 30px;
         }
-        .team-logo {
+        /* Підкладка для логотипу команд */
+        .team-logo-container {
             width: 32px;
             height: 32px;
+            background: #ffffff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .team-logo {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
         .team-name {
@@ -244,7 +255,6 @@
 </head>
 <body>
 
-    <!-- Безкінечне фонове відео -->
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
         <source src="fon.mp4" type="video/mp4">
         Ваш браузер не підтримує відео-фон.
@@ -356,7 +366,9 @@
                     <div class="team-header" onclick="toggleCard(event, document.getElementById('${cardId}'))">
                         <div class="team-info">
                             <span class="team-rank">${isInactive ? '—' : '#' + displayIndex}</span>
-                            <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                            <div class="team-logo-container">
+                                <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.parentElement.style.display='none'">
+                            </div>
                             <a href="${targetUrl}" class="team-name">${t.name}</a>
                         </div>
                         <div class="team-meta">
