@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg-color: #07090e;
-            --card-bg: rgba(13, 17, 23, 0.9);
+            --card-bg: rgba(13, 17, 23, 0.95);
             --inner-card-bg: #111620;
             --border-color: #21262d;
             --accent-color: #00ff88;
@@ -69,7 +69,6 @@
             border-radius: 8px;
             cursor: pointer;
             transition: opacity 0.2s;
-            width: 100%;
         }
         button:hover {
             opacity: 0.85;
@@ -97,10 +96,6 @@
             display: flex;
             gap: 8px;
         }
-        .row-actions button {
-            padding: 6px 12px;
-            width: auto;
-        }
         /* Модальне вікно */
         #editModal {
             display: none;
@@ -117,7 +112,7 @@
             padding: 30px;
             border-radius: 12px;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             max-height: 90vh;
             overflow-y: auto;
             box-sizing: border-box;
@@ -135,55 +130,54 @@
         <h1>Адмін-панель REUS</h1>
         <a href="index.html" style="color: var(--accent-color); text-decoration: none; display: inline-block; margin-bottom: 20px;">← Назад на сайт</a>
 
-        <!-- Блок видачі трофея команді -->
+        <!-- 1. КЕРУВАННЯ КОМАНДАМИ ТА ЇХНІМИ ТРОФЕЯМИ -->
         <div class="card">
-            <h2>Видати трофей команді</h2>
-            <div class="form-group">
-                <label>Виберіть команду</label>
-                <select id="trophyTeamSelect">
-                    <option value="">Оберіть команду</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Назва турніру</label>
-                <input type="text" id="trophyNameInput" placeholder="BLAST Premier / Major">
-            </div>
-            <div class="form-group">
-                <label>Іконка кубка (URL або emoji)</label>
-                <input type="text" id="trophyIconInput" value="🏆">
-            </div>
-            <button onclick="addTrophyToTeam()">Додати трофей команді</button>
-        </div>
-
-        <!-- Управління командами -->
-        <div class="card">
-            <h2>Команди (Очки, Трофеї)</h2>
-            <div class="form-group">
-                <label>Додати нову команду</label>
-                <div style="display: flex; gap: 10px;">
+            <h2>Керування командами</h2>
+            
+            <!-- Додати нову команду -->
+            <div class="form-group" style="background: var(--inner-card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <label style="color: var(--accent-color); font-weight: bold;">Додати нову команду</label>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
                     <input type="text" id="newTeamName" placeholder="Назва команди" style="flex: 2;">
                     <input type="number" id="newTeamPoints" placeholder="Очки" style="flex: 1;" value="0">
                     <button onclick="addNewTeam()" style="width: auto;">Створити</button>
                 </div>
             </div>
-            <div id="teamsList" class="list-container">
+
+            <!-- Видати трофей команді -->
+            <div class="form-group" style="background: var(--inner-card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px;">Видати командний трофей</label>
+                <div class="grid-2">
+                    <select id="trophyTeamSelect">
+                        <option value="">Оберіть команду</option>
+                    </select>
+                    <input type="text" id="trophyNameInput" placeholder="Назва турніру (напр. BLAST)">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="text" id="trophyIconInput" value="🏆" placeholder="URL іконки або emoji" style="flex: 1;">
+                    <button onclick="addTrophyToTeam()" style="width: auto;">Додати трофей</button>
+                </div>
+            </div>
+
+            <!-- Список команд -->
+            <div id="teamsList" class="list-container" style="margin-top: 20px;">
                 <div style="color: var(--text-muted);">Завантаження команд...</div>
             </div>
         </div>
 
-        <!-- Управління гравцями -->
+        <!-- 2. КЕРУВАННЯ ГРАВЦЯМИ (HLTV + ОСОБИСТІ ТРОФЕЇ) -->
         <div class="card">
-            <h2>Гравці (HLTV Статистика, Трофеї)</h2>
+            <h2>Керування гравцями</h2>
             <div id="playersList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження гравців...</div>
             </div>
         </div>
     </div>
 
-    <!-- Модальне вікно редагування гравця -->
+    <!-- МОДАЛЬНЕ ВІКНО РЕДАГУВАННЯ ГРАВЦЯ -->
     <div id="editModal">
         <div class="modal-content">
-            <h2 style="margin-top: 0;">Редагувати гравця (HLTV профіль)</h2>
+            <h2 style="margin-top: 0; color: var(--accent-color);">Редагувати гравця (HLTV профіль)</h2>
             <input type="hidden" id="editPlayerIndex">
             
             <div class="grid-2">
@@ -203,13 +197,13 @@
                     <input type="text" id="editPlayerRole" placeholder="Rifler / AWPer тощо">
                 </div>
                 <div class="form-group">
-                    <label>Країна (код, напр. ua, us, dk)</label>
+                    <label>Країна (код, напр. ua, us, dk, se)</label>
                     <input type="text" id="editPlayerCountry">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Фото гравця (URL)</label>
+                <label>Пряме посилання на фото (URL)</label>
                 <input type="text" id="editPlayerPhoto">
             </div>
 
@@ -235,10 +229,12 @@
                 </div>
             </div>
 
-            <!-- Особисті трофеї гравця -->
-            <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: block;">Особисті трофеї гравця</label>
-                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;"></div>
+            <!-- АДМІН ПЕНАЛЬ: ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ -->
+            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: block;">Особисті трофеї гравця (Адмін пеналь)</label>
+                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
+                    <!-- Сюди додаватимуться інпути -->
+                </div>
                 <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; font-size: 0.85rem; width: auto;">+ Додати особистий трофей</button>
             </div>
 
@@ -299,18 +295,20 @@
             });
         }
 
+        // --- РОБОТА З КОМАНДАМИ ---
         function renderTeamsList() {
             const teams = globalData.teams || [];
             const container = document.getElementById('teamsList');
             if (teams.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Команд немає.</div>';
+                container.innerHTML = '<div style="color: var(--text-muted);">Команд немає в базі.</div>';
                 return;
             }
             container.innerHTML = '';
             teams.forEach((t, index) => {
+                const cupsCount = (t.trophies || t.cups || []).length;
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.name}</b> — Очки: <input type="number" value="${t.points || 0}" onchange="updateTeamPoints(${index}, this.value)" style="width: 80px; display:inline-block; padding: 4px;"> | Трофеїв: ${(t.trophies || t.cups || []).length}</span>
+                        <span><b>${t.name}</b> — Очки: <input type="number" value="${t.points || 0}" onchange="updateTeamPoints(${index}, this.value)" style="width: 80px; display:inline-block; padding: 4px;"> | Кубків: ${cupsCount}</span>
                         <div class="row-actions">
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
                         </div>
@@ -329,8 +327,10 @@
 
             await saveData();
             document.getElementById('newTeamName').value = '';
+            document.getElementById('newTeamPoints').value = '0';
             renderTeamsList();
             updateTeamSelect();
+            alert('Команду створено!');
         }
 
         async function updateTeamPoints(index, val) {
@@ -339,7 +339,7 @@
         }
 
         async function deleteTeam(index) {
-            if (confirm('Видалити команду?')) {
+            if (confirm('Видалити цю команду?')) {
                 globalData.teams.splice(index, 1);
                 await saveData();
                 renderTeamsList();
@@ -347,11 +347,31 @@
             }
         }
 
+        async function addTrophyToTeam() {
+            const teamName = document.getElementById('trophyTeamSelect').value;
+            const trophyName = document.getElementById('trophyNameInput').value.trim();
+            const trophyIcon = document.getElementById('trophyIconInput').value.trim() || '🏆';
+
+            if (!teamName || !trophyName) return alert('Оберіть команду та введіть назву турніру!');
+
+            const team = (globalData.teams || []).find(t => t.name === teamName);
+            if (team) {
+                if (!team.trophies) team.trophies = [];
+                team.trophies.push({ name: trophyName, icon: trophyIcon });
+
+                await saveData();
+                alert('Трофей успішно додано команді!');
+                document.getElementById('trophyNameInput').value = '';
+                renderTeamsList();
+            }
+        }
+
+        // --- РОБОТА З ГРАВЦЯМИ ---
         function renderPlayersList() {
             const players = globalData.players || [];
             const container = document.getElementById('playersList');
             if (players.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Гравців немає.</div>';
+                container.innerHTML = '<div style="color: var(--text-muted);">Гравців немає в базі.</div>';
                 return;
             }
             container.innerHTML = '';
@@ -359,7 +379,7 @@
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'} | ADR: ${p.adr || '-'}</span>
+                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'}</span>
                         <div class="row-actions">
                             <button onclick="openEditModal(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
@@ -369,7 +389,7 @@
             });
         }
 
-        // Функції для модального вікна та трофеїв гравця
+        // Додавання поля для індивідуального трофею у модалці
         function addAdminPlayerTrophyInput(value = '') {
             const container = document.getElementById('adminPlayerTrophiesContainer');
             const wrapper = document.createElement('div');
@@ -377,7 +397,7 @@
             wrapper.style.gap = '8px';
             
             wrapper.innerHTML = `
-                <input type="text" class="player-trophy-input" value="${value}" placeholder="URL іконки або назва" style="flex: 1;">
+                <input type="text" class="player-trophy-input" value="${value}" placeholder="URL іконки або назва трофею" style="flex: 1;">
                 <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 0 10px;">✕</button>
             `;
             container.appendChild(wrapper);
@@ -397,7 +417,7 @@
             document.getElementById('editPlayerImpact').value = p.impact || '';
             document.getElementById('editPlayerAdr').value = p.adr || '';
 
-            // Завантаження трофеїв гравця
+            // Завантажуємо особисті трофеї гравця (адмін пеналь)
             const container = document.getElementById('adminPlayerTrophiesContainer');
             container.innerHTML = '';
             const trophies = p.trophies || p.cups || [];
@@ -429,7 +449,7 @@
             p.impact = document.getElementById('editPlayerImpact').value.trim();
             p.adr = document.getElementById('editPlayerAdr').value.trim();
 
-            // Збір особистих трофеїв гравця
+            // Збираємо особисті трофеї гравця
             let trophies = [];
             document.querySelectorAll('.player-trophy-input').forEach(input => {
                 if (input.value.trim() !== '') {
@@ -444,27 +464,8 @@
             alert('Гравця успішно оновлено!');
         }
 
-        async function addTrophyToTeam() {
-            const teamName = document.getElementById('trophyTeamSelect').value;
-            const trophyName = document.getElementById('trophyNameInput').value.trim();
-            const trophyIcon = document.getElementById('trophyIconInput').value.trim() || '🏆';
-
-            if (!teamName || !trophyName) return alert('Оберіть команду та введіть назву турніру!');
-
-            const team = (globalData.teams || []).find(t => t.name === teamName);
-            if (team) {
-                if (!team.trophies) team.trophies = [];
-                team.trophies.push({ name: trophyName, icon: trophyIcon });
-
-                await saveData();
-                alert('Трофей успішно додано команді!');
-                document.getElementById('trophyNameInput').value = '';
-                renderTeamsList();
-            }
-        }
-
         async function deletePlayer(index) {
-            if (confirm('Видалити гравця?')) {
+            if (confirm('Видалити гравця з бази?')) {
                 globalData.players.splice(index, 1);
                 await saveData();
                 renderPlayersList();
