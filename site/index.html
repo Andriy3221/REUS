@@ -77,8 +77,8 @@
             text-decoration: none;
         }
         .project-logo-wrapper {
-            width: 48px;
-            height: 48px;
+            width: 110px;
+            height: 52px;
             background: var(--inner-card-bg);
             border: 2px solid var(--accent-color);
             border-radius: 12px;
@@ -91,13 +91,14 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .project-logo-container:hover .project-logo-wrapper {
-            transform: scale(1.08);
+            transform: scale(1.05);
             box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
         }
         .project-logo-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
+            padding: 3px;
         }
         .project-title {
             color: var(--text-color);
@@ -183,12 +184,11 @@
     <div class="bg-overlay"></div>
 
     <div class="main-container">
-        <!-- Шапка з гарним неоновим логотипом -->
+        <!-- Шапка з правильно підключеним логотипом REUS.png -->
         <div class="header-banner">
             <a href="index.html" class="project-logo-container">
                 <div class="project-logo-wrapper">
-                    <!-- Заміни шлях до своєї картинки логотипа якщо він інший -->
-                    <img src="logo.png" alt="REUS Logo" onerror="this.src=''"> 
+                    <img src="REUS.png" alt="REUS Logo"> 
                 </div>
                 <div class="project-title">Reus <span>Championship</span></div>
             </a>
