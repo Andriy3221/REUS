@@ -92,7 +92,7 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-link">← На головну</a>
+        <a href="index.html" class="back-link">← Назад до рейтингу</a>
         <div id="playerContent">
             <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження профілю...</div>
         </div>
@@ -138,7 +138,6 @@
             const pName = p.name || p.nickname || 'Гравець';
             const pPhoto = p.photo || 'https://via.placeholder.com/100?text=No+Photo';
             
-            // Рендер трофеїв як фоток (або іконок)
             let trophiesHTML = '';
             const trophies = p.trophies || p.cups || [];
             
@@ -148,7 +147,6 @@
                 trophies.forEach(t => {
                     const tVal = typeof t === 'object' && t !== null ? (t.icon || t.name || '') : t;
                     
-                    // Перевіряємо чи це посилання на зображення
                     if (typeof tVal === 'string' && (tVal.startsWith('http://') || tVal.startsWith('https://') || tVal.startsWith('data:'))) {
                         trophiesHTML += `
                             <div class="trophy-item">
@@ -156,7 +154,6 @@
                             </div>
                         `;
                     } else {
-                        // Якщо раптом там звичайний емодзі або текст
                         trophiesHTML += `
                             <div class="trophy-item" style="font-size: 24px; display: flex; align-items: center; justify-content: center;">
                                 ${tVal || '🏆'}
@@ -179,7 +176,7 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 15px;">Статистика гравця</h2>
+                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 15px; color: var(--accent-color);">Статистика гравця</h2>
                     <div class="stat-row">
                         <span>K/D Ratio</span>
                         <b style="color: var(--accent-color);">${p.kd || '-'}</b>
@@ -199,7 +196,7 @@
                 </div>
 
                 <div class="card">
-                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 10px;">Досягнення та кубки</h2>
+                    <h2 style="margin-top: 0; font-size: 1.2rem; margin-bottom: 10px; color: var(--accent-color);">Досягнення та кубки</h2>
                     <div class="trophies-grid">
                         ${trophiesHTML}
                     </div>
