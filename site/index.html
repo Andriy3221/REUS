@@ -72,7 +72,6 @@
             width: 40px;
             height: 40px;
             object-fit: contain;
-            filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
         }
         .logo-area span {
             font-size: 1.2rem;
@@ -148,14 +147,26 @@
             color: var(--text-muted);
             width: 30px;
         }
-        /* Стиль для логотипів з м'яким світінням для ідеальної видимості */
-        .team-logo {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 6px rgba(0, 255, 136, 0.2));
+        
+        /* Стильне охайне кругле обрамлення для логотипів з контрастним фоном */
+        .team-logo-wrap {
+            width: 36px;
+            height: 36px;
+            background: #1a2232; /* Контрастний темний фон, на якому видно і чорні, і білі лого */
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             flex-shrink: 0;
         }
+        .team-logo {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
         .team-name {
             font-size: 1.1rem;
             font-weight: bold;
@@ -357,7 +368,9 @@
                     <div class="team-header" onclick="toggleCard(event, document.getElementById('${cardId}'))">
                         <div class="team-info">
                             <span class="team-rank">${isInactive ? '—' : '#' + displayIndex}</span>
-                            <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                            <div class="team-logo-wrap">
+                                <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                            </div>
                             <a href="${targetUrl}" class="team-name">${t.name}</a>
                         </div>
                         <div class="team-meta">
