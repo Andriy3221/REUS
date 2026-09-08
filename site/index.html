@@ -13,6 +13,7 @@
             --accent-color: #00ff88;
             --text-color: #ffffff;
             --text-muted: #8a99ad;
+            --inactive-bg: #161a22;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -85,6 +86,10 @@
             overflow: hidden;
             transition: border-color 0.2s;
         }
+        .team-card.inactive {
+            background: var(--inactive-bg);
+            opacity: 0.75;
+        }
         .team-card:hover {
             border-color: var(--accent-color);
         }
@@ -116,6 +121,12 @@
         .team-name {
             font-size: 1.1rem;
             font-weight: bold;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        .team-name:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
         }
         .team-meta {
             display: flex;
@@ -201,6 +212,11 @@
                 <div class="loading">Завантаження рейтингу...</div>
             </div>
         </div>
+
+        <div class="section-box" id="inactive-section" style="display: none;">
+            <div class="section-title" style="color: var(--text-muted);">Інактив / Дізбанд (Inactive Teams)</div>
+            <div id="inactive-teams-list"></div>
+        </div>
     </div>
 
     <script>
@@ -209,7 +225,6 @@
 
         let allTeams = [];
         let allPlayers = []; 
-        let clickCounts = {};
 
         const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='55' height='55' viewBox='0 0 24 24' fill='%238a99ad'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
@@ -234,83 +249,99 @@
             }
         }
 
-        function handleTeamHeaderClick(event, teamName, cardElement, targetUrl) {
-            if (event.target.closest('.players-container')) return;
-
+        function toggleCard(event, cardElement) {
+            if (event.target.closest('a') || event.target.closest('.players-container')) return;
             cardElement.classList.toggle('open');
+        }
 
-            if (!clickCounts[teamName]) {
-                clickCounts[teamName] = 0;
-            }
-            clickCounts[teamName]++;
+        function generateTeamCardHTML(t, displayIndex, isInactive = false) {
+            const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
+            const points = t.points !== undefined ? t.points : 0;
+            
+            const teamNameNormalized = t.name.trim().toLowerCase();
+            const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
+            
+            let playersHtml = '';
+            for (let i = 0; i < 5; i++) {
+                const p = teamPlayers[i];
+                const pName = p ? (p.name || p.nickname || `Гравець ${i+1}`) : `Гравець ${i+1}`;
+                
+                const pAvatar = (p && p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') 
+                    ? p.photo 
+                    : DEFAULT_AVATAR;
+                
+                const pFlag = (p && p.country) 
+                    ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
+                    : 'https://flagcdn.com/w20/ua.png';
 
-            if (clickCounts[teamName] >= 3) {
-                clickCounts[teamName] = 0;
-                window.location.href = targetUrl;
+                playersHtml += `
+                    <div class="player-box">
+                        <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
+                        <div class="player-details">
+                            <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
+                            <span>${pName}</span>
+                        </div>
+                    </div>
+                `;
             }
+
+            const cardId = `team-card-${Math.random().toString(36.substring(2, 9))}`;
+
+            return `
+                <div class="team-card ${isInactive ? 'inactive' : ''}" id="${cardId}">
+                    <div class="team-header" onclick="toggleCard(event, document.getElementById('${cardId}'))">
+                        <div class="team-info">
+                            <span class="team-rank">${isInactive ? '—' : '#' + displayIndex}</span>
+                            <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
+                            <a href="${targetUrl}" class="team-name">${t.name}</a>
+                        </div>
+                        <div class="team-meta">
+                            <span class="team-points">${points} pts</span>
+                            <span class="toggle-arrow">▼</span>
+                        </div>
+                    </div>
+                    <div class="players-container">
+                        ${playersHtml}
+                    </div>
+                </div>
+            `;
         }
 
         function renderList() {
             const container = document.getElementById('teams-ranking-list');
+            const inactiveContainer = document.getElementById('inactive-teams-list');
+            const inactiveSection = document.getElementById('inactive-section');
 
             if (allTeams.length === 0) {
                 container.innerHTML = '<div style="color: var(--text-muted);">Команд поки немає в базі</div>';
                 return;
             }
 
-            let html = '';
-            allTeams.forEach((t, index) => {
-                const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
-                const points = t.points !== undefined ? t.points : 0;
-                
-                const teamNameNormalized = t.name.trim().toLowerCase();
-                const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
-                
-                let playersHtml = '';
-                for (let i = 0; i < 5; i++) {
-                    const p = teamPlayers[i];
-                    const pName = p ? (p.name || p.nickname || `Гравець ${i+1}`) : `Гравець ${i+1}`;
-                    
-                    const pAvatar = (p && p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') 
-                        ? p.photo 
-                        : DEFAULT_AVATAR;
-                    
-                    const pFlag = (p && p.country) 
-                        ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
-                        : 'https://flagcdn.com/w20/ua.png';
+            let activeHtml = '';
+            let inactiveHtml = '';
+            let activeIndex = 1;
 
-                    playersHtml += `
-                        <div class="player-box">
-                            <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
-                            <div class="player-details">
-                                <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
-                                <span>${pName}</span>
-                            </div>
-                        </div>
-                    `;
+            allTeams.forEach(t => {
+                // Визначаємо інактив за наявністю мінусових балів (-999) або якщо в назві є слова retired / no teams
+                const points = Number(t.points) || 0;
+                const isInactive = points <= -500 || /retired|no teams/i.test(t.name);
+
+                if (isInactive) {
+                    inactiveHtml += generateTeamCardHTML(t, 0, true);
+                } else {
+                    activeHtml += generateTeamCardHTML(t, activeIndex, false);
+                    activeIndex++;
                 }
-
-                html += `
-                    <div class="team-card" id="team-card-${index}">
-                        <div class="team-header" onclick="handleTeamHeaderClick(event, '${t.name}', document.getElementById('team-card-${index}'), '${targetUrl}')">
-                            <div class="team-info">
-                                <span class="team-rank">#${index + 1}</span>
-                                <img src="${t.logo || 'https://via.placeholder.com/32'}" class="team-logo" onerror="this.style.display='none'">
-                                <span class="team-name">${t.name}</span>
-                            </div>
-                            <div class="team-meta">
-                                <span class="team-points">${points} pts</span>
-                                <span class="toggle-arrow">▼</span>
-                            </div>
-                        </div>
-                        <div class="players-container">
-                            ${playersHtml}
-                        </div>
-                    </div>
-                `;
             });
 
-            container.innerHTML = html;
+            container.innerHTML = activeHtml || '<div style="color: var(--text-muted);">Активних команд немає</div>';
+
+            if (inactiveHtml) {
+                inactiveContainer.innerHTML = inactiveHtml;
+                inactiveSection.style.display = 'block';
+            } else {
+                inactiveSection.style.display = 'none';
+            }
         }
 
         fetchRanking();
