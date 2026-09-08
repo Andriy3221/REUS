@@ -319,6 +319,8 @@
                 const cloudData = rawRecord.record || rawRecord;
 
                 const players = cloudData.players || [];
+                const teams = cloudData.teams || [];
+
                 const player = players.find(p => (p.name || p.nickname || '').toLowerCase() === playerNameParam.toLowerCase());
 
                 if (!player) {
@@ -326,14 +328,23 @@
                     return;
                 }
 
-                renderPlayerPage(player);
+                // Шукаємо кубки самого гравця, а якщо їх нема — беремо кубки його команди
+                let trophies = player.trophies || player.cups || [];
+                if (trophies.length === 0 && player.team) {
+                    const teamObj = teams.find(t => (t.name || '').toLowerCase() === player.team.toLowerCase());
+                    if (teamObj) {
+                        trophies = teamObj.trophies || teamObj.cups || [];
+                    }
+                }
+
+                renderPlayerPage(player, trophies);
             } catch (err) {
                 console.error(err);
                 document.getElementById('app').innerHTML = '<div class="loading" style="color: var(--danger-color);">Помилка завантаження даних гравця.</div>';
             }
         }
 
-        function renderPlayerPage(p) {
+        function renderPlayerPage(p, trophies) {
             const pName = p.name || p.nickname || 'Гравець';
             const flagImg = p.country ? `<img src="https://flagcdn.com/32x24/${p.country.toLowerCase()}.png" class="flag-icon" alt="${p.country}">` : '';
             
@@ -345,11 +356,9 @@
             const teamLink = p.team ? `<a href="team.html?name=${encodeURIComponent(p.team)}" class="team-name">${p.team}</a>` : '<span style="color: var(--text-muted);">Без команди</span>';
 
             let trophiesHtml = '';
-            const trophies = p.trophies || p.cups || [];
             if (trophies.length > 0) {
                 let items = '';
                 trophies.forEach(t => {
-                    // Підтримка і як тексту, так і об'єкта { name: "..." }
                     const trophyTitle = typeof t === 'object' && t !== null ? (t.name || t.title || 'Трофей') : t;
                     items += `
                         <div class="trophy-card">
