@@ -419,18 +419,26 @@
             return `https://flagcdn.com/24x18/${cleanCode}.png`;
         }
 
-        // Допоміжна функція для універсального пошуку КД/рейтингу гравця
+        // Потужна функція пошуку будь-якого числа чи показника гравця
         function getPlayerRating(p) {
-            return p.kd ?? 
-                   p.rating ?? 
-                   p.rate ?? 
-                   p.score ?? 
-                   p.points ?? 
-                   p.stats?.rating ?? 
-                   p.stats?.kd ?? 
-                   p.stats?.rate ?? 
-                   p.statistics?.rating ?? 
-                   '—';
+            // Перебираємо всі можливі варіанти полів напряму та всередині об'єкта stats
+            const val = p.kd ?? 
+                        p.rating ?? 
+                        p.rate ?? 
+                        p.score ?? 
+                        p.points ?? 
+                        p.kdRatio ??
+                        p.stats?.rating ?? 
+                        p.stats?.kd ?? 
+                        p.stats?.rate ?? 
+                        p.stats?.score ??
+                        p.statistics?.rating ?? 
+                        p.statistics?.kd;
+
+            if (val !== undefined && val !== null && val !== '') {
+                return val;
+            }
+            return '—';
         }
 
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
@@ -446,6 +454,11 @@
                 const cloudData = result.record?.record || result.record || result;
                 const teams = cloudData.teams || [];
                 const allPlayers = cloudData.players || [];
+
+                // ВИВЕДЕМО ПЕРШОГО ГРАВЦЯ В КОНСОЛЬ, ЩОБ ПОБАЧИТИ ЙОГО СТРУКТУРУ
+                if (allPlayers.length > 0) {
+                    console.log("Приклад об'єкта гравця з бази:", allPlayers[0]);
+                }
 
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
@@ -536,7 +549,7 @@
                     let playersHtml = '';
                     allPlayers.forEach((p, index) => {
                         const pName = p.name || p.nickname || p.username || 'Гравець';
-                        const pRating = getPlayerRating(p); // Використовуємо універсальну функцію
+                        const pRating = getPlayerRating(p);
                         
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
