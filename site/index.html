@@ -410,6 +410,18 @@
             playersDiv.style.display = playersDiv.style.display === 'grid' ? 'none' : 'grid';
         }
 
+        // Функція для отримання правильного посилання на прапор за кодом країни (наприклад, "ua" -> посилання на картинку)
+        function getFlagUrl(flagValue) {
+            if (!flagValue) return '';
+            // Якщо це вже посилання (наприклад, починається з http або /), повертаємо його як є
+            if (flagValue.startsWith('http') || flagValue.startsWith('/') || flagValue.startsWith('data:')) {
+                return flagValue;
+            }
+            // Якщо це просто код країни (наприклад, "ua", "us", "it"), перетворюємо його на посилання через сервіс flagcdn
+            const cleanCode = flagValue.trim().toLowerCase();
+            return `https://flagcdn.com/24x18/${cleanCode}.png`;
+        }
+
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
         const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
 
@@ -451,8 +463,9 @@
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
                                 
-                                // Отримуємо прапор гравця з можливих полів
-                                const playerFlag = tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '';
+                                // Отримуємо код/посилання прапора гравця і пропускаємо через функцію обробки
+                                const rawFlag = tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '';
+                                const playerFlag = getFlagUrl(rawFlag);
                                 let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
 
                                 let extraClass = '';
