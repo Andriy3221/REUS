@@ -180,6 +180,7 @@
             height: 55px;
             border-radius: 8px;
             object-fit: cover;
+            object-position: top center; /* Зміщено вище, щоб було видно зачіску */
             background: #111;
         }
         .player-details {
@@ -281,7 +282,6 @@
                     ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
                     : 'https://flagcdn.com/w20/ua.png';
 
-                // Якщо гравець існує в базі, робимо його картку посиланням на player.html
                 const playerUrl = p ? `player.html?name=${encodeURIComponent(p.name || p.nickname || '')}` : '#';
 
                 playersHtml += `
