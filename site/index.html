@@ -260,11 +260,16 @@
             transform: scale(1.15);
             transition: transform 0.3s ease;
         }
-        /* Опускаємо ще нижче для перших трьох гравців (значення 65%) */
-        .team-player-card:has(a[href*="yokirito"]) .player-avatar,
-        .team-player-card:has(a[href*="Fexum"]) .player-avatar,
-        .team-player-card:has(a[href*="darkpr1nce9"]) .player-avatar {
-            object-position: 50% 65%;
+
+        /* Індивідуальне позиціонування для перших трьох гравців */
+        .player-avatar.pos-yokirito {
+            object-position: 50% 75% !important;
+        }
+        .player-avatar.pos-fexum {
+            object-position: 50% 75% !important;
+        }
+        .player-avatar.pos-darkprince9 {
+            object-position: 50% 80% !important;
         }
 
         .team-player-card:hover .player-avatar {
@@ -433,10 +438,17 @@
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
                                 
+                                // Визначаємо додатковий клас залежно від імені гравця
+                                let extraClass = '';
+                                const lowerName = playerName.toLowerCase();
+                                if (lowerName.includes('yokirito')) extraClass = 'pos-yokirito';
+                                else if (lowerName.includes('fexum')) extraClass = 'pos-fexum';
+                                else if (lowerName.includes('darkpr1nce9')) extraClass = 'pos-darkprince9';
+
                                 playersListHtml += `
                                     <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-card" onclick="event.stopPropagation();">
                                         <div class="player-photo-wrapper">
-                                            <img src="${playerPhoto}" class="player-avatar" alt="">
+                                            <img src="${playerPhoto}" class="player-avatar ${extraClass}" alt="">
                                         </div>
                                         <div class="player-name">${playerName}</div>
                                     </a>
