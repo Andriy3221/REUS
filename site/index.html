@@ -353,11 +353,6 @@
                 const teams = cloudData.teams || [];
                 const allPlayers = cloudData.players || [];
 
-                // Виводимо структуру першої команди в консоль, щоб ви бачили ключі
-                if (teams.length > 0) {
-                    console.log("Приклад структури команди:", teams[0]);
-                }
-
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
@@ -370,29 +365,27 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Шукаємо гравців тільки ТІЛЬКИ у властивостях самої команди (не чіпаємо глобальний масив усіх гравців напряму, якщо він туди не належить)
-                        let tPlayers = t.players || t.roster || t.members || t.team || t.squad || t.users || [];
-                        
-                        // Якщо масив усередині команди — це просто список імен або об'єктів
+                        // Фільтруємо гравців із загального масиву гравців за назвою команди
+                        const teamPlayers = allPlayers.filter(p => {
+                            const pTeam = p.team || p.teamName || p.club || p.group || '';
+                            return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
+                        });
+
                         const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
 
                         let playersListHtml = '';
-                        if (Array.isArray(tPlayers) && tPlayers.length > 0) {
-                            tPlayers.forEach(tp => {
-                                const playerName = typeof tp === 'string' ? tp : (tp.name || tp.nickname || tp.username || tp.tag || '');
-                                if (playerName) {
-                                    playersListHtml += `
-                                        <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-row" onclick="event.stopPropagation();">
-                                            <span>• ${playerName}</span>
-                                            <span style="color: var(--accent-color);">переглянути</span>
-                                        </a>
-                                    `;
-                                }
+                        if (teamPlayers.length > 0) {
+                            teamPlayers.forEach(tp => {
+                                const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
+                                playersListHtml += `
+                                    <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-row" onclick="event.stopPropagation();">
+                                        <span>• ${playerName}</span>
+                                        <span style="color: var(--accent-color);">переглянути</span>
+                                    </a>
+                                `;
                             });
-                        }
-                        
-                        if (!playersListHtml) {
+                        } else {
                             playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">У команді немає гравців або дизбанд</div>';
                         }
 
