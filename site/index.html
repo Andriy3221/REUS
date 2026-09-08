@@ -221,6 +221,10 @@
             border-color: var(--accent-color);
             transform: translateY(-2px);
         }
+        .player-box.empty {
+            pointer-events: none;
+            opacity: 0.4;
+        }
         .player-avatar {
             width: 55px;
             height: 55px;
@@ -330,10 +334,10 @@
             
             let playersHtml = '';
             
-            if (teamPlayers.length === 0) {
-                playersHtml = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; font-size: 0.9rem;">Немає гравців у команді</div>';
-            } else {
-                teamPlayers.forEach(p => {
+            // Завжди виводимо рівно 5 слотів
+            for (let i = 0; i < 5; i++) {
+                const p = teamPlayers[i];
+                if (p) {
                     const pName = p.name || p.nickname || 'Гравець';
                     const pAvatar = (p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') ? p.photo : DEFAULT_AVATAR;
                     const pFlag = p.country ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` : 'https://flagcdn.com/w20/ua.png';
@@ -348,7 +352,17 @@
                             </div>
                         </a>
                     `;
-                });
+                } else {
+                    // Якщо гравця немає в базі для цього слота — малюємо стильну заглушку без тексту
+                    playersHtml += `
+                        <div class="player-box empty">
+                            <img src="${DEFAULT_AVATAR}" class="player-avatar">
+                            <div class="player-details">
+                                <span style="color: var(--text-muted);">—</span>
+                            </div>
+                        </div>
+                    `;
+                }
             }
 
             const cardId = `team-card-${Math.random().toString(36).substring(2, 9)}`;
