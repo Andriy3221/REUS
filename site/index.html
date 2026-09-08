@@ -256,11 +256,17 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Жорстке вирівнювання центру для всіх зображень */
             object-position: 50% 22%; 
             transform: scale(1.15);
             transition: transform 0.3s ease;
         }
+        /* Точкове опускання фото для перших трьох гравців за ніком */
+        .team-player-card:has(a[href*="yokirito"]) .player-avatar,
+        .team-player-card:has(a[href*="Fexum"]) .player-avatar,
+        .team-player-card:has(a[href*="darkpr1nce9"]) .player-avatar {
+            object-position: 50% 32%;
+        }
+
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
         }
