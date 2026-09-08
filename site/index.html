@@ -184,6 +184,7 @@
             align-items: center;
             gap: 15px;
         }
+        /* Збільшений розмір логотипів команд з фільтрами чіткості */
         .team-logo {
             width: 38px;
             height: 38px;
@@ -192,6 +193,8 @@
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
             padding: 2px;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         .team-name {
             font-weight: 700;
@@ -332,7 +335,6 @@
         }
 
         function toggleTeam(event, headerElement) {
-            // Зупиняємо розповсюдження події, щоб клік по посиланню гравця всередині не згортав картку назад
             event.stopPropagation();
             const playersDiv = headerElement.nextElementSibling;
             playersDiv.style.display = playersDiv.style.display === 'flex' ? 'none' : 'flex';
@@ -348,14 +350,13 @@
                 });
                 const result = await res.json();
                 
-                console.p = result; // Виведе в консоль повний об'єкт для перевірки
-                console.log("JSON Data:", result);
-
+                // Правильний шлях до даних відповідно до структури JsonBin
                 const cloudData = result.record?.record || result.record || result;
 
                 const teams = cloudData.teams || [];
-                const players = cloudData.players || [];
+                const allPlayers = cloudData.players || [];
 
+                // 1. Заповнення списку команд та їх гравців
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
@@ -368,10 +369,13 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Шукаємо масив гравців у будь-яких можливих ключах
-                        const tPlayers = t.players || t.roster || t.members || t.team || t.squad || [];
+                        // Шукаємо гравців усередині команди або матчимо з глобального масиву гравців за назвою команди
+                        let tPlayers = t.players || t.roster || t.members || t.team || t.squad || [];
+                        if (tPlayers.length === 0 && allPlayers.length > 0) {
+                            tPlayers = allPlayers.filter(p => p.team === tName || p.teamName === tName || p.team_id === t.id);
+                        }
+
                         const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
-                        
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
 
                         let playersListHtml = '';
@@ -419,12 +423,13 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                if (players.length === 0) {
+                // 2. Заповнення глобального списку гравців
+                if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
                     let playersHtml = '';
-                    players.forEach((p, index) => {
-                        const pName = p.name || p.nickname || 'Гравець';
+                    allPlayers.forEach((p, index) => {
+                        const pName = p.name || p.nickname || p.username || 'Гравець';
                         const pRating = p.stats?.rating || p.rating || p.rate || p.score || p.kd || '1.00';
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
