@@ -192,7 +192,6 @@
                 <img src="REUS.png" alt="Logo" onerror="this.style.display='none'">
                 <span>Reus Championship</span>
             </div>
-            <!-- Оновлене посилання на Discord-сервер тікетів -->
             <a href="https://discord.gg/wJ8qM8g8AC" target="_blank" class="support-btn">Техпідтримка</a>
         </div>
 
@@ -262,14 +261,17 @@
                 const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
                 const points = t.points !== undefined ? t.points : 0;
                 
-                const teamPlayers = allPlayers.filter(p => p.team === t.name);
+                // Нормалізуємо назву команди (зменшуємо регістр), щоб точно знайти гравців навіть якщо десь літери різні
+                const teamNameNormalized = t.name.trim().toLowerCase();
+                const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
                 
                 let playersHtml = '';
                 for (let i = 0; i < 5; i++) {
                     const p = teamPlayers[i];
-                    const pName = p ? p.name : `Гравець ${i+1}`;
+                    // Шукаємо нік у різних полях на випадок різного написання в адмінці
+                    const pName = p ? (p.name || p.nickname || `Гравець ${i+1}`) : `Гравець ${i+1}`;
                     
-                    const pAvatar = (p && p.photo && p.photo.trim() !== '') 
+                    const pAvatar = (p && p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') 
                         ? p.photo 
                         : 'https://via.placeholder.com/55/1a222f/00ff88?text=👤';
                     
