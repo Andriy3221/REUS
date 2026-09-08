@@ -167,6 +167,13 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .player-box:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
         }
         .player-avatar {
             width: 55px;
@@ -250,7 +257,7 @@
         }
 
         function toggleCard(event, cardElement) {
-            if (event.target.closest('a') || event.target.closest('.players-container')) return;
+            if (event.target.closest('a') || event.target.closest('.players-container a')) return;
             cardElement.classList.toggle('open');
         }
 
@@ -274,16 +281,17 @@
                     ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
                     : 'https://flagcdn.com/w20/ua.png';
 
+                // Якщо гравець існує в базі, робимо його картку посиланням на player.html
+                const playerUrl = p ? `player.html?name=${encodeURIComponent(p.name || p.nickname || '')}` : '#';
+
                 playersHtml += `
-                    <div class="player-box">
+                    <a href="${playerUrl}" class="player-box">
                         <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
-                        ` + (p && p.id ? `<a href="player.html?id=${p.id}" style="text-decoration:none; color:inherit;">` : ``) + `
                         <div class="player-details">
                             <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
                             <span>${pName}</span>
                         </div>
-                        ` + (p && p.id ? `</a>` : ``) + `
-                    </div>
+                    </a>
                 `;
             }
 
@@ -324,7 +332,6 @@
             let activeIndex = 1;
 
             allTeams.forEach(t => {
-                // Перевіряємо статус команди з адмінки (тип, статус або якщо в базі забито як unranked / не рейтингова)
                 const teamType = (t.type || t.status || '').toLowerCase();
                 const isInactive = teamType.includes('unranked') || teamType.includes('не рейтинг') || teamType.includes('inactive') || Number(t.points) <= -500;
 
