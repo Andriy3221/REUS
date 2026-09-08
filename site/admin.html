@@ -108,10 +108,12 @@
             padding: 14px 18px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
+            gap: 15px;
         }
         .row-actions {
             display: flex;
             gap: 10px;
+            flex-shrink: 0;
         }
         .row-actions button {
             padding: 7px 14px;
@@ -173,10 +175,17 @@
             
             <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
                 <label style="color: var(--accent-color); font-weight: 600;">Створити нову команду</label>
-                <div style="display: flex; gap: 12px; margin-top: 8px;">
-                    <input type="text" id="newTeamName" placeholder="Назва команди" style="flex: 2;">
-                    <input type="number" id="newTeamPoints" placeholder="Очки" style="flex: 1;" value="0">
-                    <button onclick="addNewTeam()" style="width: auto;">Створити</button>
+                <div class="grid-2" style="margin-top: 8px; margin-bottom: 12px;">
+                    <input type="text" id="newTeamName" placeholder="Назва команди">
+                    <input type="text" id="newTeamLogo" placeholder="URL логотипу команди">
+                </div>
+                <div class="grid-2" style="margin-bottom: 12px;">
+                    <input type="number" id="newTeamRank" placeholder="Ранг (позиція у рейтингу)" value="1">
+                    <input type="number" id="newTeamPoints" placeholder="Очки" value="0">
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <input type="text" id="newTeamStatus" placeholder="Статус (напр. ЄВРОПА)" style="flex: 1;">
+                    <button onclick="addNewTeam()" style="width: auto;">Створити команду</button>
                 </div>
             </div>
 
@@ -186,10 +195,10 @@
                     <select id="trophyTeamSelect">
                         <option value="">Оберіть команду</option>
                     </select>
-                    <input type="text" id="trophyNameInput" placeholder="Назва турніру (напр. BLAST Premier)">
+                    <input type="text" id="trophyNameInput" placeholder="Назва турніру">
                 </div>
                 <div style="display: flex; gap: 12px; margin-top: 12px;">
-                    <input type="text" id="trophyIconInput" value="🏆" placeholder="URL іконки або emoji" style="flex: 1;">
+                    <input type="text" id="trophyIconInput" value="🏆" placeholder="URL іконки або посилання на фото" style="flex: 1;">
                     <button onclick="addTrophyToTeam()" style="width: auto;">Додати трофей</button>
                 </div>
             </div>
@@ -211,7 +220,7 @@
         </div>
     </div>
 
-    <!-- УНІВЕРСАЛЬНЕ МОДАЛЬНЕ ВІКНО (СТВОРЕННЯ / РЕДАГУВАННЯ ГРАВЦЯ) -->
+    <!-- МОДАЛЬНЕ ВІКНО РЕДАГУВАННЯ/СТВОРЕННЯ ГРАВЦЯ -->
     <div id="modalOverlay">
         <div class="modal-content">
             <h2 id="modalHeaderTitle" style="margin-top: 0; color: var(--accent-color);">Редагувати гравця</h2>
@@ -220,57 +229,57 @@
             <div class="grid-2">
                 <div class="form-group">
                     <label>Нікнейм гравця</label>
-                    <input type="text" id="editPlayerName" placeholder="напр. s1mple">
+                    <input type="text" id="editPlayerName" placeholder="напр. todil">
                 </div>
                 <div class="form-group">
                     <label>Команда</label>
-                    <input type="text" id="editPlayerTeam" placeholder="напр. Natus Vincere">
+                    <input type="text" id="editPlayerTeam" placeholder="напр. YAMI">
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
                     <label>Роль</label>
-                    <input type="text" id="editPlayerRole" placeholder="Rifler / AWPer тощо">
+                    <input type="text" id="editPlayerRole" placeholder="Rifler / IGL тощо">
                 </div>
                 <div class="form-group">
-                    <label>Країна (код, напр. ua, us, dk)</label>
+                    <label>Країна (код, напр. ua)</label>
                     <input type="text" id="editPlayerCountry" placeholder="ua">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Пряме посилання на фото (URL)</label>
+                <label>Пряме посилання на фото гравця (URL)</label>
                 <input type="text" id="editPlayerPhoto" placeholder="https://...">
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
                     <label>Rating 2.0</label>
-                    <input type="text" id="editPlayerRating" placeholder="1.20">
+                    <input type="text" id="editPlayerRating" placeholder="1.00">
                 </div>
                 <div class="form-group">
                     <label>K/D Ratio</label>
-                    <input type="text" id="editPlayerKd" placeholder="1.30">
+                    <input type="text" id="editPlayerKd" placeholder="1.00">
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
                     <label>Impact</label>
-                    <input type="text" id="editPlayerImpact" placeholder="1.40">
+                    <input type="text" id="editPlayerImpact" placeholder="1.00">
                 </div>
                 <div class="form-group">
-                    <label>ADR (Шкода за раунд)</label>
-                    <input type="text" id="editPlayerAdr" placeholder="85.5">
+                    <label>ADR</label>
+                    <input type="text" id="editPlayerAdr" placeholder="75">
                 </div>
             </div>
 
-            <!-- ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ (Адмін пеналь) -->
+            <!-- ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ (ФОТО) -->
             <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 8px; display: block;">Особисті трофеї гравця (Адмін пеналь)</label>
+                <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 8px; display: block;">Особисті трофеї гравця (посилання на фото)</label>
                 <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;"></div>
-                <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; font-size: 0.85rem; width: auto;">+ Додати особистий трофей</button>
+                <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; font-size: 0.85rem; width: auto;">+ Додати трофей (фото)</button>
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 25px;">
@@ -340,10 +349,15 @@
             }
             container.innerHTML = '';
             teams.forEach((t, index) => {
-                const cupsCount = (t.trophies || t.cups || []).length;
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.name}</b> — Очки: <input type="number" value="${t.points || 0}" onchange="updateTeamPoints(${index}, this.value)" style="width: 80px; display:inline-block; padding: 4px;"> | Кубків: ${cupsCount}</span>
+                        <div style="display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;">
+                            <input type="text" value="${t.name || ''}" onchange="updateTeamField(${index}, 'name', this.value)" style="width: 140px; padding: 6px;" placeholder="Назва">
+                            <input type="text" value="${t.logo || ''}" onchange="updateTeamField(${index}, 'logo', this.value)" style="width: 160px; padding: 6px;" placeholder="URL логотипу">
+                            <input type="number" value="${t.rank || 1}" onchange="updateTeamField(${index}, 'rank', this.value)" style="width: 70px; padding: 6px;" placeholder="Ранг">
+                            <input type="number" value="${t.points || 0}" onchange="updateTeamField(${index}, 'points', this.value)" style="width: 80px; padding: 6px;" placeholder="Очки">
+                            <input type="text" value="${t.status || ''}" onchange="updateTeamField(${index}, 'status', this.value)" style="width: 110px; padding: 6px;" placeholder="Статус">
+                        </div>
                         <div class="row-actions">
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
                         </div>
@@ -354,21 +368,34 @@
 
         async function addNewTeam() {
             const name = document.getElementById('newTeamName').value.trim();
+            const logo = document.getElementById('newTeamLogo').value.trim();
+            const rank = parseInt(document.getElementById('newTeamRank').value) || 1;
             const points = parseInt(document.getElementById('newTeamPoints').value) || 0;
+            const status = document.getElementById('newTeamStatus').value.trim();
+
             if (!name) return alert('Введіть назву команди!');
 
             if (!globalData.teams) globalData.teams = [];
-            globalData.teams.push({ name, points, trophies: [] });
+            globalData.teams.push({ name, logo, rank, points, status, trophies: [] });
 
             await saveData();
             document.getElementById('newTeamName').value = '';
+            document.getElementById('newTeamLogo').value = '';
+            document.getElementById('newTeamRank').value = '1';
             document.getElementById('newTeamPoints').value = '0';
+            document.getElementById('newTeamStatus').value = '';
+            
             renderTeamsList();
             updateTeamSelect();
+            alert('Команду успішно створено!');
         }
 
-        async function updateTeamPoints(index, val) {
-            globalData.teams[index].points = parseInt(val) || 0;
+        async function updateTeamField(index, field, val) {
+            if (field === 'rank' || field === 'points') {
+                globalData.teams[index][field] = parseInt(val) || 0;
+            } else {
+                globalData.teams[index][field] = val;
+            }
             await saveData();
         }
 
@@ -430,7 +457,7 @@
             wrapper.style.gap = '8px';
             
             wrapper.innerHTML = `
-                <input type="text" class="player-trophy-input" value="${value}" placeholder="URL іконки або назва трофею" style="flex: 1;">
+                <input type="text" class="player-trophy-input" value="${value}" placeholder="URL фото трофею" style="flex: 1;">
                 <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 0 10px;">✕</button>
             `;
             container.appendChild(wrapper);
@@ -513,10 +540,8 @@
             if (!globalData.players) globalData.players = [];
 
             if (indexStr === '') {
-                // Додавання нового гравця
                 globalData.players.push(playerData);
             } else {
-                // Оновлення існуючого
                 globalData.players[parseInt(indexStr)] = playerData;
             }
 
