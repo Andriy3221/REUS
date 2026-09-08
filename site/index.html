@@ -410,16 +410,27 @@
             playersDiv.style.display = playersDiv.style.display === 'grid' ? 'none' : 'grid';
         }
 
-        // Функція для отримання правильного посилання на прапор за кодом країни (наприклад, "ua" -> посилання на картинку)
         function getFlagUrl(flagValue) {
             if (!flagValue) return '';
-            // Якщо це вже посилання (наприклад, починається з http або /), повертаємо його як є
             if (flagValue.startsWith('http') || flagValue.startsWith('/') || flagValue.startsWith('data:')) {
                 return flagValue;
             }
-            // Якщо це просто код країни (наприклад, "ua", "us", "it"), перетворюємо його на посилання через сервіс flagcdn
             const cleanCode = flagValue.trim().toLowerCase();
             return `https://flagcdn.com/24x18/${cleanCode}.png`;
+        }
+
+        // Допоміжна функція для універсального пошуку КД/рейтингу гравця
+        function getPlayerRating(p) {
+            return p.kd ?? 
+                   p.rating ?? 
+                   p.rate ?? 
+                   p.score ?? 
+                   p.points ?? 
+                   p.stats?.rating ?? 
+                   p.stats?.kd ?? 
+                   p.stats?.rate ?? 
+                   p.statistics?.rating ?? 
+                   '—';
         }
 
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
@@ -463,7 +474,6 @@
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
                                 
-                                // Отримуємо код/посилання прапора гравця і пропускаємо через функцію обробки
                                 const rawFlag = tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '';
                                 const playerFlag = getFlagUrl(rawFlag);
                                 let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
@@ -526,7 +536,8 @@
                     let playersHtml = '';
                     allPlayers.forEach((p, index) => {
                         const pName = p.name || p.nickname || p.username || 'Гравець';
-                        const pRating = p.stats?.rating || p.rating || p.rate || p.score || p.kd || '1.00';
+                        const pRating = getPlayerRating(p); // Використовуємо універсальну функцію
+                        
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
                                 <div class="item-info">
