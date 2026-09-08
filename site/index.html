@@ -193,6 +193,13 @@
             border: 1px solid var(--border-color);
             padding: 2px;
         }
+        .team-flag {
+            width: 24px;
+            height: 16px;
+            border-radius: 3px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+        }
         .team-name-link {
             font-weight: 700;
             font-size: 1.05rem;
@@ -261,7 +268,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* Піднімаємо перших трьох гравців, щоб були видні голови */
         .player-avatar.pos-yokirito {
             object-position: 50% 15% !important;
         }
@@ -422,6 +428,7 @@
                     teams.forEach((t) => {
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
+                        const tFlag = t.flag || t.countryFlag || t.country || '';
                         
                         const teamPlayers = allPlayers.filter(p => {
                             const pTeam = p.team || p.teamName || p.club || p.group || '';
@@ -430,6 +437,7 @@
 
                         const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
+                        let flagHtml = tFlag ? `<img src="${tFlag}" class="team-flag" alt="flag" title="${t.countryName || ''}">` : '';
 
                         let playersListHtml = '';
                         if (teamPlayers.length > 0) {
@@ -463,6 +471,7 @@
                                     <div class="team-info">
                                         <span style="color: var(--text-muted); font-weight: bold;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
                                         ${logoHtml}
+                                        ${flagHtml}
                                         <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
