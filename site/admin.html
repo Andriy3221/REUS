@@ -6,55 +6,66 @@
     <title>Admin Panel | REUS</title>
     <style>
         :root {
-            --bg-color: #07090e;
-            --card-bg: rgba(13, 17, 23, 0.95);
-            --inner-card-bg: #111620;
-            --border-color: #21262d;
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --inner-card-bg: #19233c;
+            --border-color: #2a3655;
             --accent-color: #00ff88;
+            --accent-hover: #00cc6a;
             --text-color: #ffffff;
-            --text-muted: #8b949e;
-            --danger-color: #ff4444;
+            --text-muted: #94a3b8;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 30px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
         h1, h2 {
             color: var(--accent-color);
+            margin: 0 0 15px 0;
         }
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
         }
         .form-group {
             margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             color: var(--text-muted);
+            font-weight: 500;
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 11px 14px;
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
             color: var(--text-color);
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
         input:focus, select:focus {
             border-color: var(--accent-color);
@@ -62,25 +73,31 @@
         }
         button {
             background: var(--accent-color);
-            color: #000;
+            color: #050b14;
             border: none;
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 11px 20px;
+            font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background 0.2s, transform 0.1s;
         }
         button:hover {
-            opacity: 0.85;
+            background: var(--accent-hover);
+        }
+        button:active {
+            transform: scale(0.98);
         }
         .btn-danger {
             background: var(--danger-color);
             color: #fff;
         }
+        .btn-danger:hover {
+            background: var(--danger-hover);
+        }
         .list-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             margin-top: 15px;
         }
         .item-row {
@@ -88,106 +105,126 @@
             justify-content: space-between;
             align-items: center;
             background: var(--inner-card-bg);
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 14px 18px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
         }
         .row-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
-        /* Модальне вікно */
-        #editModal {
+        .row-actions button {
+            padding: 7px 14px;
+            font-size: 0.85rem;
+        }
+        #modalOverlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(5, 11, 20, 0.85);
+            backdrop-filter: blur(5px);
             justify-content: center;
             align-items: center;
             z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .modal-content {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 16px;
             width: 100%;
             max-width: 650px;
             max-height: 90vh;
             overflow-y: auto;
             box-sizing: border-box;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
+        .back-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Адмін-панель REUS</h1>
-        <a href="index.html" style="color: var(--accent-color); text-decoration: none; display: inline-block; margin-bottom: 20px;">← Назад на сайт</a>
+        <header>
+            <h1>Адмін-панель REUS</h1>
+            <a href="index.html" class="back-link">← На сайт</a>
+        </header>
 
-        <!-- 1. КЕРУВАННЯ КОМАНДАМИ ТА ЇХНІМИ ТРОФЕЯМИ -->
+        <!-- РОБОТА З КОМАНДАМИ -->
         <div class="card">
             <h2>Керування командами</h2>
             
-            <!-- Додати нову команду -->
-            <div class="form-group" style="background: var(--inner-card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                <label style="color: var(--accent-color); font-weight: bold;">Додати нову команду</label>
-                <div style="display: flex; gap: 10px; margin-top: 8px;">
+            <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <label style="color: var(--accent-color); font-weight: 600;">Створити нову команду</label>
+                <div style="display: flex; gap: 12px; margin-top: 8px;">
                     <input type="text" id="newTeamName" placeholder="Назва команди" style="flex: 2;">
                     <input type="number" id="newTeamPoints" placeholder="Очки" style="flex: 1;" value="0">
                     <button onclick="addNewTeam()" style="width: auto;">Створити</button>
                 </div>
             </div>
 
-            <!-- Видати трофей команді -->
-            <div class="form-group" style="background: var(--inner-card-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
-                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px;">Видати командний трофей</label>
+            <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color);">
+                <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px;">Видати командний трофей</label>
                 <div class="grid-2">
                     <select id="trophyTeamSelect">
                         <option value="">Оберіть команду</option>
                     </select>
-                    <input type="text" id="trophyNameInput" placeholder="Назва турніру (напр. BLAST)">
+                    <input type="text" id="trophyNameInput" placeholder="Назва турніру (напр. BLAST Premier)">
                 </div>
-                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
                     <input type="text" id="trophyIconInput" value="🏆" placeholder="URL іконки або emoji" style="flex: 1;">
                     <button onclick="addTrophyToTeam()" style="width: auto;">Додати трофей</button>
                 </div>
             </div>
 
-            <!-- Список команд -->
             <div id="teamsList" class="list-container" style="margin-top: 20px;">
                 <div style="color: var(--text-muted);">Завантаження команд...</div>
             </div>
         </div>
 
-        <!-- 2. КЕРУВАННЯ ГРАВЦЯМИ (HLTV + ОСОБИСТІ ТРОФЕЇ) -->
+        <!-- РОБОТА З ГРАВЦЯМИ -->
         <div class="card">
-            <h2>Керування гравцями</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">Керування гравцями</h2>
+                <button onclick="openPlayerModalForAdd()">+ Додати гравця</button>
+            </div>
             <div id="playersList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження гравців...</div>
             </div>
         </div>
     </div>
 
-    <!-- МОДАЛЬНЕ ВІКНО РЕДАГУВАННЯ ГРАВЦЯ -->
-    <div id="editModal">
+    <!-- УНІВЕРСАЛЬНЕ МОДАЛЬНЕ ВІКНО (СТВОРЕННЯ / РЕДАГУВАННЯ ГРАВЦЯ) -->
+    <div id="modalOverlay">
         <div class="modal-content">
-            <h2 style="margin-top: 0; color: var(--accent-color);">Редагувати гравця (HLTV профіль)</h2>
+            <h2 id="modalHeaderTitle" style="margin-top: 0; color: var(--accent-color);">Редагувати гравця</h2>
             <input type="hidden" id="editPlayerIndex">
             
             <div class="grid-2">
                 <div class="form-group">
                     <label>Нікнейм гравця</label>
-                    <input type="text" id="editPlayerName">
+                    <input type="text" id="editPlayerName" placeholder="напр. s1mple">
                 </div>
                 <div class="form-group">
                     <label>Команда</label>
-                    <input type="text" id="editPlayerTeam">
+                    <input type="text" id="editPlayerTeam" placeholder="напр. Natus Vincere">
                 </div>
             </div>
 
@@ -197,50 +234,48 @@
                     <input type="text" id="editPlayerRole" placeholder="Rifler / AWPer тощо">
                 </div>
                 <div class="form-group">
-                    <label>Країна (код, напр. ua, us, dk, se)</label>
-                    <input type="text" id="editPlayerCountry">
+                    <label>Країна (код, напр. ua, us, dk)</label>
+                    <input type="text" id="editPlayerCountry" placeholder="ua">
                 </div>
             </div>
 
             <div class="form-group">
                 <label>Пряме посилання на фото (URL)</label>
-                <input type="text" id="editPlayerPhoto">
+                <input type="text" id="editPlayerPhoto" placeholder="https://...">
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
                     <label>Rating 2.0</label>
-                    <input type="text" id="editPlayerRating">
+                    <input type="text" id="editPlayerRating" placeholder="1.20">
                 </div>
                 <div class="form-group">
                     <label>K/D Ratio</label>
-                    <input type="text" id="editPlayerKd">
+                    <input type="text" id="editPlayerKd" placeholder="1.30">
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="form-group">
                     <label>Impact</label>
-                    <input type="text" id="editPlayerImpact">
+                    <input type="text" id="editPlayerImpact" placeholder="1.40">
                 </div>
                 <div class="form-group">
                     <label>ADR (Шкода за раунд)</label>
-                    <input type="text" id="editPlayerAdr">
+                    <input type="text" id="editPlayerAdr" placeholder="85.5">
                 </div>
             </div>
 
-            <!-- АДМІН ПЕНАЛЬ: ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ -->
+            <!-- ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ (Адмін пеналь) -->
             <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: block;">Особисті трофеї гравця (Адмін пеналь)</label>
-                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
-                    <!-- Сюди додаватимуться інпути -->
-                </div>
+                <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 8px; display: block;">Особисті трофеї гравця (Адмін пеналь)</label>
+                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;"></div>
                 <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; font-size: 0.85rem; width: auto;">+ Додати особистий трофей</button>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button type="button" onclick="saveEditedPlayer()" style="flex: 1;">Зберегти зміни</button>
-                <button type="button" onclick="closeEditModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
+            <div style="display: flex; gap: 12px; margin-top: 25px;">
+                <button type="button" onclick="savePlayerFormData()" style="flex: 1;">Зберегти</button>
+                <button type="button" onclick="closePlayerModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
             </div>
         </div>
     </div>
@@ -295,7 +330,7 @@
             });
         }
 
-        // --- РОБОТА З КОМАНДАМИ ---
+        // Керування командами
         function renderTeamsList() {
             const teams = globalData.teams || [];
             const container = document.getElementById('teamsList');
@@ -330,7 +365,6 @@
             document.getElementById('newTeamPoints').value = '0';
             renderTeamsList();
             updateTeamSelect();
-            alert('Команду створено!');
         }
 
         async function updateTeamPoints(index, val) {
@@ -366,7 +400,7 @@
             }
         }
 
-        // --- РОБОТА З ГРАВЦЯМИ ---
+        // Керування гравцями
         function renderPlayersList() {
             const players = globalData.players || [];
             const container = document.getElementById('playersList');
@@ -381,7 +415,7 @@
                     <div class="item-row">
                         <span><b>${pName}</b> (${p.team || 'Без команди'}) | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'}</span>
                         <div class="row-actions">
-                            <button onclick="openEditModal(${index})">Редагувати</button>
+                            <button onclick="openPlayerModalForEdit(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
@@ -389,7 +423,6 @@
             });
         }
 
-        // Додавання поля для індивідуального трофею у модалці
         function addAdminPlayerTrophyInput(value = '') {
             const container = document.getElementById('adminPlayerTrophiesContainer');
             const wrapper = document.createElement('div');
@@ -403,8 +436,27 @@
             container.appendChild(wrapper);
         }
 
-        function openEditModal(index) {
+        function openPlayerModalForAdd() {
+            document.getElementById('editPlayerIndex').value = '';
+            document.getElementById('modalHeaderTitle').innerText = 'Додати нового гравця';
+
+            document.getElementById('editPlayerName').value = '';
+            document.getElementById('editPlayerTeam').value = '';
+            document.getElementById('editPlayerRole').value = '';
+            document.getElementById('editPlayerCountry').value = '';
+            document.getElementById('editPlayerPhoto').value = '';
+            document.getElementById('editPlayerRating').value = '';
+            document.getElementById('editPlayerKd').value = '';
+            document.getElementById('editPlayerImpact').value = '';
+            document.getElementById('editPlayerAdr').value = '';
+
+            document.getElementById('adminPlayerTrophiesContainer').innerHTML = '';
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        function openPlayerModalForEdit(index) {
             document.getElementById('editPlayerIndex').value = index;
+            document.getElementById('modalHeaderTitle').innerText = 'Редагувати гравця';
             const p = globalData.players[index];
 
             document.getElementById('editPlayerName').value = p.name || p.nickname || '';
@@ -417,7 +469,6 @@
             document.getElementById('editPlayerImpact').value = p.impact || '';
             document.getElementById('editPlayerAdr').value = p.adr || '';
 
-            // Завантажуємо особисті трофеї гравця (адмін пеналь)
             const container = document.getElementById('adminPlayerTrophiesContainer');
             container.innerHTML = '';
             const trophies = p.trophies || p.cups || [];
@@ -426,42 +477,53 @@
                 addAdminPlayerTrophyInput(val);
             });
 
-            document.getElementById('editModal').style.display = 'flex';
+            document.getElementById('modalOverlay').style.display = 'flex';
         }
 
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
+        function closePlayerModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
         }
 
-        async function saveEditedPlayer() {
-            const index = document.getElementById('editPlayerIndex').value;
-            if (index === '') return;
-
-            const p = globalData.players[index];
-            p.name = document.getElementById('editPlayerName').value.trim();
-            p.nickname = p.name;
-            p.team = document.getElementById('editPlayerTeam').value.trim();
-            p.role = document.getElementById('editPlayerRole').value.trim();
-            p.country = document.getElementById('editPlayerCountry').value.trim().toLowerCase();
-            p.photo = document.getElementById('editPlayerPhoto').value.trim();
-            p.rating = document.getElementById('editPlayerRating').value.trim();
-            p.kd = document.getElementById('editPlayerKd').value.trim();
-            p.impact = document.getElementById('editPlayerImpact').value.trim();
-            p.adr = document.getElementById('editPlayerAdr').value.trim();
-
-            // Збираємо особисті трофеї гравця
+        async function savePlayerFormData() {
+            const indexStr = document.getElementById('editPlayerIndex').value;
+            
             let trophies = [];
             document.querySelectorAll('.player-trophy-input').forEach(input => {
                 if (input.value.trim() !== '') {
                     trophies.push(input.value.trim());
                 }
             });
-            p.trophies = trophies;
+
+            const playerData = {
+                name: document.getElementById('editPlayerName').value.trim(),
+                nickname: document.getElementById('editPlayerName').value.trim(),
+                team: document.getElementById('editPlayerTeam').value.trim(),
+                role: document.getElementById('editPlayerRole').value.trim(),
+                country: document.getElementById('editPlayerCountry').value.trim().toLowerCase(),
+                photo: document.getElementById('editPlayerPhoto').value.trim(),
+                rating: document.getElementById('editPlayerRating').value.trim(),
+                kd: document.getElementById('editPlayerKd').value.trim(),
+                impact: document.getElementById('editPlayerImpact').value.trim(),
+                adr: document.getElementById('editPlayerAdr').value.trim(),
+                trophies: trophies
+            };
+
+            if (!playerData.name) return alert('Введіть нікнейм гравця!');
+
+            if (!globalData.players) globalData.players = [];
+
+            if (indexStr === '') {
+                // Додавання нового гравця
+                globalData.players.push(playerData);
+            } else {
+                // Оновлення існуючого
+                globalData.players[parseInt(indexStr)] = playerData;
+            }
 
             await saveData();
-            closeEditModal();
+            closePlayerModal();
             renderPlayersList();
-            alert('Гравця успішно оновлено!');
+            alert('Збережено успішно!');
         }
 
         async function deletePlayer(index) {
