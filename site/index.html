@@ -52,8 +52,7 @@
             position: relative;
             z-index: 1;
         }
-        
-        /* Стильна велика шапка з красивим логотипом */
+        /* Стильне неонове лого */
         .header-banner {
             display: flex;
             align-items: center;
@@ -61,7 +60,7 @@
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
-            padding: 20px 30px;
+            padding: 15px 25px;
             border-radius: 14px;
             margin-bottom: 25px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -74,13 +73,12 @@
         .project-logo-container {
             display: inline-flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             text-decoration: none;
         }
-        /* Зробили блок логотипу ширшим та ефектнішим */
         .project-logo-wrapper {
-            width: 120px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             background: var(--inner-card-bg);
             border: 2px solid var(--accent-color);
             border-radius: 12px;
@@ -88,33 +86,32 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.35), inset 0 0 15px rgba(0,255,136,0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3), inset 0 0 10px rgba(0,255,136,0.2);
             flex-shrink: 0;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .project-logo-container:hover .project-logo-wrapper {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
         }
         .project-logo-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Зберігає пропорції логотипу без обрізання */
-            padding: 4px;
+            object-fit: cover;
         }
         .project-title {
             color: var(--text-color);
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 800;
             letter-spacing: 0.5px;
             text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
         .project-title span {
             color: var(--accent-color);
-            text-shadow: 0 0 12px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
         }
 
-        /* Таблиця / список */
+        /* Основний контент / таблиця */
         .section-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -186,11 +183,12 @@
     <div class="bg-overlay"></div>
 
     <div class="main-container">
-        <!-- Шапка з правильно підключеним логотипом REUS.png -->
+        <!-- Шапка з гарним неоновим логотипом -->
         <div class="header-banner">
             <a href="index.html" class="project-logo-container">
                 <div class="project-logo-wrapper">
-                    <img src="REUS.png" alt="REUS Logo"> 
+                    <!-- Заміни шлях до своєї картинки логотипа якщо він інший -->
+                    <img src="logo.png" alt="REUS Logo" onerror="this.src=''"> 
                 </div>
                 <div class="project-title">Reus <span>Championship</span></div>
             </a>
