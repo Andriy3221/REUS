@@ -193,14 +193,6 @@
             border: 1px solid var(--border-color);
             padding: 2px;
         }
-        .team-flag {
-            width: 24px;
-            height: 16px;
-            border-radius: 3px;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
         .team-name-link {
             font-weight: 700;
             font-size: 1.05rem;
@@ -282,17 +274,31 @@
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
         }
-        .player-name {
-            font-size: 0.95rem;
-            font-weight: 700;
+        .player-name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
             padding: 10px 6px;
             width: 100%;
             box-sizing: border-box;
+            background: #111620;
+            border-top: 1px solid var(--border-color);
+        }
+        .player-name {
+            font-size: 0.95rem;
+            font-weight: 700;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            background: #111620;
-            border-top: 1px solid var(--border-color);
+        }
+        .player-flag {
+            width: 20px;
+            height: 14px;
+            border-radius: 2px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
         .item-row {
             display: flex;
@@ -430,23 +436,13 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Шукаємо спочатку прапор у самої команди
-                        let tFlag = t.flag || t.countryFlag || t.flagUrl || t.countryIcon || t.countryImage || '';
-                        
                         const teamPlayers = allPlayers.filter(p => {
                             const pTeam = p.team || p.teamName || p.club || p.group || '';
                             return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
                         });
 
-                        // Якщо у команди немає прапора, беремо прапор першого гравця цієї команди (якщо він є)
-                        if (!tFlag && teamPlayers.length > 0) {
-                            const firstP = teamPlayers[0];
-                            tFlag = firstP.flag || firstP.countryFlag || firstP.country || firstP.flagUrl || '';
-                        }
-
                         const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
-                        let flagHtml = tFlag ? `<img src="${tFlag}" class="team-flag" alt="flag">` : '';
 
                         let playersListHtml = '';
                         if (teamPlayers.length > 0) {
@@ -455,6 +451,10 @@
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
                                 const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
                                 
+                                // Отримуємо прапор гравця з можливих полів
+                                const playerFlag = tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '';
+                                let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
+
                                 let extraClass = '';
                                 const lowerName = playerName.toLowerCase();
                                 if (lowerName.includes('yokirito')) extraClass = 'pos-yokirito';
@@ -466,7 +466,10 @@
                                         <div class="player-photo-wrapper">
                                             <img src="${playerPhoto}" class="player-avatar ${extraClass}" alt="">
                                         </div>
-                                        <div class="player-name">${playerName}</div>
+                                        <div class="player-name-container">
+                                            ${playerFlagHtml}
+                                            <div class="player-name">${playerName}</div>
+                                        </div>
                                     </a>
                                 `;
                             });
@@ -480,7 +483,6 @@
                                     <div class="team-info">
                                         <span style="color: var(--text-muted); font-weight: bold;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
                                         ${logoHtml}
-                                        ${flagHtml}
                                         <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
