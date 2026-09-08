@@ -412,16 +412,19 @@
             return `https://flagcdn.com/24x18/${cleanCode}.png`;
         }
 
-        // Функція для отримання рейтингу/КД з урахуванням структури адмін-панелі (p.stats)
-        function getPlayerRating(p) {
-            if (p.stats && typeof p.stats === 'object') {
-                if (p.stats.rating) return p.stats.rating;
-                if (p.stats.kd) return p.stats.kd;
+        // Чиста функція для діставання значення рейтингу у вигляді числа (або null)
+        function getRawRating(p) {
+            const val = p.stats?.rating || p.stats?.kd || p.rating || p.kd || p.score;
+            if (val !== undefined && val !== null && val !== '' && val !== '—') {
+                const parsed = parseFloat(val);
+                return isNaN(parsed) ? null : parsed;
             }
-            if (p.rating) return p.rating;
-            if (p.kd) return p.kd;
-            if (p.score) return p.score;
-            return '—';
+            return null;
+        }
+
+        function getPlayerRating(p) {
+            const raw = getRawRating(p);
+            return raw !== null ? raw : '—';
         }
 
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
@@ -524,6 +527,23 @@
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
+                    // ЖОРСТКЕ СОРТУВАННЯ: гравці з рейтингом — нагору (від більшого до меншого), без рейтингу — вниз
+                    allPlayers.sort((a, b) => {
+                        const rA = getRawRating(a);
+                        const rB = getRawRating(b);
+
+                        if (rA !== null && rB !== null) {
+                            return rB - rA; // У кого більше, той вище (наприклад, 3.08 вище ніж 2.26)
+                        }
+                        if (rA !== null && rB === null) {
+                            return -1; // A йде вище, бо у нього є рейтинг
+                        }
+                        if (rA === null && rB !== null) {
+                            return 1; // B йде вище
+                        }
+                        return 0; // Обидва без рейтингу — залишаємо як є
+                    });
+
                     let playersHtml = '';
                     allPlayers.forEach((p, index) => {
                         const pName = p.name || p.nickname || p.username || 'Гравець';
