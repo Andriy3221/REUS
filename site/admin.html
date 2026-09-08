@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         h1, h2 {
@@ -101,6 +101,32 @@
             padding: 6px 12px;
             width: auto;
         }
+        /* Модальне вікно */
+        #editModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
     </style>
 </head>
 <body>
@@ -109,39 +135,116 @@
         <h1>Адмін-панель REUS</h1>
         <a href="index.html" style="color: var(--accent-color); text-decoration: none; display: inline-block; margin-bottom: 20px;">← Назад на сайт</a>
 
-        <!-- Видати трофей команді -->
+        <!-- Блок видачі трофея команді -->
         <div class="card">
             <h2>Видати трофей команді</h2>
             <div class="form-group">
                 <label>Виберіть команду</label>
                 <select id="trophyTeamSelect">
-                    <option value="">Завантаження команд...</option>
+                    <option value="">Оберіть команду</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Назва турніру (наприклад, BLAST Premier)</label>
-                <input type="text" id="trophyNameInput" placeholder="Назва турніру або досягнення">
+                <label>Назва турніру</label>
+                <input type="text" id="trophyNameInput" placeholder="BLAST Premier / Major">
             </div>
             <div class="form-group">
-                <label>Іконка кубка (URL посилання або emoji 🏆)</label>
-                <input type="text" id="trophyIconInput" value="🏆" placeholder="URL картинки або емодзі">
+                <label>Іконка кубка (URL або emoji)</label>
+                <input type="text" id="trophyIconInput" value="🏆">
             </div>
-            <button onclick="addTrophyToTeam()">Додати трофей</button>
+            <button onclick="addTrophyToTeam()">Додати трофей команді</button>
         </div>
 
-        <!-- Список команд -->
+        <!-- Управління командами -->
         <div class="card">
-            <h2>Команди в базі</h2>
+            <h2>Команди (Очки, Трофеї)</h2>
+            <div class="form-group">
+                <label>Додати нову команду</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="newTeamName" placeholder="Назва команди" style="flex: 2;">
+                    <input type="number" id="newTeamPoints" placeholder="Очки" style="flex: 1;" value="0">
+                    <button onclick="addNewTeam()" style="width: auto;">Створити</button>
+                </div>
+            </div>
             <div id="teamsList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження команд...</div>
             </div>
         </div>
 
-        <!-- Список гравців -->
+        <!-- Управління гравцями -->
         <div class="card">
-            <h2>Гравці в базі</h2>
+            <h2>Гравці (HLTV Статистика, Трофеї)</h2>
             <div id="playersList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження гравців...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальне вікно редагування гравця -->
+    <div id="editModal">
+        <div class="modal-content">
+            <h2 style="margin-top: 0;">Редагувати гравця (HLTV профіль)</h2>
+            <input type="hidden" id="editPlayerIndex">
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Нікнейм гравця</label>
+                    <input type="text" id="editPlayerName">
+                </div>
+                <div class="form-group">
+                    <label>Команда</label>
+                    <input type="text" id="editPlayerTeam">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Роль</label>
+                    <input type="text" id="editPlayerRole" placeholder="Rifler / AWPer тощо">
+                </div>
+                <div class="form-group">
+                    <label>Країна (код, напр. ua, us, dk)</label>
+                    <input type="text" id="editPlayerCountry">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Фото гравця (URL)</label>
+                <input type="text" id="editPlayerPhoto">
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Rating 2.0</label>
+                    <input type="text" id="editPlayerRating">
+                </div>
+                <div class="form-group">
+                    <label>K/D Ratio</label>
+                    <input type="text" id="editPlayerKd">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Impact</label>
+                    <input type="text" id="editPlayerImpact">
+                </div>
+                <div class="form-group">
+                    <label>ADR (Шкода за раунд)</label>
+                    <input type="text" id="editPlayerAdr">
+                </div>
+            </div>
+
+            <!-- Особисті трофеї гравця -->
+            <div style="margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: block;">Особисті трофеї гравця</label>
+                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;"></div>
+                <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; font-size: 0.85rem; width: auto;">+ Додати особистий трофей</button>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="button" onclick="saveEditedPlayer()" style="flex: 1;">Зберегти зміни</button>
+                <button type="button" onclick="closeEditModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
             </div>
         </div>
     </div>
@@ -207,13 +310,41 @@
             teams.forEach((t, index) => {
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.name}</b> (Трофеїв: ${(t.trophies || t.cups || []).length})</span>
+                        <span><b>${t.name}</b> — Очки: <input type="number" value="${t.points || 0}" onchange="updateTeamPoints(${index}, this.value)" style="width: 80px; display:inline-block; padding: 4px;"> | Трофеїв: ${(t.trophies || t.cups || []).length}</span>
                         <div class="row-actions">
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
                 `;
             });
+        }
+
+        async function addNewTeam() {
+            const name = document.getElementById('newTeamName').value.trim();
+            const points = parseInt(document.getElementById('newTeamPoints').value) || 0;
+            if (!name) return alert('Введіть назву команди!');
+
+            if (!globalData.teams) globalData.teams = [];
+            globalData.teams.push({ name, points, trophies: [] });
+
+            await saveData();
+            document.getElementById('newTeamName').value = '';
+            renderTeamsList();
+            updateTeamSelect();
+        }
+
+        async function updateTeamPoints(index, val) {
+            globalData.teams[index].points = parseInt(val) || 0;
+            await saveData();
+        }
+
+        async function deleteTeam(index) {
+            if (confirm('Видалити команду?')) {
+                globalData.teams.splice(index, 1);
+                await saveData();
+                renderTeamsList();
+                updateTeamSelect();
+            }
         }
 
         function renderPlayersList() {
@@ -228,8 +359,9 @@
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${pName}</b> — Команда: ${p.team || 'Без команди'} | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'} | ADR: ${p.adr || '-'}</span>
+                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'} | ADR: ${p.adr || '-'}</span>
                         <div class="row-actions">
+                            <button onclick="openEditModal(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
@@ -237,24 +369,92 @@
             });
         }
 
+        // Функції для модального вікна та трофеїв гравця
+        function addAdminPlayerTrophyInput(value = '') {
+            const container = document.getElementById('adminPlayerTrophiesContainer');
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.gap = '8px';
+            
+            wrapper.innerHTML = `
+                <input type="text" class="player-trophy-input" value="${value}" placeholder="URL іконки або назва" style="flex: 1;">
+                <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 0 10px;">✕</button>
+            `;
+            container.appendChild(wrapper);
+        }
+
+        function openEditModal(index) {
+            document.getElementById('editPlayerIndex').value = index;
+            const p = globalData.players[index];
+
+            document.getElementById('editPlayerName').value = p.name || p.nickname || '';
+            document.getElementById('editPlayerTeam').value = p.team || '';
+            document.getElementById('editPlayerRole').value = p.role || '';
+            document.getElementById('editPlayerCountry').value = p.country || '';
+            document.getElementById('editPlayerPhoto').value = p.photo || '';
+            document.getElementById('editPlayerRating').value = p.rating || '';
+            document.getElementById('editPlayerKd').value = p.kd || '';
+            document.getElementById('editPlayerImpact').value = p.impact || '';
+            document.getElementById('editPlayerAdr').value = p.adr || '';
+
+            // Завантаження трофеїв гравця
+            const container = document.getElementById('adminPlayerTrophiesContainer');
+            container.innerHTML = '';
+            const trophies = p.trophies || p.cups || [];
+            trophies.forEach(t => {
+                const val = typeof t === 'object' && t !== null ? (t.icon || t.name || '') : t;
+                addAdminPlayerTrophyInput(val);
+            });
+
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        async function saveEditedPlayer() {
+            const index = document.getElementById('editPlayerIndex').value;
+            if (index === '') return;
+
+            const p = globalData.players[index];
+            p.name = document.getElementById('editPlayerName').value.trim();
+            p.nickname = p.name;
+            p.team = document.getElementById('editPlayerTeam').value.trim();
+            p.role = document.getElementById('editPlayerRole').value.trim();
+            p.country = document.getElementById('editPlayerCountry').value.trim().toLowerCase();
+            p.photo = document.getElementById('editPlayerPhoto').value.trim();
+            p.rating = document.getElementById('editPlayerRating').value.trim();
+            p.kd = document.getElementById('editPlayerKd').value.trim();
+            p.impact = document.getElementById('editPlayerImpact').value.trim();
+            p.adr = document.getElementById('editPlayerAdr').value.trim();
+
+            // Збір особистих трофеїв гравця
+            let trophies = [];
+            document.querySelectorAll('.player-trophy-input').forEach(input => {
+                if (input.value.trim() !== '') {
+                    trophies.push(input.value.trim());
+                }
+            });
+            p.trophies = trophies;
+
+            await saveData();
+            closeEditModal();
+            renderPlayersList();
+            alert('Гравця успішно оновлено!');
+        }
+
         async function addTrophyToTeam() {
             const teamName = document.getElementById('trophyTeamSelect').value;
             const trophyName = document.getElementById('trophyNameInput').value.trim();
             const trophyIcon = document.getElementById('trophyIconInput').value.trim() || '🏆';
 
-            if (!teamName || !trophyName) {
-                alert('Оберіть команду та введіть назву турніру!');
-                return;
-            }
+            if (!teamName || !trophyName) return alert('Оберіть команду та введіть назву турніру!');
 
-            const teams = globalData.teams || [];
-            const team = teams.find(t => t.name === teamName);
+            const team = (globalData.teams || []).find(t => t.name === teamName);
             if (team) {
                 if (!team.trophies) team.trophies = [];
-                team.trophies.push({
-                    name: trophyName,
-                    icon: trophyIcon
-                });
+                team.trophies.push({ name: trophyName, icon: trophyIcon });
 
                 await saveData();
                 alert('Трофей успішно додано команді!');
@@ -263,17 +463,8 @@
             }
         }
 
-        async function deleteTeam(index) {
-            if (confirm('Видалити цю команду?')) {
-                globalData.teams.splice(index, 1);
-                await saveData();
-                renderTeamsList();
-                updateTeamSelect();
-            }
-        }
-
         async function deletePlayer(index) {
-            if (confirm('Видалити цього гравця?')) {
+            if (confirm('Видалити гравця?')) {
                 globalData.players.splice(index, 1);
                 await saveData();
                 renderPlayersList();
