@@ -98,7 +98,6 @@
             position: relative;
             overflow: hidden;
         }
-        /* Декоративне світіння на фоні картки гравця */
         .header-card::before {
             content: '';
             position: absolute;
@@ -123,13 +122,8 @@
             overflow: hidden;
             flex-shrink: 0;
             box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 15px rgba(0,255,136,0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             z-index: 1;
-        }
-        .player-avatar:hover {
-            transform: scale(1.04);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), inset 0 0 20px rgba(0,255,136,0.4);
         }
         .player-avatar img {
             width: 100%;
@@ -200,9 +194,6 @@
             letter-spacing: 0.5px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             text-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
         }
         .stats-list {
@@ -358,10 +349,12 @@
             if (trophies.length > 0) {
                 let items = '';
                 trophies.forEach(t => {
+                    // Підтримка і як тексту, так і об'єкта { name: "..." }
+                    const trophyTitle = typeof t === 'object' && t !== null ? (t.name || t.title || 'Трофей') : t;
                     items += `
                         <div class="trophy-card">
                             <div class="trophy-icon">🏆</div>
-                            <div class="trophy-name">${t.name || t}</div>
+                            <div class="trophy-name">${trophyTitle}</div>
                         </div>
                     `;
                 });
