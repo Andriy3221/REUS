@@ -73,7 +73,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-        /* Збільшене та чітке лого (4K якість рендерингу) */
         .project-logo-wrapper {
             width: 190px;
             height: 75px;
@@ -167,6 +166,7 @@
             padding: 25px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             display: none;
+            margin-bottom: 25px;
         }
         .section-box.active {
             display: block;
@@ -181,6 +181,11 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
             text-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+        }
+        .section-title.unranked-title {
+            color: var(--text-muted);
+            text-shadow: none;
+            border-color: var(--border-color);
         }
         .list-container {
             display: flex;
@@ -227,7 +232,6 @@
             font-weight: 800;
             text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
         }
-        /* Стиль для нерейтингових команд */
         .unranked-badge {
             background: rgba(139, 148, 158, 0.15);
             color: var(--text-muted);
@@ -334,8 +338,13 @@
         <!-- Блок команд -->
         <div id="teams-section" class="section-box active">
             <div class="section-title">Рейтинг команд</div>
-            <div id="teams-app" class="list-container">
+            <div id="ranked-teams-app" class="list-container">
                 <div class="loading">Завантаження команд...</div>
+            </div>
+
+            <div class="section-title unranked-title" style="margin-top: 35px;">Нерейтингові команди / Дизбанд</div>
+            <div id="unranked-teams-app" class="list-container">
+                <!-- Сюди автоматично підуть нерейтингові -->
             </div>
         </div>
 
@@ -389,15 +398,20 @@
                 // Завантаження команд
                 const teams = cloudData.teams || [];
                 if (teams.length === 0) {
-                    document.getElementById('teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
+                    document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
+                    document.getElementById('unranked-teams-app').innerHTML = '';
                 } else {
-                    let teamsHtml = '';
-                    teams.forEach((t, index) => {
+                    let rankedHtml = '';
+                    let unrankedHtml = '';
+                    
+                    let rankedCounter = 1;
+                    let unrankedCounter = 1;
+
+                    teams.forEach((t) => {
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         const tPlayers = t.players || t.roster || t.members || [];
                         
-                        // Визначення чи команда рейтингова (підтримує різні варіанти з адмінки)
                         const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
                         
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
@@ -417,30 +431,49 @@
                             playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">У команді немає гравців або дизбанд</div>';
                         }
 
-                        // Якщо нерейтингова - виводимо статус замість балів
-                        const rightSideHtml = isRanked 
-                            ? `<span class="team-value">${t.points || t.rating || '0'}</span><span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>`
-                            : `<span class="unranked-badge">Нерейтингова</span><span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>`;
-
-                        teamsHtml += `
-                            <div class="team-card ${isRanked ? '' : 'unranked'}">
-                                <div class="team-header" onclick="toggleTeam(this)">
-                                    <div class="team-info">
-                                        <span style="color: var(--text-muted); font-weight: bold;">#${index + 1}</span>
-                                        ${logoHtml}
-                                        <span class="team-name">${tName}</span>
+                        if (isRanked) {
+                            rankedHtml += `
+                                <div class="team-card">
+                                    <div class="team-header" onclick="toggleTeam(this)">
+                                        <div class="team-info">
+                                            <span style="color: var(--text-muted); font-weight: bold;">#${rankedCounter++}</span>
+                                            ${logoHtml}
+                                            <span class="team-name">${tName}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <span class="team-value">${t.points || t.rating || '0'}</span>
+                                            <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
+                                        </div>
                                     </div>
-                                    <div style="display: flex; align-items: center; gap: 15px;">
-                                        ${rightSideHtml}
+                                    <div class="team-players">
+                                        ${playersListHtml}
                                     </div>
                                 </div>
-                                <div class="team-players">
-                                    ${playersListHtml}
+                            `;
+                        } else {
+                            unrankedHtml += `
+                                <div class="team-card unranked">
+                                    <div class="team-header" onclick="toggleTeam(this)">
+                                        <div class="team-info">
+                                            <span style="color: var(--text-muted); font-weight: bold;">#${unrankedCounter++}</span>
+                                            ${logoHtml}
+                                            <span class="team-name">${tName}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <span class="unranked-badge">Нерейтингова</span>
+                                            <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
+                                        </div>
+                                    </div>
+                                    <div class="team-players">
+                                        ${playersListHtml}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
+                            `;
+                        }
                     });
-                    document.getElementById('teams-app').innerHTML = teamsHtml;
+
+                    document.getElementById('ranked-teams-app').innerHTML = rankedHtml || '<div class="loading">Немає рейтингових команд.</div>';
+                    document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
                 // Завантаження гравців
@@ -467,7 +500,7 @@
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('teams-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
+                document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
                 document.getElementById('players-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
             }
         }
