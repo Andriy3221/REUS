@@ -119,7 +119,7 @@
             padding: 7px 14px;
             font-size: 0.85rem;
         }
-        #modalOverlay {
+        #modalOverlay, #teamModalOverlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -171,25 +171,12 @@
 
         <!-- РОБОТА З КОМАНДАМИ -->
         <div class="card">
-            <h2>Керування командами</h2>
-            
-            <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                <label style="color: var(--accent-color); font-weight: 600;">Створити нову команду</label>
-                <div class="grid-2" style="margin-top: 8px; margin-bottom: 12px;">
-                    <input type="text" id="newTeamName" placeholder="Назва команди">
-                    <input type="text" id="newTeamLogo" placeholder="URL логотипу команди">
-                </div>
-                <div class="grid-2" style="margin-bottom: 12px;">
-                    <input type="number" id="newTeamRank" placeholder="Ранг (позиція у рейтингу)" value="1">
-                    <input type="number" id="newTeamPoints" placeholder="Очки" value="0">
-                </div>
-                <div style="display: flex; gap: 12px;">
-                    <input type="text" id="newTeamStatus" placeholder="Статус (напр. ЄВРОПА)" style="flex: 1;">
-                    <button onclick="addNewTeam()" style="width: auto;">Створити команду</button>
-                </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">Керування командами</h2>
+                <button onclick="openTeamModalForAdd()">+ Додати команду</button>
             </div>
-
-            <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color);">
+            
+            <div class="form-group" style="background: var(--inner-card-bg); padding: 18px; border-radius: 10px; border: 1px solid var(--border-color); margin-top: 20px;">
                 <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 10px;">Видати командний трофей</label>
                 <div class="grid-2">
                     <select id="trophyTeamSelect">
@@ -220,7 +207,46 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНЕ ВІКНО РЕДАГУВАННЯ/СТВОРЕННЯ ГРАВЦЯ -->
+    <!-- МОДАЛЬНЕ ВІКНО ДЛЯ КОМАНД -->
+    <div id="teamModalOverlay">
+        <div class="modal-content">
+            <h2 id="teamModalHeaderTitle" style="margin-top: 0; color: var(--accent-color);">Команда</h2>
+            <input type="hidden" id="editTeamIndex">
+
+            <div class="form-group">
+                <label>Назва команди</label>
+                <input type="text" id="editTeamName" placeholder="напр. YAMI">
+            </div>
+
+            <div class="form-group">
+                <label>URL логотипу команди</label>
+                <input type="text" id="editTeamLogo" placeholder="https://...">
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Ранг (позиція у рейтингу)</label>
+                    <input type="number" id="editTeamRank" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Очки</label>
+                    <input type="number" id="editTeamPoints" placeholder="0">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Статус (напр. ЄВРОПА)</label>
+                <input type="text" id="editTeamStatus" placeholder="ЄВРОПА">
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 25px;">
+                <button type="button" onclick="saveTeamFormData()" style="flex: 1;">Зберегти команду</button>
+                <button type="button" onclick="closeTeamModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНЕ ВІКНО ДЛЯ ГРАВЦІВ -->
     <div id="modalOverlay">
         <div class="modal-content">
             <h2 id="modalHeaderTitle" style="margin-top: 0; color: var(--accent-color);">Редагувати гравця</h2>
@@ -275,7 +301,6 @@
                 </div>
             </div>
 
-            <!-- ОСОБИСТІ ТРОФЕЇ ГРАВЦЯ (ФОТО) -->
             <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
                 <label style="color: var(--accent-color); font-weight: 600; margin-bottom: 8px; display: block;">Особисті трофеї гравця (посилання на фото)</label>
                 <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;"></div>
@@ -283,7 +308,7 @@
             </div>
 
             <div style="display: flex; gap: 12px; margin-top: 25px;">
-                <button type="button" onclick="savePlayerFormData()" style="flex: 1;">Зберегти</button>
+                <button type="button" onclick="savePlayerFormData()" style="flex: 1;">Зберегти гравця</button>
                 <button type="button" onclick="closePlayerModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
             </div>
         </div>
@@ -339,7 +364,7 @@
             });
         }
 
-        // Керування командами
+        // Керування командами (через модальне вікно для зручності)
         function renderTeamsList() {
             const teams = globalData.teams || [];
             const container = document.getElementById('teamsList');
@@ -351,14 +376,9 @@
             teams.forEach((t, index) => {
                 container.innerHTML += `
                     <div class="item-row">
-                        <div style="display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;">
-                            <input type="text" value="${t.name || ''}" onchange="updateTeamField(${index}, 'name', this.value)" style="width: 140px; padding: 6px;" placeholder="Назва">
-                            <input type="text" value="${t.logo || ''}" onchange="updateTeamField(${index}, 'logo', this.value)" style="width: 160px; padding: 6px;" placeholder="URL логотипу">
-                            <input type="number" value="${t.rank || 1}" onchange="updateTeamField(${index}, 'rank', this.value)" style="width: 70px; padding: 6px;" placeholder="Ранг">
-                            <input type="number" value="${t.points || 0}" onchange="updateTeamField(${index}, 'points', this.value)" style="width: 80px; padding: 6px;" placeholder="Очки">
-                            <input type="text" value="${t.status || ''}" onchange="updateTeamField(${index}, 'status', this.value)" style="width: 110px; padding: 6px;" placeholder="Статус">
-                        </div>
+                        <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: ${t.status || '-'}</span>
                         <div class="row-actions">
+                            <button onclick="openTeamModalForEdit(${index})">Редагувати</button>
                             <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
@@ -366,37 +386,61 @@
             });
         }
 
-        async function addNewTeam() {
-            const name = document.getElementById('newTeamName').value.trim();
-            const logo = document.getElementById('newTeamLogo').value.trim();
-            const rank = parseInt(document.getElementById('newTeamRank').value) || 1;
-            const points = parseInt(document.getElementById('newTeamPoints').value) || 0;
-            const status = document.getElementById('newTeamStatus').value.trim();
-
-            if (!name) return alert('Введіть назву команди!');
-
-            if (!globalData.teams) globalData.teams = [];
-            globalData.teams.push({ name, logo, rank, points, status, trophies: [] });
-
-            await saveData();
-            document.getElementById('newTeamName').value = '';
-            document.getElementById('newTeamLogo').value = '';
-            document.getElementById('newTeamRank').value = '1';
-            document.getElementById('newTeamPoints').value = '0';
-            document.getElementById('newTeamStatus').value = '';
-            
-            renderTeamsList();
-            updateTeamSelect();
-            alert('Команду успішно створено!');
+        function openTeamModalForAdd() {
+            document.getElementById('editTeamIndex').value = '';
+            document.getElementById('teamModalHeaderTitle').innerText = 'Додати нову команду';
+            document.getElementById('editTeamName').value = '';
+            document.getElementById('editTeamLogo').value = '';
+            document.getElementById('editTeamRank').value = '1';
+            document.getElementById('editTeamPoints').value = '0';
+            document.getElementById('editTeamStatus').value = '';
+            document.getElementById('teamModalOverlay').style.display = 'flex';
         }
 
-        async function updateTeamField(index, field, val) {
-            if (field === 'rank' || field === 'points') {
-                globalData.teams[index][field] = parseInt(val) || 0;
+        function openTeamModalForEdit(index) {
+            document.getElementById('editTeamIndex').value = index;
+            document.getElementById('teamModalHeaderTitle').innerText = 'Редагувати команду';
+            const t = globalData.teams[index];
+            document.getElementById('editTeamName').value = t.name || '';
+            document.getElementById('editTeamLogo').value = t.logo || '';
+            document.getElementById('editTeamRank').value = t.rank || 1;
+            document.getElementById('editTeamPoints').value = t.points || 0;
+            document.getElementById('editTeamStatus').value = t.status || '';
+            document.getElementById('teamModalOverlay').style.display = 'flex';
+        }
+
+        function closeTeamModal() {
+            document.getElementById('teamModalOverlay').style.display = 'none';
+        }
+
+        async function saveTeamFormData() {
+            const indexStr = document.getElementById('editTeamIndex').value;
+            const teamData = {
+                name: document.getElementById('editTeamName').value.trim(),
+                logo: document.getElementById('editTeamLogo').value.trim(),
+                rank: parseInt(document.getElementById('editTeamRank').value) || 1,
+                points: parseInt(document.getElementById('editTeamPoints').value) || 0,
+                status: document.getElementById('editTeamStatus').value.trim(),
+                trophies: []
+            };
+
+            if (!teamData.name) return alert('Введіть назву команди!');
+
+            if (!globalData.teams) globalData.teams = [];
+
+            if (indexStr === '') {
+                globalData.teams.push(teamData);
             } else {
-                globalData.teams[index][field] = val;
+                // Зберігаємо старі трофеї при редагуванні
+                teamData.trophies = globalData.teams[parseInt(indexStr)].trophies || [];
+                globalData.teams[parseInt(indexStr)] = teamData;
             }
+
             await saveData();
+            closeTeamModal();
+            renderTeamsList();
+            updateTeamSelect();
+            alert('Команду успішно збережено!');
         }
 
         async function deleteTeam(index) {
@@ -548,7 +592,7 @@
             await saveData();
             closePlayerModal();
             renderPlayersList();
-            alert('Збережено успішно!');
+            alert('Гравця успішно збережено!');
         }
 
         async function deletePlayer(index) {
