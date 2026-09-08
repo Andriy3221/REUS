@@ -260,16 +260,9 @@
             transform: scale(1.15);
             transition: transform 0.3s ease;
         }
-
-        .player-avatar.pos-yokirito {
-            object-position: 50% 15% !important;
-        }
-        .player-avatar.pos-fexum {
-            object-position: 50% 15% !important;
-        }
-        .player-avatar.pos-darkprince9 {
-            object-position: 50% 15% !important;
-        }
+        .player-avatar.pos-yokirito { object-position: 50% 15% !important; }
+        .player-avatar.pos-fexum { object-position: 50% 15% !important; }
+        .player-avatar.pos-darkprince9 { object-position: 50% 15% !important; }
 
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
@@ -419,25 +412,15 @@
             return `https://flagcdn.com/24x18/${cleanCode}.png`;
         }
 
-        // Потужна функція пошуку будь-якого числа чи показника гравця
+        // Функція для отримання рейтингу/КД з урахуванням структури адмін-панелі (p.stats)
         function getPlayerRating(p) {
-            // Перебираємо всі можливі варіанти полів напряму та всередині об'єкта stats
-            const val = p.kd ?? 
-                        p.rating ?? 
-                        p.rate ?? 
-                        p.score ?? 
-                        p.points ?? 
-                        p.kdRatio ??
-                        p.stats?.rating ?? 
-                        p.stats?.kd ?? 
-                        p.stats?.rate ?? 
-                        p.stats?.score ??
-                        p.statistics?.rating ?? 
-                        p.statistics?.kd;
-
-            if (val !== undefined && val !== null && val !== '') {
-                return val;
+            if (p.stats && typeof p.stats === 'object') {
+                if (p.stats.rating) return p.stats.rating;
+                if (p.stats.kd) return p.stats.kd;
             }
+            if (p.rating) return p.rating;
+            if (p.kd) return p.kd;
+            if (p.score) return p.score;
             return '—';
         }
 
@@ -454,11 +437,6 @@
                 const cloudData = result.record?.record || result.record || result;
                 const teams = cloudData.teams || [];
                 const allPlayers = cloudData.players || [];
-
-                // ВИВЕДЕМО ПЕРШОГО ГРАВЦЯ В КОНСОЛЬ, ЩОБ ПОБАЧИТИ ЙОГО СТРУКТУРУ
-                if (allPlayers.length > 0) {
-                    console.log("Приклад об'єкта гравця з бази:", allPlayers[0]);
-                }
 
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
