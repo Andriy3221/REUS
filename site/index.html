@@ -369,8 +369,9 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const rawRecord = result.record || result;
-                const cloudData = rawRecord.record || rawRecord;
+                
+                // Універсальний пошук даних залежно від вкладеності record
+                const cloudData = result.record?.record || result.record || result;
 
                 // --- Завантаження команд (з випадаючим списком гравців) ---
                 const teams = cloudData.teams || [];
@@ -381,7 +382,7 @@
                     teams.forEach((t, index) => {
                         const tName = t.name || 'Команда';
                         const tPoints = t.points || t.rating || '0';
-                        const tPlayers = t.players || []; // Масив гравців всередині команди
+                        const tPlayers = t.players || [];
 
                         let playersListHtml = '';
                         if (tPlayers.length > 0) {
@@ -427,13 +428,14 @@
                     let playersHtml = '';
                     players.forEach((p, index) => {
                         const pName = p.name || p.nickname || 'Гравець';
+                        const pRating = p.rating || p.rate || p.score || p.kd || '1.00';
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
                                 <div class="item-info">
                                     <span style="color: var(--text-muted); font-weight: bold;">#${index + 1}</span>
                                     <span class="item-name">${pName}</span>
                                 </div>
-                                <div class="item-value">${p.rating || '1.00'}</div>
+                                <div class="item-value">${pRating}</div>
                             </a>
                         `;
                     });
