@@ -329,12 +329,22 @@
             const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
             const points = t.points !== undefined ? t.points : 0;
             
-            const teamNameNormalized = t.name.trim().toLowerCase();
-            const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
+            const teamNameNormalized = (t.name || '').trim().toLowerCase();
+            
+            // Фільтруємо гравців саме для цієї команди, відсіюючи тих, хто на лаві запасних чи тренер у головній сітці
+            const teamPlayers = allPlayers.filter(p => {
+                if (!p.team) return false;
+                const pTeamNormalized = p.team.trim().toLowerCase();
+                if (pTeamNormalized !== teamNameNormalized) return false;
+                
+                const slot = (p.roleSlot || '').trim().toLowerCase();
+                // Для головної картки беремо тільки основний склад (де slot порожній або 'main')
+                return slot === '' || slot === 'main';
+            });
             
             let playersHtml = '';
             
-            // Завжди виводимо рівно 5 слотів
+            // Виводимо рівно 5 слотів
             for (let i = 0; i < 5; i++) {
                 const p = teamPlayers[i];
                 if (p) {
@@ -353,7 +363,6 @@
                         </a>
                     `;
                 } else {
-                    // Якщо гравця немає в базі для цього слота — малюємо стильну заглушку без тексту
                     playersHtml += `
                         <div class="player-box empty">
                             <img src="${DEFAULT_AVATAR}" class="player-avatar">
