@@ -463,7 +463,9 @@
                             return isTeamMatch && isNotBench;
                         });
 
-                        const isRanked = t.isRanked !== false && t.ranked !== false && t.type !== 'unranked' && t.type !== 'не рейтингова';
+                        // Оновлена перевірка за полем status з адмін-панелі
+                        const teamStatus = t.status || 'Активна';
+                        const isRanked = teamStatus === 'Активна';
                         let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
 
                         let playersListHtml = '';
@@ -508,7 +510,7 @@
                                         <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
-                                        ${isRanked ? `<span class="team-value">${t.points || t.rating || '0'}</span>` : '<span class="unranked-badge">Нерейтингова</span>'}
+                                        ${isRanked ? `<span class="team-value">${t.points || t.rating || '0'}</span>` : `<span class="unranked-badge">${teamStatus}</span>`}
                                         <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
                                     </div>
                                 </div>
