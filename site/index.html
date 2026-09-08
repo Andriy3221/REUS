@@ -221,36 +221,45 @@
         }
         .team-players {
             display: none;
-            padding: 10px 18px 15px 18px;
+            padding: 12px 18px 15px 18px;
             border-top: 1px solid var(--border-color);
             background: rgba(7, 9, 14, 0.4);
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
         .team-player-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            padding: 4px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            padding: 6px 10px;
+            background: var(--inner-card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             text-decoration: none;
+            transition: all 0.2s ease;
         }
         .team-player-row:hover {
+            border-color: var(--accent-color);
             color: var(--accent-color);
         }
         .player-info-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
+        /* Збільшене та добре видиме фото гравця */
         .player-avatar {
-            width: 28px;
-            height: 28px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             object-fit: cover;
-            border: 1px solid var(--border-color);
+            object-position: top center;
+            border: 2px solid var(--accent-color);
             background: #000;
+            flex-shrink: 0;
         }
         .item-row {
             display: flex;
@@ -383,7 +392,6 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Фільтруємо гравців команди
                         const teamPlayers = allPlayers.filter(p => {
                             const pTeam = p.team || p.teamName || p.club || p.group || '';
                             return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
@@ -394,19 +402,18 @@
 
                         let playersListHtml = '';
                         if (teamPlayers.length > 0) {
-                            // Виводимо максимум 5 гравців
                             const limitedPlayers = teamPlayers.slice(0, 5);
                             limitedPlayers.forEach(tp => {
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
-                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/28';
+                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/44';
                                 
                                 playersListHtml += `
                                     <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-row" onclick="event.stopPropagation();">
                                         <div class="player-info-left">
                                             <img src="${playerPhoto}" class="player-avatar" alt="">
-                                            <span>• ${playerName}</span>
+                                            <span>${playerName}</span>
                                         </div>
-                                        <span style="color: var(--accent-color);">переглянути</span>
+                                        <span style="color: var(--accent-color); font-size: 0.9rem;">переглянути</span>
                                     </a>
                                 `;
                             });
@@ -447,7 +454,6 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                // Заповнення глобального списку гравців
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
