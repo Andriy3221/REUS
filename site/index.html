@@ -192,12 +192,16 @@
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
             padding: 2px;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
         }
-        .team-name {
+        .team-name-link {
             font-weight: 700;
             font-size: 1.05rem;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+        .team-name-link:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
         }
         .team-value {
             color: var(--accent-color);
@@ -226,6 +230,7 @@
         .team-player-row {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 0.95rem;
             color: var(--text-muted);
             padding: 4px 0;
@@ -233,6 +238,19 @@
         }
         .team-player-row:hover {
             color: var(--accent-color);
+        }
+        .player-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .player-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background: #000;
         }
         .item-row {
             display: flex;
@@ -365,7 +383,7 @@
                         const tName = t.name || 'Команда';
                         const tLogo = t.logo || t.image || '';
                         
-                        // Фільтруємо гравців із загального масиву гравців за назвою команди
+                        // Фільтруємо гравців команди
                         const teamPlayers = allPlayers.filter(p => {
                             const pTeam = p.team || p.teamName || p.club || p.group || '';
                             return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
@@ -376,15 +394,25 @@
 
                         let playersListHtml = '';
                         if (teamPlayers.length > 0) {
-                            teamPlayers.forEach(tp => {
+                            // Виводимо максимум 5 гравців
+                            const limitedPlayers = teamPlayers.slice(0, 5);
+                            limitedPlayers.forEach(tp => {
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
+                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/28';
+                                
                                 playersListHtml += `
                                     <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-row" onclick="event.stopPropagation();">
-                                        <span>• ${playerName}</span>
+                                        <div class="player-info-left">
+                                            <img src="${playerPhoto}" class="player-avatar" alt="">
+                                            <span>• ${playerName}</span>
+                                        </div>
                                         <span style="color: var(--accent-color);">переглянути</span>
                                     </a>
                                 `;
                             });
+                            if (teamPlayers.length > 5) {
+                                playersListHtml += `<div style="color: var(--text-muted); font-size: 0.85rem; padding-top: 4px; text-align: center;">+ ще гравці...</div>`;
+                            }
                         } else {
                             playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">У команді немає гравців або дизбанд</div>';
                         }
@@ -395,7 +423,7 @@
                                     <div class="team-info">
                                         <span style="color: var(--text-muted); font-weight: bold;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
                                         ${logoHtml}
-                                        <span class="team-name">${tName}</span>
+                                        <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
                                         ${isRanked ? `<span class="team-value">${t.points || t.rating || '0'}</span>` : '<span class="unranked-badge">Нерейтингова</span>'}
@@ -419,7 +447,7 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                // Заповнення глобального списку гравців (вкладка "Гравці")
+                // Заповнення глобального списку гравців
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
