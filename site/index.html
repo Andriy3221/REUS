@@ -211,6 +211,9 @@
         let allPlayers = []; 
         let clickCounts = {};
 
+        // Безпечна SVG заглушка замість сторонніх сервісів, які блокуються мережею
+        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='55' height='55' viewBox='0 0 24 24' fill='%238a99ad'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+
         async function fetchRanking() {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
@@ -243,7 +246,7 @@
             clickCounts[teamName]++;
 
             if (clickCounts[teamName] >= 3) {
-                clickCounts[teamName] = 0;
+                clickCounts[clickName] = 0;
                 window.location.href = targetUrl;
             }
         }
@@ -261,19 +264,18 @@
                 const targetUrl = `team.html?name=${encodeURIComponent(t.name)}`;
                 const points = t.points !== undefined ? t.points : 0;
                 
-                // Нормалізуємо назву команди (зменшуємо регістр), щоб точно знайти гравців навіть якщо десь літери різні
                 const teamNameNormalized = t.name.trim().toLowerCase();
                 const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
                 
                 let playersHtml = '';
                 for (let i = 0; i < 5; i++) {
                     const p = teamPlayers[i];
-                    // Шукаємо нік у різних полях на випадок різного написання в адмінці
                     const pName = p ? (p.name || p.nickname || `Гравець ${i+1}`) : `Гравець ${i+1}`;
                     
+                    // Перевіряємо чи є посилання на фото; якщо немає — підставляємо вбудовану SVG іконку
                     const pAvatar = (p && p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') 
                         ? p.photo 
-                        : 'https://via.placeholder.com/55/1a222f/00ff88?text=👤';
+                        : DEFAULT_AVATAR;
                     
                     const pFlag = (p && p.country) 
                         ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
@@ -281,7 +283,7 @@
 
                     playersHtml += `
                         <div class="player-box">
-                            <img src="${pAvatar}" class="player-avatar" onerror="this.src='https://via.placeholder.com/55/1a222f/00ff88?text=👤'">
+                            <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
                             <div class="player-details">
                                 <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
                                 <span>${pName}</span>
