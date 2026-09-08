@@ -147,8 +147,6 @@
             color: var(--text-muted);
             width: 30px;
         }
-        
-        /* Використання кольору #CBD0CC для підложки логотипу */
         .team-logo-wrap {
             width: 36px;
             height: 36px;
@@ -159,13 +157,13 @@
             justify-content: center;
             overflow: hidden;
             flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(203, 208, 204, 0.2);
         }
         .team-logo {
             width: 22px;
             height: 22px;
             object-fit: contain;
         }
-
         .team-name {
             font-size: 1.1rem;
             font-weight: bold;
@@ -230,9 +228,6 @@
             object-fit: cover;
             object-position: top center;
             background: #1a222f;
-            -webkit-font-smoothing: antialiased;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: high-quality;
         }
         .player-details {
             display: flex;
@@ -258,7 +253,6 @@
 
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
         <source src="fon.mp4" type="video/mp4">
-        Ваш браузер не підтримує відео-фон.
     </video>
     <div class="bg-overlay"></div>
 
@@ -335,29 +329,26 @@
             const teamPlayers = allPlayers.filter(p => p.team && p.team.trim().toLowerCase() === teamNameNormalized);
             
             let playersHtml = '';
-            for (let i = 0; i < 5; i++) {
-                const p = teamPlayers[i];
-                const pName = p ? (p.name || p.nickname || `Гравець ${i+1}`) : `Гравець ${i+1}`;
-                
-                const pAvatar = (p && p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') 
-                    ? p.photo 
-                    : DEFAULT_AVATAR;
-                
-                const pFlag = (p && p.country) 
-                    ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` 
-                    : 'https://flagcdn.com/w20/ua.png';
+            
+            if (teamPlayers.length === 0) {
+                playersHtml = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; font-size: 0.9rem;">Немає гравців у команді</div>';
+            } else {
+                teamPlayers.forEach(p => {
+                    const pName = p.name || p.nickname || 'Гравець';
+                    const pAvatar = (p.photo && p.photo.trim() !== '' && p.photo !== 'undefined') ? p.photo : DEFAULT_AVATAR;
+                    const pFlag = p.country ? `https://flagcdn.com/w20/${p.country.toLowerCase()}.png` : 'https://flagcdn.com/w20/ua.png';
+                    const playerUrl = `player.html?name=${encodeURIComponent(pName)}`;
 
-                const playerUrl = p ? `player.html?name=${encodeURIComponent(p.name || p.nickname || '')}` : '#';
-
-                playersHtml += `
-                    <a href="${playerUrl}" class="player-box">
-                        <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
-                        <div class="player-details">
-                            <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
-                            <span>${pName}</span>
-                        </div>
-                    </a>
-                `;
+                    playersHtml += `
+                        <a href="${playerUrl}" class="player-box">
+                            <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
+                            <div class="player-details">
+                                <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
+                                <span>${pName}</span>
+                            </div>
+                        </a>
+                    `;
+                });
             }
 
             const cardId = `team-card-${Math.random().toString(36).substring(2, 9)}`;
