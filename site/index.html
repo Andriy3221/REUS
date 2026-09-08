@@ -247,7 +247,7 @@
         }
         .player-photo-wrapper {
             width: 100%;
-            height: 145px;
+            height: 155px;
             background: #0d1117;
             overflow: hidden;
             position: relative;
@@ -256,12 +256,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 50% 18%; /* Рівне центрування по вертикалі і горизонталі для всіх фото */
-            transform: scale(1.12); /* Однаковий масштаб, щоб плечі та лого були на одній лінії */
+            object-position: center 30%; /* Оптимальне вирівнювання для всіх фото */
+            transform: scale(1.05);
             transition: transform 0.3s ease;
         }
         .team-player-card:hover .player-avatar {
-            transform: scale(1.18);
+            transform: scale(1.12);
         }
         .player-name {
             font-size: 0.95rem;
