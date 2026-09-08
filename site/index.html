@@ -221,45 +221,49 @@
         }
         .team-players {
             display: none;
-            padding: 12px 18px 15px 18px;
+            padding: 15px;
             border-top: 1px solid var(--border-color);
-            background: rgba(7, 9, 14, 0.4);
-            flex-direction: column;
+            background: rgba(7, 9, 14, 0.5);
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
         }
-        .team-player-row {
+        .team-player-card {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            padding: 6px 10px;
-            background: var(--inner-card-bg);
+            background: #151b26;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
+            padding: 12px 8px;
             text-decoration: none;
-            transition: all 0.2s ease;
+            color: var(--text-color);
+            transition: all 0.25s ease;
+            text-align: center;
         }
-        .team-player-row:hover {
+        .team-player-card:hover {
             border-color: var(--accent-color);
-            color: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.15);
         }
-        .player-info-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        /* Збільшене та добре видиме фото гравця */
         .player-avatar {
-            width: 44px;
-            height: 44px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
             object-position: top center;
             border: 2px solid var(--accent-color);
             background: #000;
-            flex-shrink: 0;
+            margin-bottom: 8px;
+            image-rendering: -webkit-optimize-contrast;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+        .player-name {
+            font-size: 0.9rem;
+            font-weight: 700;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .item-row {
             display: flex;
@@ -293,6 +297,11 @@
             text-align: center;
             color: var(--text-muted);
             padding: 40px;
+        }
+        @media (max-width: 768px) {
+            .team-players {
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            }
         }
     </style>
 </head>
@@ -363,7 +372,7 @@
         function toggleTeam(event, headerElement) {
             event.stopPropagation();
             const playersDiv = headerElement.nextElementSibling;
-            playersDiv.style.display = playersDiv.style.display === 'flex' ? 'none' : 'flex';
+            playersDiv.style.display = playersDiv.style.display === 'grid' ? 'none' : 'grid';
         }
 
         const BIN_ID = '6a8b3dffda38895dfe079cb1';
@@ -405,23 +414,17 @@
                             const limitedPlayers = teamPlayers.slice(0, 5);
                             limitedPlayers.forEach(tp => {
                                 const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
-                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/44';
+                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/52';
                                 
                                 playersListHtml += `
-                                    <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-row" onclick="event.stopPropagation();">
-                                        <div class="player-info-left">
-                                            <img src="${playerPhoto}" class="player-avatar" alt="">
-                                            <span>${playerName}</span>
-                                        </div>
-                                        <span style="color: var(--accent-color); font-size: 0.9rem;">переглянути</span>
+                                    <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-card" onclick="event.stopPropagation();">
+                                        <img src="${playerPhoto}" class="player-avatar" alt="">
+                                        <span class="player-name">${playerName}</span>
                                     </a>
                                 `;
                             });
-                            if (teamPlayers.length > 5) {
-                                playersListHtml += `<div style="color: var(--text-muted); font-size: 0.85rem; padding-top: 4px; text-align: center;">+ ще гравці...</div>`;
-                            }
                         } else {
-                            playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">У команді немає гравців або дизбанд</div>';
+                            playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">У команді немає гравців або дизбанд</div>';
                         }
 
                         const cardHtml = `
