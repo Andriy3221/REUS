@@ -254,8 +254,17 @@
         }
         .trophy-icon {
             font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             filter: drop-shadow(0 4px 8px rgba(255, 215, 0, 0.4));
             animation: floatTrophy 3s ease-in-out infinite;
+        }
+        .trophy-icon img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
         }
         @keyframes floatTrophy {
             0%, 100% { transform: translateY(0); }
@@ -319,7 +328,7 @@
                 const cloudData = rawRecord.record || rawRecord;
 
                 const players = cloudData.players || [];
-                const teams = cloudData.teams || [];
+                const globalTrophies = cloudData.trophies || cloudData.cups || [];
 
                 const player = players.find(p => (p.name || p.nickname || '').toLowerCase() === playerNameParam.toLowerCase());
 
@@ -328,13 +337,13 @@
                     return;
                 }
 
-                // Шукаємо кубки самого гравця, а якщо їх нема — беремо кубки його команди
+                // Збираємо трофеї гравця або глобальні трофеї, які прив'язані до його команди
                 let trophies = player.trophies || player.cups || [];
                 if (trophies.length === 0 && player.team) {
-                    const teamObj = teams.find(t => (t.name || '').toLowerCase() === player.team.toLowerCase());
-                    if (teamObj) {
-                        trophies = teamObj.trophies || teamObj.cups || [];
-                    }
+                    trophies = globalTrophies.filter(t => 
+                        (t.team && t.team.toLowerCase() === player.team.toLowerCase()) || 
+                        (t.name && t.name.toLowerCase() === player.team.toLowerCase())
+                    );
                 }
 
                 renderPlayerPage(player, trophies);
@@ -359,10 +368,26 @@
             if (trophies.length > 0) {
                 let items = '';
                 trophies.forEach(t => {
-                    const trophyTitle = typeof t === 'object' && t !== null ? (t.name || t.title || 'Трофей') : t;
+                    // Визначаємо іконку (це може бути посилання на картинку з адмінки або звичайний емодзі)
+                    let iconVal = t.icon || t.image || t.img || '🏆';
+                    let iconHtml = iconVal.startsWith('http') ? `<img src="${iconVal}" alt="Trophy">` : iconVal;
+
+                    // Визначаємо назву турніру/трофея
+                    let trophyTitle = '';
+                    if (typeof t === 'string') {
+                        trophyTitle = t;
+                    } else if (typeof t === 'object' && t !== null) {
+                        trophyTitle = t.title || t.name || t.tournament || 'Турнір';
+                    }
+
+                    // Якщо в базі замість назви записано посилання на картинку (як на скріншоті)
+                    if (iconVal.startsWith('http') && trophyTitle.startsWith('http')) {
+                        trophyTitle = 'Трофей команди';
+                    }
+
                     items += `
                         <div class="trophy-card">
-                            <div class="trophy-icon">🏆</div>
+                            <div class="trophy-icon">${iconHtml}</div>
                             <div class="trophy-name">${trophyTitle}</div>
                         </div>
                     `;
