@@ -6,14 +6,14 @@
     <title>Reus Championship | Рейтинг</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --card-bg: rgba(255, 255, 255, 0.85); /* Світле напівпрозоре скло */
-            --inner-card-bg: #ffffff;
-            --border-color: #d1d5db;
-            --accent-color: #059669; /* Насичений смарагдовий */
-            --text-color: #111827;     /* Глибокий чорний */
-            --text-muted: #4b5563;     /* Темно-сірий */
-            --inactive-bg: rgba(243, 244, 246, 0.85);
+            --bg-color: #07090e;
+            --card-bg: rgba(13, 17, 23, 0.85); /* Глибоке темне скло */
+            --inner-card-bg: #111620;
+            --border-color: #21262d;
+            --accent-color: #00ff88; /* Яскравий кіберспортивний зелений */
+            --text-color: #ffffff;
+            --text-muted: #8b949e;
+            --inactive-bg: rgba(13, 17, 23, 0.5);
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,7 +25,7 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-        /* Відео-фон на весь екран */
+        /* Безкінечне відео-фон */
         .bg-video {
             position: fixed;
             right: 0;
@@ -37,14 +37,14 @@
             z-index: -2;
             object-fit: cover;
         }
-        /* Легке світле затемнення поверх відео */
+        /* Темне затемнення для ідеального контрасту */
         .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(7, 9, 14, 0.82);
             z-index: -1;
         }
         .main-container {
@@ -55,7 +55,7 @@
         }
         .nav-bar {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 15px 25px;
@@ -63,7 +63,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
         .logo-area {
             display: flex;
@@ -74,7 +74,6 @@
             width: 40px;
             height: 40px;
             object-fit: contain;
-            filter: brightness(0.1); /* Робить світлий логотип темним */
         }
         .logo-area span {
             font-size: 1.2rem;
@@ -82,7 +81,7 @@
             color: var(--text-color);
         }
         .support-btn {
-            background: #ffffff;
+            background: var(--inner-card-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
             padding: 8px 16px;
@@ -95,16 +94,15 @@
         .support-btn:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
-            background: #f9fafb;
         }
         .section-box {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
         .section-title {
             font-size: 1.1rem;
@@ -121,15 +119,15 @@
             margin-bottom: 15px;
             overflow: hidden;
             transition: border-color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
         .team-card.inactive {
             background: var(--inactive-bg);
-            opacity: 0.75;
+            opacity: 0.6;
         }
         .team-card:hover {
             border-color: var(--accent-color);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 255, 136, 0.1);
         }
         .team-header {
             display: flex;
@@ -137,7 +135,7 @@
             align-items: center;
             padding: 15px 20px;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(17, 22, 32, 0.9);
             user-select: none;
         }
         .team-info {
@@ -155,7 +153,6 @@
             width: 32px;
             height: 32px;
             object-fit: contain;
-            filter: brightness(0.1); /* Автоматично перефарбовує білі логотипи команд у темні */
         }
         .team-name {
             font-size: 1.1rem;
@@ -188,7 +185,7 @@
         .players-container {
             display: none;
             padding: 15px 20px;
-            background: rgba(249, 250, 251, 0.95);
+            background: rgba(13, 17, 23, 0.95);
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 12px;
             border-top: 1px solid var(--border-color);
@@ -209,12 +206,10 @@
             text-decoration: none;
             color: var(--text-color);
             transition: border-color 0.2s, transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
         .player-box:hover {
             border-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
         .player-avatar {
             width: 55px;
@@ -222,7 +217,7 @@
             border-radius: 8px;
             object-fit: cover;
             object-position: top center;
-            background: #e5e7eb;
+            background: #1a222f;
             -webkit-font-smoothing: antialiased;
             image-rendering: -webkit-optimize-contrast;
             image-rendering: high-quality;
@@ -232,7 +227,7 @@
             align-items: center;
             gap: 6px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 500;
         }
         .player-flag {
             width: 18px;
@@ -244,7 +239,6 @@
             text-align: center;
             color: var(--text-muted);
             padding: 40px;
-            font-weight: 500;
         }
     </style>
 </head>
@@ -294,7 +288,7 @@
         let allTeams = [];
         let allPlayers = []; 
 
-        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='55' height='55' viewBox='0 0 24 24' fill='%239ca3af'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
+        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='55' height='55' viewBox='0 0 24 24' fill='%238a99ad'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E";
 
         async function fetchRanking() {
             try {
@@ -313,7 +307,7 @@
                 renderList();
             } catch (err) {
                 console.error(err);
-                document.getElementById('teams-ranking-list').innerHTML = '<div style="color: #dc2626; text-align: center;">Помилка завантаження рейтингу.</div>';
+                document.getElementById('teams-ranking-list').innerHTML = '<div style="color: #ff4444; text-align: center;">Помилка завантаження рейтингу.</div>';
             }
         }
 
