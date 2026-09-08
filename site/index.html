@@ -214,7 +214,7 @@
         </div>
 
         <div class="section-box" id="inactive-section" style="display: none;">
-            <div class="section-title" style="color: var(--text-muted);">Інактив / Дізбанд (Inactive Teams)</div>
+            <div class="section-title" style="color: var(--text-muted);">Інактив / Не рейтингові (Inactive Teams)</div>
             <div id="inactive-teams-list"></div>
         </div>
     </div>
@@ -277,15 +277,17 @@
                 playersHtml += `
                     <div class="player-box">
                         <img src="${pAvatar}" class="player-avatar" onerror="this.src='${DEFAULT_AVATAR}'">
+                        ` + (p && p.id ? `<a href="player.html?id=${p.id}" style="text-decoration:none; color:inherit;">` : ``) + `
                         <div class="player-details">
                             <img src="${pFlag}" class="player-flag" onerror="this.style.display='none'">
                             <span>${pName}</span>
                         </div>
+                        ` + (p && p.id ? `</a>` : ``) + `
                     </div>
                 `;
             }
 
-            const cardId = `team-card-${Math.random().toString(36.substring(2, 9))}`;
+            const cardId = `team-card-${Math.random().toString(36).substring(2, 9)}`;
 
             return `
                 <div class="team-card ${isInactive ? 'inactive' : ''}" id="${cardId}">
@@ -322,9 +324,9 @@
             let activeIndex = 1;
 
             allTeams.forEach(t => {
-                // Визначаємо інактив за наявністю мінусових балів (-999) або якщо в назві є слова retired / no teams
-                const points = Number(t.points) || 0;
-                const isInactive = points <= -500 || /retired|no teams/i.test(t.name);
+                // Перевіряємо статус команди з адмінки (тип, статус або якщо в базі забито як unranked / не рейтингова)
+                const teamType = (t.type || t.status || '').toLowerCase();
+                const isInactive = teamType.includes('unranked') || teamType.includes('не рейтинг') || teamType.includes('inactive') || Number(t.points) <= -500;
 
                 if (isInactive) {
                     inactiveHtml += generateTeamCardHTML(t, 0, true);
