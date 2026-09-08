@@ -256,12 +256,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 30%; /* Оптимальне вирівнювання для всіх фото */
-            transform: scale(1.05);
+            /* Жорстке вирівнювання центру для всіх зображень */
+            object-position: 50% 22%; 
+            transform: scale(1.15);
             transition: transform 0.3s ease;
         }
         .team-player-card:hover .player-avatar {
-            transform: scale(1.12);
+            transform: scale(1.22);
         }
         .player-name {
             font-size: 0.95rem;
