@@ -23,7 +23,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
         h1, h2 {
@@ -34,7 +34,7 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         .form-group {
@@ -69,6 +69,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: opacity 0.2s;
+            width: 100%;
         }
         button:hover {
             opacity: 0.85;
@@ -77,10 +78,11 @@
             background: var(--danger-color);
             color: #fff;
         }
-        .players-list, .teams-list {
+        .list-container {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            margin-top: 15px;
         }
         .item-row {
             display: flex;
@@ -91,97 +93,55 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
-        /* Модальне вікно редагування */
-        #editModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
+        .row-actions {
+            display: flex;
+            gap: 8px;
         }
-        .modal-content {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 550px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-sizing: border-box;
+        .row-actions button {
+            padding: 6px 12px;
+            width: auto;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Панель керування REUS</h1>
+        <h1>Адмін-панель REUS</h1>
         <a href="index.html" style="color: var(--accent-color); text-decoration: none; display: inline-block; margin-bottom: 20px;">← Назад на сайт</a>
 
-        <!-- Блок керування гравцями -->
+        <!-- Видати трофей команді -->
         <div class="card">
-            <h2>Гравці в базі</h2>
-            <div id="playersList" class="players-list">
-                <div style="color: var(--text-muted);">Завантаження гравців...</div>
+            <h2>Видати трофей команді</h2>
+            <div class="form-group">
+                <label>Виберіть команду</label>
+                <select id="trophyTeamSelect">
+                    <option value="">Завантаження команд...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Назва турніру (наприклад, BLAST Premier)</label>
+                <input type="text" id="trophyNameInput" placeholder="Назва турніру або досягнення">
+            </div>
+            <div class="form-group">
+                <label>Іконка кубка (URL посилання або emoji 🏆)</label>
+                <input type="text" id="trophyIconInput" value="🏆" placeholder="URL картинки або емодзі">
+            </div>
+            <button onclick="addTrophyToTeam()">Додати трофей</button>
+        </div>
+
+        <!-- Список команд -->
+        <div class="card">
+            <h2>Команди в базі</h2>
+            <div id="teamsList" class="list-container">
+                <div style="color: var(--text-muted);">Завантаження команд...</div>
             </div>
         </div>
-    </div>
 
-    <!-- Модальне вікно редагування гравця -->
-    <div id="editModal">
-        <div class="modal-content">
-            <h2 id="modalTitle" style="margin-top: 0;">Редагувати гравця</h2>
-            <input type="hidden" id="editPlayerOriginalName">
-            
-            <div class="form-group">
-                <label>Нікнейм гравця</label>
-                <input type="text" id="editPlayerName">
-            </div>
-
-            <div class="form-group">
-                <label>Команда</label>
-                <input type="text" id="editPlayerTeam">
-            </div>
-
-            <div class="form-group">
-                <label>Роль</label>
-                <input type="text" id="editPlayerRole">
-            </div>
-
-            <div class="form-group">
-                <label>Країна (код, напр. ua)</label>
-                <input type="text" id="editPlayerCountry">
-            </div>
-
-            <div class="form-group">
-                <label>Пряме посилання на фото (URL)</label>
-                <input type="text" id="editPlayerPhoto">
-            </div>
-
-            <div class="form-group">
-                <label>Rating 2.0</label>
-                <input type="text" id="editPlayerRating">
-            </div>
-
-            <div class="form-group">
-                <label>K/D Ratio</label>
-                <input type="text" id="editPlayerKd">
-            </div>
-
-            <!-- БЛОК ОСОБИСТИХ ТРОФЕЇВ ГРАВЦЯ -->
-            <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <label style="color: var(--accent-color); font-weight: bold; margin-bottom: 8px; display: block;">Особисті трофеї гравця (URL іконки або назва)</label>
-                <div id="adminPlayerTrophiesContainer" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">
-                    <!-- Сюди додаються інпути трофеїв -->
-                </div>
-                <button type="button" onclick="addAdminPlayerTrophyInput('')" style="background: transparent; color: var(--accent-color); border: 1px dashed var(--accent-color); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">+ Додати трофей</button>
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 25px;">
-                <button type="button" onclick="saveEditedPlayer()" style="flex: 1;">Зберегти зміни</button>
-                <button type="button" onclick="closeEditModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
+        <!-- Список гравців -->
+        <div class="card">
+            <h2>Гравці в базі</h2>
+            <div id="playersList" class="list-container">
+                <div style="color: var(--text-muted);">Завантаження гравців...</div>
             </div>
         </div>
     </div>
@@ -199,114 +159,18 @@
                 });
                 const result = await res.json();
                 globalData = result.record || result;
-                if (globalData.record) globalData = globalData.record; // На випадок вкладеності
-                
+                if (globalData.record) globalData = globalData.record;
+
+                renderTeamsList();
                 renderPlayersList();
+                updateTeamSelect();
             } catch (err) {
                 console.error(err);
-                document.getElementById('playersList').innerHTML = '<div style="color: var(--danger-color);">Помилка завантаження бази даних.</div>';
+                alert('Помилка завантаження бази даних.');
             }
         }
 
-        function renderPlayersList() {
-            const players = globalData.players || [];
-            const container = document.getElementById('playersList');
-            if (players.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Гравців немає в базі.</div>';
-                return;
-            }
-
-            container.innerHTML = '';
-            players.forEach((p, index) => {
-                const pName = p.name || p.nickname || 'Без імені';
-                const row = document.createElement('div');
-                row.className = 'item-row';
-                row.innerHTML = `
-                    <span><b>${pName}</b> (${p.team || 'Без команди'})</span>
-                    <button onclick="openEditModal(${index})">Редагувати</button>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        // Функції для роботи з трофеями у модальному вікні
-        function addAdminPlayerTrophyInput(value = '') {
-            const container = document.getElementById('adminPlayerTrophiesContainer');
-            const wrapper = document.createElement('div');
-            wrapper.style.display = 'flex';
-            wrapper.style.gap = '8px';
-            
-            wrapper.innerHTML = `
-                <input type="text" class="player-trophy-input" value="${value}" placeholder="Посилання на іконку (URL) або назва" style="flex: 1;">
-                <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding: 0 10px;">✕</button>
-            `;
-            container.appendChild(wrapper);
-        }
-
-        function loadPlayerTrophiesToForm(playerTrophies) {
-            const container = document.getElementById('adminPlayerTrophiesContainer');
-            container.innerHTML = '';
-            if (playerTrophies && Array.isArray(playerTrophies)) {
-                playerTrophies.forEach(t => {
-                    const val = typeof t === 'object' && t !== null ? (t.icon || t.name || '') : t;
-                    addAdminPlayerTrophyInput(val);
-                });
-            }
-        }
-
-        function collectPlayerTrophiesFromForm() {
-            let trophies = [];
-            document.querySelectorAll('.player-trophy-input').forEach(input => {
-                if (input.value.trim() !== '') {
-                    trophies.push(input.value.trim());
-                }
-            });
-            return trophies;
-        }
-
-        let editingPlayerIndex = null;
-
-        function openEditModal(index) {
-            editingPlayerIndex = index;
-            const p = globalData.players[index];
-
-            document.getElementById('editPlayerOriginalName').value = p.name || p.nickname || '';
-            document.getElementById('editPlayerName').value = p.name || p.nickname || '';
-            document.getElementById('editPlayerTeam').value = p.team || '';
-            document.getElementById('editPlayerRole').value = p.role || '';
-            document.getElementById('editPlayerCountry').value = p.country || '';
-            document.getElementById('editPlayerPhoto').value = p.photo || '';
-            document.getElementById('editPlayerRating').value = p.rating || '';
-            document.getElementById('editPlayerKd').value = p.kd || '';
-
-            // Завантажуємо особисті трофеї гравця у форму
-            loadPlayerTrophiesToForm(p.trophies || p.cups);
-
-            document.getElementById('editModal').style.display = 'flex';
-        }
-
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-            editingPlayerIndex = null;
-        }
-
-        async function saveEditedPlayer() {
-            if (editingPlayerIndex === null) return;
-
-            const p = globalData.players[editingPlayerIndex];
-            p.name = document.getElementById('editPlayerName').value.trim();
-            p.nickname = p.name;
-            p.team = document.getElementById('editPlayerTeam').value.trim();
-            p.role = document.getElementById('editPlayerRole').value.trim();
-            p.country = document.getElementById('editPlayerCountry').value.trim();
-            p.photo = document.getElementById('editPlayerPhoto').value.trim();
-            p.rating = document.getElementById('editPlayerRating').value.trim();
-            p.kd = document.getElementById('editPlayerKd').value.trim();
-            
-            // Збираємо нові трофеї з інпутів та записуємо гравцю
-            p.trophies = collectPlayerTrophiesFromForm();
-
-            // Відправляємо оновлені дані на JSONBin
+        async function saveData() {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
@@ -316,21 +180,106 @@
                     },
                     body: JSON.stringify(globalData)
                 });
-
-                if (res.ok) {
-                    alert('Гравця успішно оновлено!');
-                    closeEditModal();
-                    renderPlayersList();
-                } else {
-                    alert('Помилка збереження на сервері.');
-                }
+                if (!res.ok) alert('Помилка збереження на сервері!');
             } catch (err) {
                 console.error(err);
                 alert('Помилка мережі при збереженні.');
             }
         }
 
-        // Запуск завантаження даних при відкритті сторінки
+        function updateTeamSelect() {
+            const select = document.getElementById('trophyTeamSelect');
+            const teams = globalData.teams || [];
+            select.innerHTML = '<option value="">Оберіть команду</option>';
+            teams.forEach(t => {
+                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+            });
+        }
+
+        function renderTeamsList() {
+            const teams = globalData.teams || [];
+            const container = document.getElementById('teamsList');
+            if (teams.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Команд немає.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            teams.forEach((t, index) => {
+                container.innerHTML += `
+                    <div class="item-row">
+                        <span><b>${t.name}</b> (Трофеїв: ${(t.trophies || t.cups || []).length})</span>
+                        <div class="row-actions">
+                            <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderPlayersList() {
+            const players = globalData.players || [];
+            const container = document.getElementById('playersList');
+            if (players.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Гравців немає.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            players.forEach((p, index) => {
+                const pName = p.name || p.nickname || 'Гравець';
+                container.innerHTML += `
+                    <div class="item-row">
+                        <span><b>${pName}</b> — Команда: ${p.team || 'Без команди'} | K/D: ${p.kd || '-'} | Rating: ${p.rating || '-'} | ADR: ${p.adr || '-'}</span>
+                        <div class="row-actions">
+                            <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        async function addTrophyToTeam() {
+            const teamName = document.getElementById('trophyTeamSelect').value;
+            const trophyName = document.getElementById('trophyNameInput').value.trim();
+            const trophyIcon = document.getElementById('trophyIconInput').value.trim() || '🏆';
+
+            if (!teamName || !trophyName) {
+                alert('Оберіть команду та введіть назву турніру!');
+                return;
+            }
+
+            const teams = globalData.teams || [];
+            const team = teams.find(t => t.name === teamName);
+            if (team) {
+                if (!team.trophies) team.trophies = [];
+                team.trophies.push({
+                    name: trophyName,
+                    icon: trophyIcon
+                });
+
+                await saveData();
+                alert('Трофей успішно додано команді!');
+                document.getElementById('trophyNameInput').value = '';
+                renderTeamsList();
+            }
+        }
+
+        async function deleteTeam(index) {
+            if (confirm('Видалити цю команду?')) {
+                globalData.teams.splice(index, 1);
+                await saveData();
+                renderTeamsList();
+                updateTeamSelect();
+            }
+        }
+
+        async function deletePlayer(index) {
+            if (confirm('Видалити цього гравця?')) {
+                globalData.players.splice(index, 1);
+                await saveData();
+                renderPlayersList();
+            }
+        }
+
         loadData();
     </script>
 </body>
