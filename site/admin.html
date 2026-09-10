@@ -229,7 +229,7 @@
                     <input type="number" id="editTeamRank" placeholder="1">
                 </div>
                 <div class="form-group">
-                    <label>Очки</label>
+                    <label>Очки (ПТС)</label>
                     <input type="number" id="editTeamPoints" placeholder="0">
                 </div>
             </div>
@@ -585,7 +585,7 @@
             const playerData = {
                 name: document.getElementById('editPlayerName').value.trim(),
                 nickname: document.getElementById('editPlayerName').value.trim(),
-                team: document.getElementById('editPlayerTeam.value' || 'editPlayerTeam').value.trim(),
+                team: document.getElementById('editPlayerTeam').value.trim(), // Виправлено помилку з ID
                 role: document.getElementById('editPlayerRole').value.trim(),
                 country: document.getElementById('editPlayerCountry').value,
                 photo: document.getElementById('editPlayerPhoto').value.trim(),
