@@ -273,9 +273,12 @@
                 <div class="form-group">
                     <label>Роль / Статус</label>
                     <select id="editPlayerRole">
-                        <option value="Player">Гравець (Основний)</option>
-                        <option value="Bench">Бенч (Запасний)</option>
-                        <option value="Coach">Тренер</option>
+                        <option value="RIFLER">Rifler</option>
+                        <option value="AWP">AWP</option>
+                        <option value="SUPPORT">Support</option>
+                        <option value="IGL / CAPTAIN">IGL / Captain</option>
+                        <option value="Coach">Тренер (Coach)</option>
+                        <option value="Bench">Запасний (Bench)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -513,7 +516,7 @@
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | Роль: ${p.role || 'Player'} | Країна: ${p.country || 'ua'}</span>
+                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | Роль: ${p.role || 'RIFLER'} | Країна: ${p.country || 'ua'}</span>
                         <div class="row-actions">
                             <button onclick="openPlayerModalForEdit(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
@@ -542,7 +545,7 @@
 
             document.getElementById('editPlayerName').value = '';
             document.getElementById('editPlayerTeam').value = '';
-            document.getElementById('editPlayerRole').value = 'Player';
+            document.getElementById('editPlayerRole').value = 'RIFLER';
             document.getElementById('editPlayerCountry').value = 'ua';
             document.getElementById('editPlayerPhoto').value = '';
             document.getElementById('editPlayerRating').value = '';
@@ -561,7 +564,7 @@
 
             document.getElementById('editPlayerName').value = p.name || p.nickname || '';
             document.getElementById('editPlayerTeam').value = p.team || '';
-            document.getElementById('editPlayerRole').value = p.role || 'Player';
+            document.getElementById('editPlayerRole').value = p.role || 'RIFLER';
             document.getElementById('editPlayerCountry').value = p.country || 'ua';
             document.getElementById('editPlayerPhoto').value = p.photo || '';
             document.getElementById('editPlayerRating').value = p.rating || '';
