@@ -285,14 +285,14 @@
             </div>
         </div>
 
-        <div class="section-box" id="coachSection" style="display: none;">
-            <div class="section-title">Тренер</div>
-            <div id="coachPlayersGrid" class="players-grid"></div>
-        </div>
-
         <div class="section-box" id="benchSection" style="display: none;">
             <div class="section-title">Запасні гравці</div>
             <div id="benchPlayersGrid" class="players-grid"></div>
+        </div>
+
+        <div class="section-box" id="coachSection" style="display: none;">
+            <div class="section-title">Тренер</div>
+            <div id="coachPlayersGrid" class="players-grid"></div>
         </div>
     </div>
 
@@ -402,14 +402,14 @@
                     mainContainerEl.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Немає гравців основного складу.</div>';
                 }
 
-                if (coachRoster.length > 0) {
-                    document.getElementById('coachSection').style.display = 'block';
-                    document.getElementById('coachPlayersGrid').innerHTML = renderPlayerCards(coachRoster);
-                }
-
                 if (benchRoster.length > 0) {
                     document.getElementById('benchSection').style.display = 'block';
                     document.getElementById('benchPlayersGrid').innerHTML = renderPlayerCards(benchRoster);
+                }
+
+                if (coachRoster.length > 0) {
+                    document.getElementById('coachSection').style.display = 'block';
+                    document.getElementById('coachPlayersGrid').innerHTML = renderPlayerCards(coachRoster);
                 }
 
             } catch (err) {
