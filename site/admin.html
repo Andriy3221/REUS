@@ -263,7 +263,9 @@
                 </div>
                 <div class="form-group">
                     <label>Команда</label>
-                    <input type="text" id="editPlayerTeam" placeholder="напр. YAMI">
+                    <select id="editPlayerTeam">
+                        <option value="">Без команди</option>
+                    </select>
                 </div>
             </div>
 
@@ -374,11 +376,19 @@
         }
 
         function updateTeamSelect() {
-            const select = document.getElementById('trophyTeamSelect');
             const teams = globalData.teams || [];
-            select.innerHTML = '<option value="">Оберіть команду</option>';
+            
+            // Оновлюємо селект для трофеїв
+            const trophySelect = document.getElementById('trophyTeamSelect');
+            trophySelect.innerHTML = '<option value="">Оберіть команду</option>';
+            
+            // Оновлюємо селект команди у модальному вікні гравця
+            const playerTeamSelect = document.getElementById('editPlayerTeam');
+            playerTeamSelect.innerHTML = '<option value="">Без команди</option>';
+
             teams.forEach(t => {
-                select.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                trophySelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
+                playerTeamSelect.innerHTML += `<option value="${t.name}">${t.name}</option>`;
             });
         }
 
@@ -585,7 +595,7 @@
             const playerData = {
                 name: document.getElementById('editPlayerName').value.trim(),
                 nickname: document.getElementById('editPlayerName').value.trim(),
-                team: document.getElementById('editPlayerTeam').value.trim(), // Виправлено помилку з ID
+                team: document.getElementById('editPlayerTeam').value.trim(),
                 role: document.getElementById('editPlayerRole').value.trim(),
                 country: document.getElementById('editPlayerCountry').value,
                 photo: document.getElementById('editPlayerPhoto').value.trim(),
