@@ -326,6 +326,60 @@
             color: var(--text-muted);
             padding: 40px;
         }
+
+        /* Стилі для блоку Contact us */
+        .contact-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        .contact-title {
+            color: var(--accent-color);
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .contact-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .contact-item {
+            background: var(--inner-card-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 10px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+        .contact-item:hover {
+            border-color: var(--accent-color);
+        }
+        .contact-name {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        .contact-handle {
+            color: var(--text-muted);
+        }
+
         @media (max-width: 768px) {
             .team-players {
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
@@ -372,6 +426,24 @@
             <div class="section-title">Рейтинг гравців</div>
             <div id="players-app" class="list-container">
                 <div class="loading">Завантаження гравців...</div>
+            </div>
+        </div>
+
+        <!-- Блок Contact us -->
+        <div class="contact-box">
+            <div class="contact-title">Contact us</div>
+            <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
+            
+            <div class="contact-links">
+                <a href="https://t.me/Andriy1794" target="_blank" class="contact-item">
+                    <span class="contact-name">Andriy:</span> 
+                    <span class="contact-handle">@Andriy1794</span>
+                </a>
+
+                <a href="https://t.me/MrXwello" target="_blank" class="contact-item">
+                    <span class="contact-name">Xwello:</span> 
+                    <span class="contact-handle">@MrXwello</span>
+                </a>
             </div>
         </div>
     </div>
@@ -443,7 +515,6 @@
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
-                    // СОРТУВАННЯ КОМАНД ЗА ПТС (від більшого до меншого)
                     teams.sort((a, b) => {
                         const pointsA = parseFloat(a.points !== undefined && a.points !== null ? a.points : (a.rating || 0)) || 0;
                         const pointsB = parseFloat(b.points !== undefined && b.points !== null ? b.points : (b.rating || 0)) || 0;
