@@ -285,8 +285,13 @@
             </div>
         </div>
 
+        <div class="section-box" id="coachSection" style="display: none;">
+            <div class="section-title">Тренер</div>
+            <div id="coachPlayersGrid" class="players-grid"></div>
+        </div>
+
         <div class="section-box" id="benchSection" style="display: none;">
-            <div class="section-title">Запасні гравці / Тренери</div>
+            <div class="section-title">Запасні гравці</div>
             <div id="benchPlayersGrid" class="players-grid"></div>
         </div>
     </div>
@@ -335,7 +340,6 @@
                 const tLogo = team.logo || team.image || '';
                 const tRegion = team.region || team.status || 'Reus Championship';
 
-                // Render Team Header
                 document.getElementById('teamHeader').innerHTML = `
                     <div class="header-logo-wrap">
                         ${tLogo ? `<img src="${tLogo}" class="header-logo" alt="${tName}">` : '<div style="font-size: 1.5rem;">🛡️</div>'}
@@ -346,18 +350,20 @@
                     </div>
                 `;
 
-                // Filter players belonging to this team
                 const teamPlayers = allPlayers.filter(p => {
                     const pTeam = p.team || p.teamName || p.club || p.group || '';
                     return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
                 });
 
                 const mainRoster = [];
+                const coachRoster = [];
                 const benchRoster = [];
 
                 teamPlayers.forEach(p => {
                     const pRole = (p.role || p.slot || '').toLowerCase();
-                    if (pRole.includes('запасний') || pRole.includes('bench') || pRole.includes('тренер')) {
+                    if (pRole.includes('coach') || pRole.includes('тренер')) {
+                        coachRoster.push(p);
+                    } else if (pRole.includes('запасний') || pRole.includes('bench')) {
                         benchRoster.push(p);
                     } else {
                         mainRoster.push(p);
@@ -393,7 +399,12 @@
                 if (mainRoster.length > 0) {
                     mainContainerEl.innerHTML = renderPlayerCards(mainRoster);
                 } else {
-                    mainContainerEl.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Немає активних гравців основного складу.</div>';
+                    mainContainerEl.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Немає гравців основного складу.</div>';
+                }
+
+                if (coachRoster.length > 0) {
+                    document.getElementById('coachSection').style.display = 'block';
+                    document.getElementById('coachPlayersGrid').innerHTML = renderPlayerCards(coachRoster);
                 }
 
                 if (benchRoster.length > 0) {
