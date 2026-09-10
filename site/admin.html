@@ -271,8 +271,12 @@
 
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Роль</label>
-                    <input type="text" id="editPlayerRole" placeholder="Rifler / IGL тощо">
+                    <label>Роль / Статус</label>
+                    <select id="editPlayerRole">
+                        <option value="Player">Гравець (Основний)</option>
+                        <option value="Bench">Бенч (Запасний)</option>
+                        <option value="Coach">Тренер</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>Країна</label>
@@ -378,11 +382,9 @@
         function updateTeamSelect() {
             const teams = globalData.teams || [];
             
-            // Оновлюємо селект для трофеїв
             const trophySelect = document.getElementById('trophyTeamSelect');
             trophySelect.innerHTML = '<option value="">Оберіть команду</option>';
             
-            // Оновлюємо селект команди у модальному вікні гравця
             const playerTeamSelect = document.getElementById('editPlayerTeam');
             playerTeamSelect.innerHTML = '<option value="">Без команди</option>';
 
@@ -511,7 +513,7 @@
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | Країна: ${p.country || 'ua'} | K/D: ${p.kd || '-'}</span>
+                        <span><b>${pName}</b> (${p.team || 'Без команди'}) | Роль: ${p.role || 'Player'} | Країна: ${p.country || 'ua'}</span>
                         <div class="row-actions">
                             <button onclick="openPlayerModalForEdit(${index})">Редагувати</button>
                             <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
@@ -540,7 +542,7 @@
 
             document.getElementById('editPlayerName').value = '';
             document.getElementById('editPlayerTeam').value = '';
-            document.getElementById('editPlayerRole').value = '';
+            document.getElementById('editPlayerRole').value = 'Player';
             document.getElementById('editPlayerCountry').value = 'ua';
             document.getElementById('editPlayerPhoto').value = '';
             document.getElementById('editPlayerRating').value = '';
@@ -559,7 +561,7 @@
 
             document.getElementById('editPlayerName').value = p.name || p.nickname || '';
             document.getElementById('editPlayerTeam').value = p.team || '';
-            document.getElementById('editPlayerRole').value = p.role || '';
+            document.getElementById('editPlayerRole').value = p.role || 'Player';
             document.getElementById('editPlayerCountry').value = p.country || 'ua';
             document.getElementById('editPlayerPhoto').value = p.photo || '';
             document.getElementById('editPlayerRating').value = p.rating || '';
@@ -596,7 +598,7 @@
                 name: document.getElementById('editPlayerName').value.trim(),
                 nickname: document.getElementById('editPlayerName').value.trim(),
                 team: document.getElementById('editPlayerTeam').value.trim(),
-                role: document.getElementById('editPlayerRole').value.trim(),
+                role: document.getElementById('editPlayerRole').value,
                 country: document.getElementById('editPlayerCountry').value,
                 photo: document.getElementById('editPlayerPhoto').value.trim(),
                 rating: document.getElementById('editPlayerRating').value.trim(),
