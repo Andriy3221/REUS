@@ -119,7 +119,7 @@
             padding: 7px 14px;
             font-size: 0.85rem;
         }
-        #modalOverlay, #teamModalOverlay {
+        #modalOverlay, #teamModalOverlay, #tournamentModalOverlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -203,6 +203,17 @@
             </div>
             <div id="playersList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження гравців...</div>
+            </div>
+        </div>
+
+        <!-- РОБОТА З ТУРНІРАМИ -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;">Керування турнірами</h2>
+                <button onclick="openTournamentModalForAdd()">+ Додати турнір</button>
+            </div>
+            <div id="tournamentsList" class="list-container">
+                <div style="color: var(--text-muted);">Завантаження турнірів...</div>
             </div>
         </div>
     </div>
@@ -341,9 +352,66 @@
         </div>
     </div>
 
+    <!-- МОДАЛЬНЕ ВІКНО ДЛЯ ТУРНІРІВ -->
+    <div id="tournamentModalOverlay">
+        <div class="modal-content">
+            <h2 id="tourModalHeaderTitle" style="margin-top: 0; color: var(--accent-color);">Турнір</h2>
+            <input type="hidden" id="editTourIndex">
+            
+            <div class="form-group">
+                <label>Назва турніру (або проєкту)</label>
+                <input type="text" id="editTourTitle" placeholder="напр. PGL Masters Bucharest 2026">
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Логотип турніру (URL)</label>
+                    <input type="text" id="editTourLogo" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Банер (для Тір 1 / Тір 2)</label>
+                    <input type="text" id="editTourBanner" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Призові (наприклад, $1,000,000)</label>
+                    <input type="text" id="editTourPrize" placeholder="$1,000,000">
+                </div>
+                <div class="form-group">
+                    <label>Кількість команд (наприклад, 16)</label>
+                    <input type="text" id="editTourTeamsCount" placeholder="16">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Дата (наприклад, Oct 14th - Oct 18th)</label>
+                    <input type="text" id="editTourDate" placeholder="Oct 14th - Oct 18th">
+                </div>
+                <div class="form-group">
+                    <label>Статус тіру</label>
+                    <select id="editTourTier">
+                        <option value="tier-1">Tier 1 (Велика картка з банером)</option>
+                        <option value="tier-2">Tier 2 (Велика картка з банером)</option>
+                        <option value="tier-3">Tier 3 (Звичайний рядок)</option>
+                        <option value="tier-4">Tier 4 (Звичайний рядок)</option>
+                        <option value="tier-5">Tier 5 (Звичайний рядок)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 25px;">
+                <button type="button" onclick="saveTournament()" style="flex: 1;">Зберегти турнір</button>
+                <button type="button" onclick="closeTournamentModal()" class="btn-danger" style="flex: 1;">Скасувати</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-              const BIN_ID = '6ad23f85ac6210605a379839';
-              const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
+        const BIN_ID = '6ad23f85ac6210605a379839';
+        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
 
         let globalData = {};
 
@@ -358,6 +426,7 @@
 
                 renderTeamsList();
                 renderPlayersList();
+                renderTournamentsList();
                 updateTeamSelect();
             } catch (err) {
                 console.error(err);
@@ -632,6 +701,95 @@
                 globalData.players.splice(index, 1);
                 await saveData();
                 renderPlayersList();
+            }
+        }
+
+        // Керування турнірами
+        function renderTournamentsList() {
+            const tournaments = globalData.tournaments || [];
+            const container = document.getElementById('tournamentsList');
+            if (tournaments.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Турнірів немає в базі.</div>';
+                return;
+            }
+            container.innerHTML = '';
+            tournaments.forEach((t, index) => {
+                container.innerHTML += `
+                    <div class="item-row">
+                        <span><b>${t.title || 'Без назви'}</b> | Тір: <b>${t.tier || 'tier-1'}</b> | Призові: ${t.prize || '—'} | Команд: ${t.teamsCount || '—'}</span>
+                        <div class="row-actions">
+                            <button onclick="openTournamentModalForEdit(${index})">Редагувати</button>
+                            <button onclick="deleteTournament(${index})" class="btn-danger">Видалити</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openTournamentModalForAdd() {
+            document.getElementById('editTourIndex').value = '';
+            document.getElementById('tourModalHeaderTitle').innerText = 'Додати новий турнір';
+            document.getElementById('editTourTitle').value = '';
+            document.getElementById('editTourLogo').value = '';
+            document.getElementById('editTourBanner').value = '';
+            document.getElementById('editTourPrize').value = '';
+            document.getElementById('editTourTeamsCount').value = '';
+            document.getElementById('editTourDate').value = '';
+            document.getElementById('editTourTier').value = 'tier-1';
+            document.getElementById('tournamentModalOverlay').style.display = 'flex';
+        }
+
+        function openTournamentModalForEdit(index) {
+            document.getElementById('editTourIndex').value = index;
+            document.getElementById('tourModalHeaderTitle').innerText = 'Редагувати турнір';
+            const t = globalData.tournaments[index];
+            document.getElementById('editTourTitle').value = t.title || '';
+            document.getElementById('editTourLogo').value = t.logo || '';
+            document.getElementById('editTourBanner').value = t.banner || '';
+            document.getElementById('editTourPrize').value = t.prize || '';
+            document.getElementById('editTourTeamsCount').value = t.teamsCount || '';
+            document.getElementById('editTourDate').value = t.date || '';
+            document.getElementById('editTourTier').value = t.tier || 'tier-1';
+            document.getElementById('tournamentModalOverlay').style.display = 'flex';
+        }
+
+        function closeTournamentModal() {
+            document.getElementById('tournamentModalOverlay').style.display = 'none';
+        }
+
+        async function saveTournament() {
+            const indexStr = document.getElementById('editTourIndex').value;
+            const tourData = {
+                title: document.getElementById('editTourTitle').value.trim(),
+                logo: document.getElementById('editTourLogo').value.trim(),
+                banner: document.getElementById('editTourBanner').value.trim(),
+                prize: document.getElementById('editTourPrize').value.trim(),
+                teamsCount: document.getElementById('editTourTeamsCount').value.trim(),
+                date: document.getElementById('editTourDate').value.trim(),
+                tier: document.getElementById('editTourTier').value
+            };
+
+            if (!tourData.title) return alert('Введіть назву турніру!');
+
+            if (!globalData.tournaments) globalData.tournaments = [];
+
+            if (indexStr === '') {
+                globalData.tournaments.push(tourData);
+            } else {
+                globalData.tournaments[parseInt(indexStr)] = tourData;
+            }
+
+            await saveData();
+            closeTournamentModal();
+            renderTournamentsList();
+            alert('Турнір успішно збережено!');
+        }
+
+        async function deleteTournament(index) {
+            if (confirm('Видалити цей турнір?')) {
+                globalData.tournaments.splice(index, 1);
+                await saveData();
+                renderTournamentsList();
             }
         }
 
