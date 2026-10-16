@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship | Rating</title>
+    <title>Reus Championship | Rating & Tournaments</title>
     <style>
         :root {
             --bg-color: #07090e;
@@ -99,6 +99,7 @@
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             background: var(--card-bg);
@@ -110,6 +111,7 @@
             font-weight: 700;
             cursor: pointer;
             font-size: 1rem;
+            transition: 0.2s;
         }
         .tab-btn.active {
             background: var(--inner-card-bg);
@@ -243,10 +245,6 @@
             transform: scale(1.15);
             transition: transform 0.3s ease;
         }
-        .player-avatar.pos-yokirito { object-position: 50% 15% !important; }
-        .player-avatar.pos-fexum { object-position: 50% 15% !important; }
-        .player-avatar.pos-darkprince9 { object-position: 50% 15% !important; }
-
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
         }
@@ -310,7 +308,46 @@
             padding: 40px;
         }
 
-        /* Стилі для блоку Contact us */
+        /* Стилі для секції Турнірів */
+        .tournaments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .tournament-big-card {
+            background: var(--inner-card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .tournament-big-card img.t-banner {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+        }
+        .tournament-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+        .tournament-row-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--inner-card-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px 18px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        /* Блок Contact us */
         .contact-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -390,8 +427,10 @@
         <div class="tabs-container">
             <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
             <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
         </div>
 
+        <!-- Секція команд -->
         <div id="teams-section" class="section-box active">
             <div class="section-title">Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
@@ -402,10 +441,19 @@
             <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
+        <!-- Секція гравців -->
         <div id="players-section" class="section-box">
             <div class="section-title">Рейтинг гравців</div>
             <div id="players-app" class="list-container">
                 <div class="loading">Завантаження гравців...</div>
+            </div>
+        </div>
+
+        <!-- Секція турнірів -->
+        <div id="tournaments-section" class="section-box">
+            <div class="section-title">Турніри</div>
+            <div id="tournaments-app">
+                <div class="loading">Завантаження турнірів...</div>
             </div>
         </div>
 
@@ -444,8 +492,10 @@
             btn.classList.add('active');
             if (tabName === 'teams') {
                 document.getElementById('teams-section').classList.add('active');
-            } else {
+            } else if (tabName === 'players') {
                 document.getElementById('players-section').classList.add('active');
+            } else if (tabName === 'tournaments') {
+                document.getElementById('tournaments-section').classList.add('active');
             }
         }
 
@@ -478,8 +528,8 @@
             return raw !== null ? raw : '—';
         }
 
-              const BIN_ID = '6ad23f85ac6210605a379839';
-              const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
+        const BIN_ID = '6ad23f85ac6210605a379839';
+        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
 
         async function fetchData() {
             try {
@@ -491,7 +541,9 @@
                 const cloudData = result.record?.record || result.record || result;
                 const teams = cloudData.teams || [];
                 const allPlayers = cloudData.players || [];
+                const tournaments = cloudData.tournaments || [];
 
+                // 1. Рендер команд
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
@@ -535,16 +587,10 @@
                                 const playerFlag = getFlagUrl(tp.flag || tp.countryFlag || tp.country || tp.flagUrl || '');
                                 let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
 
-                                let extraClass = '';
-                                const lowerName = playerName.toLowerCase();
-                                if (lowerName.includes('yokirito')) extraClass = 'pos-yokirito';
-                                else if (lowerName.includes('fexum')) extraClass = 'pos-fexum';
-                                else if (lowerName.includes('darkpr1nce9')) extraClass = 'pos-darkprince9';
-
                                 playersListHtml += `
                                     <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-card" onclick="event.stopPropagation();">
                                         <div class="player-photo-wrapper">
-                                            <img src="${playerPhoto}" class="player-avatar ${extraClass}" alt="">
+                                            <img src="${playerPhoto}" class="player-avatar" alt="">
                                         </div>
                                         <div class="player-name-container">
                                             ${playerFlagHtml}
@@ -589,22 +635,16 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
+                // 2. Рендер гравців
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
                     allPlayers.sort((a, b) => {
                         const rA = getRawRating(a);
                         const rB = getRawRating(b);
-
-                        if (rA !== null && rB !== null) {
-                            return rB - rA;
-                        }
-                        if (rA !== null && rB === null) {
-                            return -1;
-                        }
-                        if (rA === null && rB !== null) {
-                            return 1;
-                        }
+                        if (rA !== null && rB !== null) return rB - rA;
+                        if (rA !== null && rB === null) return -1;
+                        if (rA === null && rB !== null) return 1;
                         return 0;
                     });
 
@@ -626,10 +666,72 @@
                     document.getElementById('players-app').innerHTML = playersHtml;
                 }
 
+                // 3. Рендер турнірів (HLTV style)
+                const tContainer = document.getElementById('tournaments-app');
+                if (tournaments.length === 0) {
+                    tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
+                } else {
+                    let bigCardsHtml = '<div class="tournaments-grid">';
+                    let rowCardsHtml = '<div class="list-container" style="margin-top: 15px;">';
+                    let hasBig = false;
+                    let hasRow = false;
+
+                    tournaments.forEach(tour => {
+                        const isBigCard = tour.tier === 'tier-1' || tour.tier === 'tier-2';
+
+                        if (isBigCard) {
+                            hasBig = true;
+                            bigCardsHtml += `
+                                <div class="tournament-big-card">
+                                    ${tour.banner ? `<img src="${tour.banner}" class="t-banner">` : ''}
+                                    <div class="tournament-content">
+                                        <div>
+                                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                                                ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
+                                                <b style="font-size:1.1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                            </div>
+                                            <div style="font-size: 0.8rem; color: var(--accent-color); text-transform: uppercase; font-weight: bold;">${tour.tier || ''}</div>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
+                                            <span>📅 ${tour.date || 'TBA'}</span>
+                                            <span style="color:var(--accent-color); font-weight: bold;">💰 ${tour.prize || 'TBA'}</span>
+                                            <span>👥 ${tour.teamsCount || '—'} Teams</span>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        } else {
+                            hasRow = true;
+                            rowCardsHtml += `
+                                <div class="tournament-row-card">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
+                                        <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                    </div>
+                                    <div style="display:flex; gap:25px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
+                                        <span style="font-size: 0.75rem; background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px;">${tour.tier || 'Tier'}</span>
+                                        <span>${tour.teamsCount ? tour.teamsCount + ' Teams' : 'TBA'}</span>
+                                        <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
+                                        <span>📅 ${tour.date || 'Online'}</span>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+
+                    bigCardsHtml += '</div>';
+                    rowCardsHtml += '</div>';
+
+                    let finalTourHtml = '';
+                    if (hasBig) finalTourHtml += bigCardsHtml;
+                    if (hasRow) finalTourHtml += rowCardsHtml;
+
+                    tContainer.innerHTML = finalTourHtml;
+                }
+
             } catch (err) {
                 console.error("Помилка завантаження:", err);
                 document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
                 document.getElementById('players-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
+                document.getElementById('tournaments-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
             }
         }
 
