@@ -380,7 +380,7 @@
                     <input type="text" id="editTourPrize" placeholder="$1,000,000">
                 </div>
                 <div class="form-group">
-                    <label>Кількість команд (наприклад, 16)</label>
+                    <label>Кількість команд (необов'язково, рахується автоматично)</label>
                     <input type="text" id="editTourTeamsCount" placeholder="16">
                 </div>
             </div>
@@ -399,6 +399,13 @@
                         <option value="tier-4">Tier 4 (Звичайний рядок)</option>
                         <option value="tier-5">Tier 5 (Звичайний рядок)</option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label style="color: var(--accent-color); font-weight: 600;">Команди-учасники турніру</label>
+                <div id="tourTeamsCheckboxes" style="max-height: 150px; overflow-y: auto; background: var(--inner-card-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Чекбокси команд -->
                 </div>
             </div>
 
@@ -705,6 +712,28 @@
         }
 
         // Керування турнірами
+        function renderTourTeamsCheckboxes(selectedTeams = []) {
+            const container = document.getElementById('tourTeamsCheckboxes');
+            container.innerHTML = '';
+            const teams = globalData.teams || [];
+            
+            if (teams.length === 0) {
+                container.innerHTML = '<span style="color:var(--text-muted); font-size:0.85rem;">Спочатку додайте команди в базу</span>';
+                return;
+            }
+
+            teams.forEach(t => {
+                const isChecked = selectedTeams.includes(t.name) ? 'checked' : '';
+                container.innerHTML += `
+                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; color:var(--text-color); font-size:0.9rem;">
+                        <input type="checkbox" class="tour-team-cb" value="${t.name}" ${isChecked} style="width:auto;">
+                        ${t.logo ? `<img src="${t.logo}" style="width:20px; height:20px; object-fit:contain;">` : ''}
+                        ${t.name}
+                    </label>
+                `;
+            });
+        }
+
         function renderTournamentsList() {
             const tournaments = globalData.tournaments || [];
             const container = document.getElementById('tournamentsList');
@@ -714,9 +743,10 @@
             }
             container.innerHTML = '';
             tournaments.forEach((t, index) => {
+                const teamsLen = (t.teams && t.teams.length) ? t.teams.length : (t.teamsCount || '—');
                 container.innerHTML += `
                     <div class="item-row">
-                        <span><b>${t.title || 'Без назви'}</b> | Тір: <b>${t.tier || 'tier-1'}</b> | Призові: ${t.prize || '—'} | Команд: ${t.teamsCount || '—'}</span>
+                        <span><b>${t.title || 'Без назви'}</b> | Тір: <b>${t.tier || 'tier-1'}</b> | Призові: ${t.prize || '—'} | Команд: ${teamsLen}</span>
                         <div class="row-actions">
                             <button onclick="openTournamentModalForEdit(${index})">Редагувати</button>
                             <button onclick="deleteTournament(${index})" class="btn-danger">Видалити</button>
@@ -736,6 +766,8 @@
             document.getElementById('editTourTeamsCount').value = '';
             document.getElementById('editTourDate').value = '';
             document.getElementById('editTourTier').value = 'tier-1';
+            
+            renderTourTeamsCheckboxes([]);
             document.getElementById('tournamentModalOverlay').style.display = 'flex';
         }
 
@@ -750,6 +782,8 @@
             document.getElementById('editTourTeamsCount').value = t.teamsCount || '';
             document.getElementById('editTourDate').value = t.date || '';
             document.getElementById('editTourTier').value = t.tier || 'tier-1';
+            
+            renderTourTeamsCheckboxes(t.teams || []);
             document.getElementById('tournamentModalOverlay').style.display = 'flex';
         }
 
@@ -759,14 +793,21 @@
 
         async function saveTournament() {
             const indexStr = document.getElementById('editTourIndex').value;
+            
+            const selectedTeams = [];
+            document.querySelectorAll('.tour-team-cb:checked').forEach(cb => {
+                selectedTeams.push(cb.value);
+            });
+
             const tourData = {
                 title: document.getElementById('editTourTitle').value.trim(),
                 logo: document.getElementById('editTourLogo').value.trim(),
                 banner: document.getElementById('editTourBanner').value.trim(),
                 prize: document.getElementById('editTourPrize').value.trim(),
-                teamsCount: document.getElementById('editTourTeamsCount').value.trim(),
+                teamsCount: selectedTeams.length ? selectedTeams.length.toString() : document.getElementById('editTourTeamsCount').value.trim(),
                 date: document.getElementById('editTourDate').value.trim(),
-                tier: document.getElementById('editTourTier').value
+                tier: document.getElementById('editTourTier').value,
+                teams: selectedTeams
             };
 
             if (!tourData.title) return alert('Введіть назву турніру!');
