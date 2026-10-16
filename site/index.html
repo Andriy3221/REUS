@@ -6,14 +6,13 @@
     <title>Reus Championship | Rating & Tournaments</title>
     <style>
         :root {
-            --bg-color: #07090e;
-            --card-bg: rgba(13, 17, 23, 0.85);
-            --inner-card-bg: #111620;
-            --border-color: #21262d;
-            --accent-color: #00ff88;
-            --accent-glow: rgba(0, 255, 136, 0.2);
+            --bg-color: #0b0b0b;
+            --card-bg: #121212;
+            --inner-card-bg: #181818;
+            --border-color: #262626;
+            --accent-color: #ffffff;
             --text-color: #ffffff;
-            --text-muted: #8b949e;
+            --text-muted: #888888;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,6 +32,7 @@
             min-height: 100%;
             z-index: -2;
             object-fit: cover;
+            filter: grayscale(100%) brightness(0.4);
         }
         .bg-overlay {
             position: fixed;
@@ -40,7 +40,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(7, 9, 14, 0.82);
+            background: rgba(11, 11, 11, 0.9);
             z-index: -1;
         }
         .main-container {
@@ -54,12 +54,10 @@
             align-items: center;
             justify-content: space-between;
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             padding: 15px 25px;
-            border-radius: 14px;
+            border-radius: 8px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
         .project-logo-container {
             display: inline-flex;
@@ -72,13 +70,12 @@
             width: 190px;
             height: 75px;
             background: var(--inner-card-bg);
-            border: 2px solid var(--accent-color);
-            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 255, 136, 0.4);
             flex-shrink: 0;
         }
         .project-logo-wrapper img {
@@ -86,6 +83,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
+            filter: grayscale(20%);
         }
         .project-title {
             color: var(--text-color);
@@ -93,82 +91,73 @@
             font-weight: 800;
         }
         .project-title span {
-            color: var(--accent-color);
+            color: var(--text-muted);
+            font-weight: 400;
         }
         .tabs-container {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .tab-btn {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.25s ease;
+            font-size: 0.95rem;
+            transition: 0.2s;
         }
         .tab-btn:hover {
-            border-color: var(--accent-color);
             color: var(--text-color);
+            border-color: #444;
         }
         .tab-btn.active {
             background: var(--inner-card-bg);
-            border-color: var(--accent-color);
-            color: var(--accent-color);
-            box-shadow: 0 0 15px var(--accent-glow);
+            border-color: #ffffff;
+            color: var(--text-color);
         }
         .section-box {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 8px;
             padding: 25px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             display: none;
             margin-bottom: 25px;
-            animation: fadeIn 0.3s ease;
         }
         .section-box.active {
             display: block;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1rem;
+            font-weight: 700;
             margin-bottom: 20px;
-            color: var(--accent-color);
+            color: var(--text-color);
             text-transform: uppercase;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
         .section-title.unranked-title {
             color: var(--text-muted);
-            border-color: var(--border-color);
         }
         .list-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         .team-card {
             background: var(--inner-card-bg);
-            border-radius: 10px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             overflow: hidden;
             transition: border-color 0.2s;
         }
         .team-card:hover {
-            border-color: rgba(0, 255, 136, 0.4);
+            border-color: #444;
         }
         .team-header {
             display: flex;
@@ -184,71 +173,67 @@
             gap: 15px;
         }
         .team-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
             object-fit: contain;
-            background: rgba(0, 0, 0, 0.2);
+            background: #0b0b0b;
             border: 1px solid var(--border-color);
             padding: 2px;
         }
         .team-name-link {
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text-color);
             text-decoration: none;
-            transition: color 0.2s;
         }
         .team-name-link:hover {
-            color: var(--accent-color);
             text-decoration: underline;
         }
         .team-value {
-            color: var(--accent-color);
-            font-weight: 800;
+            color: var(--text-color);
+            font-weight: 700;
         }
         .unranked-badge {
-            background: rgba(139, 148, 158, 0.15);
+            background: #1f1f1f;
             color: var(--text-muted);
             border: 1px solid var(--border-color);
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
         .team-card.unranked {
-            opacity: 0.75;
+            opacity: 0.6;
         }
         .team-players {
             display: none;
             padding: 15px;
             border-top: 1px solid var(--border-color);
-            background: rgba(7, 9, 14, 0.5);
+            background: #0f0f0f;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
         .team-player-card {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #151b26;
+            background: #141414;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 6px;
             overflow: hidden;
             text-decoration: none;
             color: var(--text-color);
-            transition: all 0.25s ease;
+            transition: 0.2s;
             text-align: center;
         }
         .team-player-card:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.2);
+            border-color: #555;
         }
         .player-photo-wrapper {
             width: 100%;
-            height: 155px;
-            background: #0d1117;
+            height: 140px;
+            background: #0b0b0b;
             overflow: hidden;
             position: relative;
         }
@@ -256,35 +241,31 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 50% 22%; 
-            transform: scale(1.15);
-            transition: transform 0.3s ease;
-        }
-        .team-player-card:hover .player-avatar {
-            transform: scale(1.22);
+            object-position: 50% 20%;
+            filter: grayscale(15%);
         }
         .player-name-container {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 10px 6px;
+            padding: 8px 4px;
             width: 100%;
             box-sizing: border-box;
-            background: #111620;
+            background: #181818;
             border-top: 1px solid var(--border-color);
         }
         .player-name {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
         .player-flag {
-            width: 20px;
-            height: 14px;
-            border-radius: 2px;
+            width: 18px;
+            height: 12px;
+            border-radius: 1px;
             object-fit: cover;
             border: 1px solid var(--border-color);
             flex-shrink: 0;
@@ -295,16 +276,14 @@
             align-items: center;
             padding: 12px 18px;
             background: var(--inner-card-bg);
-            border-radius: 10px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             text-decoration: none;
             color: var(--text-color);
-            transition: all 0.2s;
         }
         .item-row:hover {
-            border-color: rgba(0, 255, 136, 0.5);
-            background: rgba(17, 22, 32, 0.95);
-            transform: translateX(3px);
+            border-color: #444;
+            background: #1c1c1c;
         }
         .item-info {
             display: flex;
@@ -312,12 +291,12 @@
             gap: 15px;
         }
         .item-name {
-            font-weight: 700;
-            font-size: 1.05rem;
+            font-weight: 600;
+            font-size: 1rem;
         }
         .item-value {
-            color: var(--accent-color);
-            font-weight: 800;
+            color: var(--text-color);
+            font-weight: 700;
         }
         .loading {
             text-align: center;
@@ -325,40 +304,38 @@
             padding: 40px;
         }
 
-        /* --- СТИКЕРИ ТА КАРТКИ ТУРНІРІВ (HLTV Style) --- */
+        /* Турніри */
         .tournaments-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
         .tournament-big-card {
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 6px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: all 0.25s ease;
-            position: relative;
+            transition: 0.2s;
         }
         .tournament-big-card:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.15);
+            border-color: #555;
         }
         .tournament-big-card img.t-banner {
             width: 100%;
-            height: 130px;
+            height: 120px;
             object-fit: cover;
             border-bottom: 1px solid var(--border-color);
+            filter: grayscale(20%);
         }
         .tournament-content {
-            padding: 16px;
+            padding: 14px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             flex-grow: 1;
             justify-content: space-between;
         }
@@ -368,43 +345,37 @@
             align-items: center;
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
-            padding: 14px 18px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: 0.2s;
         }
         .tournament-row-card:hover {
-            border-color: var(--accent-color);
-            background: rgba(17, 22, 32, 0.95);
-            transform: translateX(3px);
-            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
+            border-color: #555;
+            background: #1c1c1c;
         }
 
-        /* Стикери (бейжді) для Тірів з крутими кольорами */
+        /* Чорно-білі стікери тірів */
         .tier-badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid transparent;
+            border: 1px solid var(--border-color);
+            background: #1f1f1f;
+            color: #ccc;
         }
-        .tier-1 { background: rgba(255, 215, 0, 0.12); color: #ffd700; border-color: rgba(255, 215, 0, 0.3); box-shadow: 0 0 10px rgba(255, 215, 0, 0.15); }
-        .tier-2 { background: rgba(0, 255, 136, 0.12); color: #00ff88; border-color: rgba(0, 255, 136, 0.3); box-shadow: 0 0 10px rgba(0, 255, 136, 0.15); }
-        .tier-3 { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
-        .tier-4 { background: rgba(168, 85, 247, 0.12); color: #a855f7; border-color: rgba(168, 85, 247, 0.3); }
-        .tier-5 { background: rgba(148, 163, 184, 0.12); color: #94a3b8; border-color: rgba(148, 163, 184, 0.3); }
 
         /* Модальне вікно турніру */
         #tourModalOverlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 11, 20, 0.88);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 999;
@@ -414,86 +385,79 @@
         .tour-modal-content {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 16px;
+            padding: 24px;
+            border-radius: 8px;
             width: 100%;
-            max-width: 600px;
+            max-width: 550px;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
         .tour-team-item {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             background: var(--inner-card-bg);
-            padding: 10px 15px;
-            border-radius: 10px;
+            padding: 10px 14px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             text-decoration: none;
             color: var(--text-color);
             font-weight: 600;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
         .tour-team-item:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 255, 136, 0.15);
+            border-color: #555;
+            background: #1c1c1c;
         }
 
-        /* Блок Contact us */
+        /* Contact us */
         .contact-box {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 25px;
+            border-radius: 8px;
+            padding: 20px;
             margin-top: 30px;
             text-align: center;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
         }
         .contact-title {
-            color: var(--accent-color);
+            color: var(--text-color);
             margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 1rem;
+            font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .contact-desc {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
         }
         .contact-links {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
         }
         .contact-item {
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 6px;
             color: var(--text-color);
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-size: 0.9rem;
             transition: 0.2s;
         }
         .contact-item:hover {
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
+            border-color: #555;
         }
         .contact-name {
-            color: var(--accent-color);
+            color: #fff;
             font-weight: 600;
         }
         .contact-handle {
@@ -502,7 +466,7 @@
 
         @media (max-width: 768px) {
             .team-players {
-                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             }
         }
     </style>
@@ -581,20 +545,20 @@
         <div class="tour-modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <img id="viewTourLogo" style="width: 32px; height: 32px; object-fit: contain; display: none;">
-                    <h2 id="viewTourTitle" style="margin: 0; color: var(--accent-color); font-size: 1.3rem;">Назва турніру</h2>
+                    <img id="viewTourLogo" style="width: 28px; height: 28px; object-fit: contain; display: none;">
+                    <h2 id="viewTourTitle" style="margin: 0; color: var(--text-color); font-size: 1.15rem; font-weight: 700;">Назва турніру</h2>
                 </div>
-                <button onclick="closeTourModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+                <button onclick="closeTourModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
             </div>
 
-            <div style="display: flex; gap: 20px; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+            <div style="display: flex; gap: 20px; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">
                 <span id="viewTourDate">📅 -</span>
-                <span id="viewTourPrize" style="color: var(--accent-color); font-weight: bold;">💰 -</span>
+                <span id="viewTourPrize" style="color: var(--text-color); font-weight: 600;">💰 -</span>
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
-            <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+            <div style="font-weight: 600; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">Команди-учасники:</div>
+            <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
                 <!-- Список команд -->
             </div>
         </div>
@@ -730,7 +694,7 @@
                                 `;
                             });
                         } else {
-                            playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">У команді немає активних основних гравців</div>';
+                            playersListHtml = '<div style="color: var(--text-muted); font-size: 0.85rem; grid-column: 1 / -1; text-align: center;">У команді немає активних основних гравців</div>';
                         }
 
                         const teamPoints = t.points !== undefined && t.points !== null ? t.points : (t.rating || 0);
@@ -739,13 +703,13 @@
                             <div class="team-card ${isRanked ? '' : 'unranked'}">
                                 <div class="team-header" onclick="toggleTeam(event, this)">
                                     <div class="team-info">
-                                        <span style="color: var(--text-muted); font-weight: bold;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
+                                        <span style="color: var(--text-muted); font-weight: 600;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
                                         ${logoHtml}
                                         <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 15px;">
                                         ${isRanked ? `<span class="team-value">${teamPoints}</span>` : `<span class="unranked-badge">${teamStatus || 'Нерейтингова'}</span>`}
-                                        <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
+                                        <span style="color: var(--text-muted); font-size: 0.75rem;">▼</span>
                                     </div>
                                 </div>
                                 <div class="team-players">
@@ -762,7 +726,7 @@
                     });
 
                     document.getElementById('ranked-teams-app').innerHTML = rankedHtml || '<div class="loading">Немає рейтингових команд.</div>';
-                    document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
+                    document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.85rem; padding: 5px 0;">Немає нерейтингових команд.</div>';
                 }
 
                 // 2. Рендер гравців
@@ -786,7 +750,7 @@
                         playersHtml += `
                             <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
                                 <div class="item-info">
-                                    <span style="color: var(--text-muted); font-weight: bold;">#${index + 1}</span>
+                                    <span style="color: var(--text-muted); font-weight: 600;">#${index + 1}</span>
                                     <span class="item-name">${pName}</span>
                                 </div>
                                 <div class="item-value">${pRating}</div>
@@ -796,7 +760,7 @@
                     document.getElementById('players-app').innerHTML = playersHtml;
                 }
 
-                // 3. Рендер турнірів зі стикерами тірів
+                // 3. Рендер турнірів у чорно-білому стилі
                 const tContainer = document.getElementById('tournaments-app');
                 if (tournaments.length === 0) {
                     tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
@@ -821,15 +785,15 @@
                                         <div>
                                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                                                 <div style="display:flex; align-items:center; gap:10px;">
-                                                    ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
-                                                    <b style="font-size:1.1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                                    ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
+                                                    <b style="font-size:1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                                 </div>
-                                                <span class="tier-badge ${tierClass}">${tierName}</span>
+                                                <span class="tier-badge">${tierName}</span>
                                             </div>
                                         </div>
-                                        <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
+                                        <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.8rem; border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 4px;">
                                             <span>📅 ${tour.date || 'TBA'}</span>
-                                            <span style="color:var(--accent-color); font-weight: bold;">💰 ${tour.prize || 'TBA'}</span>
+                                            <span style="color:var(--text-color); font-weight: 600;">💰 ${tour.prize || 'TBA'}</span>
                                             <span>👥 ${teamsCount} Teams</span>
                                         </div>
                                     </div>
@@ -838,14 +802,14 @@
                             hasRow = true;
                             rowCardsHtml += `
                                 <div class="tournament-row-card" onclick="openTourModal(${tIdx})">
-                                    <div style="display:flex; align-items:center; gap:12px;">
-                                        ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
-                                        <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        ${tour.logo ? `<img src="${tour.logo}" style="width:20px; height:20px; object-fit:contain;">` : ''}
+                                        <b style="color:var(--text-color); font-size:0.95rem;">${tour.title || 'Турнір'}</b>
                                     </div>
-                                    <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
-                                        <span class="tier-badge ${tierClass}">${tierName}</span>
+                                    <div style="display:flex; gap:15px; color:var(--text-muted); font-size:0.8rem; align-items: center;">
+                                        <span class="tier-badge">${tierName}</span>
                                         <span>${teamsCount} Teams</span>
-                                        <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
+                                        <span style="color:var(--text-color); font-weight: 600;">${tour.prize || 'Other'}</span>
                                         <span>📅 ${tour.date || 'Online'}</span>
                                     </div>
                                 </div>`;
@@ -893,7 +857,7 @@
             document.getElementById('viewTourTeamsCount').innerText = `👥 ${tourTeams.length} Teams`;
 
             if (tourTeams.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 20px;">Список команд у цьому турнірі ще не сформовано.</div>';
+                container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 15px; font-size: 0.85rem;">Список команд у цьому турнірі ще не сформовано.</div>';
             } else {
                 tourTeams.forEach(tName => {
                     const teamObj = allTeamsCache.find(t => t.name.trim().toLowerCase() === tName.trim().toLowerCase());
@@ -901,8 +865,8 @@
                     
                     container.innerHTML += `
                         <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
-                            ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
-                            <span>${tName}</span>
+                            ${logo ? `<img src="${logo}" style="width:20px; height:20px; object-fit:contain;">` : '▫️'}
+                            <span style="font-size: 0.9rem;">${tName}</span>
                         </a>
                     `;
                 });
@@ -915,7 +879,6 @@
             document.getElementById('tourModalOverlay').style.display = 'none';
         }
 
-        // Закриття модального вікна по кліку поза ним
         window.onclick = function(event) {
             const modal = document.getElementById('tourModalOverlay');
             if (event.target === modal) {
