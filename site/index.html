@@ -319,7 +319,7 @@
             flex-shrink: 0;
         }
 
-        /* --- ІДЕАЛЬНІ ПРЕМІУМ АВАТАРКИ В РЕЙТИНГУ ГРАВЦІВ --- */
+        /* --- СУПЕР-ЯКІСНІ ВЕЛИКІ АВАТАРКИ В РЕЙТИНГУ ГРАВЦІВ --- */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -344,14 +344,14 @@
             gap: 16px;
         }
         .rating-player-avatar-wrap {
-            width: 48px;
-            height: 48px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid var(--accent-color);
             background: #1d0f2b;
             flex-shrink: 0;
-            box-shadow: 0 0 12px rgba(255, 107, 0, 0.35);
+            box-shadow: 0 0 12px rgba(255, 107, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -360,24 +360,26 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 50% 20%;
-            /* Виправляємо пікселі за допомогою якісного згладжування */
+            object-position: 50% 18%;
+            transform: scale(1.18);
+            /* Покращення якості та різкості */
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
+            filter: contrast(105%) brightness(102%);
         }
         .rating-player-placeholder {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--accent-color);
             font-weight: bold;
         }
         .item-name {
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
         .item-value {
             color: var(--accent-color);
             font-weight: 800;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             text-shadow: 0 0 6px var(--accent-glow);
         }
         .loading {
@@ -827,7 +829,7 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                // 2. Рендер гравців (із чіткими преміум аватарками без пікселів)
+                // 2. Рендер гравців (із великими, якісними та різкими аватарками)
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
@@ -958,7 +960,6 @@
                 logoImg.style.display = 'none';
             }
 
-            // Рендер списку команд в модалці
             const container = document.getElementById('viewTourTeamsList');
             container.innerHTML = '';
 
