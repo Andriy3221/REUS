@@ -148,7 +148,7 @@
             to { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8), 0 0 30px rgba(255, 107, 0, 0.5); }
         }
 
-        /* --- С К Р И М Е Р (ЕЛЕМЕНТ НА ВЕСЬ ЕКРАН) --- */
+        /* --- ЖОРСТКИЙ СКРИМЕР НА ВЕСЬ ЕКРАН --- */
         #jumpscareOverlay {
             display: none;
             position: fixed;
@@ -158,19 +158,18 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            cursor: pointer;
         }
         #jumpscareImg {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            animation: jumpShake 0.1s infinite alternate;
+            animation: extremeShake 0.05s infinite alternate;
         }
-        @keyframes jumpShake {
-            0% { transform: scale(1.1) translate(0, 0) rotate(0deg); filter: contrast(200%) invert(10%); }
-            25% { transform: scale(1.18) translate(-15px, 15px) rotate(-3deg); filter: contrast(250%) saturate(300%) drop-shadow(0 0 20px red); }
-            50% { transform: scale(1.12) translate(15px, -15px) rotate(3deg); filter: contrast(200%) invert(20%); }
-            75% { transform: scale(1.2) translate(-10px, -10px) rotate(-2deg); filter: contrast(300%) saturate(400%); }
-            100% { transform: scale(1.15) translate(10px, 10px) rotate(2deg); filter: contrast(250%); }
+        @keyframes extremeShake {
+            0% { transform: scale(1.25) translate(-20px, 20px) rotate(-5deg); filter: contrast(300%) invert(10%) drop-shadow(0 0 40px red); }
+            50% { transform: scale(1.3) translate(20px, -20px) rotate(5deg); filter: contrast(400%) saturate(500%) invert(30%); }
+            100% { transform: scale(1.2) translate(-10px, -15px) rotate(-2deg); filter: contrast(350%) drop-shadow(0 0 50px darkred); }
         }
 
         .tabs-container {
@@ -371,7 +370,7 @@
             flex-shrink: 0;
         }
 
-        /* --- СУПЕР-ЯКІСНІ ВЕЛИКІ АВАТАРКИ В РЕЙТИНГУ ГРАВЦІВ --- */
+        /* --- ЯКІСНІ АВАТАРКИ В РЕЙТИНГУ --- */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -623,14 +622,15 @@
 </head>
 <body>
 
-    <!-- С К Р И М Е Р (ЕЛЕМЕНТ НА ВЕСЬ ЕКРАН) -->
+    <!-- ЖОРСТКИЙ МОНСТР-СКРИМЕР НА ВЕСЬ ЕКРАН -->
     <div id="jumpscareOverlay" onclick="closeJumpscare()">
-        <img id="jumpscareImg" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80" alt="Scares">
+        <!-- Змінено посилання на жорсткого страшного монстра (зомбі/демон з фільму жахів) -->
+        <img id="jumpscareImg" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80" alt="Scary Monster">
     </div>
 
-    <!-- Страшний звук крику для скримера -->
+    <!-- Страшний аудіо-ефект крику (гучний несамовитий крик) -->
     <audio id="screamAudio" preload="auto">
-        <source src="https://www.myinstants.com/media/sounds/the-conjuring-clap-sound-scary.mp3" type="audio/mpeg">
+        <source src="https://www.myinstants.com/media/sounds/horror-screaming.mp3" type="audio/mpeg">
     </audio>
 
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
@@ -728,24 +728,26 @@
     </div>
 
     <script>
-        // ЛОГІКА СКРИМЕРА
+        // ЛОГІКА ЖОРСТКОГО СКРИМЕРА ЗІ ЗВУКОМ КРИКУ
         function triggerJumpscare() {
             const overlay = document.getElementById('jumpscareOverlay');
             const audio = document.getElementById('screamAudio');
             const bgVideo = document.getElementById('bgVideo');
 
-            // Зупиняємо відеофон, щоб нічого не відволікало
+            // Пауза фонового відео
             if (bgVideo) bgVideo.pause();
 
-            // Вмикаємо на весь екран скример
+            // Показуємо монстра на весь екран
             overlay.style.display = 'flex';
 
-            // Пускаємо моторошний звук на максимальній гучності
+            // Вмикаємо страшний крик на повну потужність
             audio.currentTime = 0;
             audio.volume = 1.0;
-            audio.play().catch(e => console.log("Блокування аудіо браузером:", e));
+            audio.play().catch(err => {
+                console.log("Браузер вимагає взаємодії, звук активовано:", err);
+            });
 
-            // Автоматично вимикаємо скример через 4 секунди (або можна клікнути по ньому раніше)
+            // Автоматично закриваємо через 4 секунди
             setTimeout(() => {
                 closeJumpscare();
             }, 4000);
