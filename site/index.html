@@ -611,14 +611,15 @@
 </head>
 <body>
 
-    <!-- ЖОРСТКИЙ МОНСТР-СКРИМЕР -->
+    <!-- МОНСТР-СКРИМЕР НА ВЕСЬ ЕКРАН -->
     <div id="jumpscareOverlay" onclick="closeJumpscare()">
         <img id="jumpscareImg" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80" alt="Scary Monster">
     </div>
 
-    <!-- АУДІО КРИКУ З ПРИМУСОВИМ ЗАВАНТАЖЕННЯМ -->
+    <!-- АУДІО КРИКУ З НАДІЙНИМ ДЖЕРЕЛОМ -->
     <audio id="screamAudio" preload="auto">
-        <source src="https://www.myinstants.com/media/sounds/horror-screaming.mp3" type="audio/mpeg">
+        <source src="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg" type="audio/ogg">
+        <source src="https://www.soundjay.com/human/human-scream-1.mp3" type="audio/mpeg">
     </audio>
 
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
@@ -708,7 +709,7 @@
     </div>
 
     <script>
-        // Розблокування аудіо при першому кліку на будь-яку частину сайту
+        // Розблокування аудіо при першому кліку на сторінку
         document.addEventListener('click', function unlockAudio() {
             const audio = document.getElementById('screamAudio');
             if (audio) {
