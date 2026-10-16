@@ -197,7 +197,7 @@
             gap: 10px;
         }
 
-        /* ВЕЛИКА ПАВУТИНА НА ПІВ КАРТКИ КОМАНДИ */
+        /* КАРТОЧКА КОМАНДЫ С ПАУТИНОЙ */
         .team-card {
             background: var(--inner-card-bg);
             border-radius: 10px;
@@ -289,7 +289,7 @@
             z-index: 1;
         }
 
-        /* ПОКРАЩЕНА, ЯСКРАВА ПАВУТИНА НА КАРТКАХ ГРАВЦІВ */
+        /* КАРТОЧКИ ИГРОКОВ (ПАУТИНА НА ЗАДНЕМ ФОНЕ) */
         .team-player-card {
             display: flex;
             flex-direction: column;
@@ -304,19 +304,6 @@
             text-align: center;
             position: relative;
         }
-        .team-player-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.5)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.45)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.4)' stroke-width='1.8' fill='none'/%3E%3C/svg%3E") no-repeat top left;
-            background-size: contain;
-            pointer-events: none;
-            z-index: 5;
-            filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.7));
-        }
         .team-player-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
@@ -329,6 +316,20 @@
             overflow: hidden;
             position: relative;
         }
+        /* ПАУТИНА НА ЗАДНЕМ ФОНЕ ФОТОГРАФИИ */
+        .player-photo-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.55)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.5)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.45)' stroke-width='1.8' fill='none'/%3E%3C/svg%3E") no-repeat top left;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 1; /* Задний план относительно фото */
+            filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.7));
+        }
         .player-avatar {
             width: 100%;
             height: 100%;
@@ -337,7 +338,7 @@
             transform: scale(1.15);
             transition: transform 0.3s ease;
             position: relative;
-            z-index: 1;
+            z-index: 2; /* Фото игрока ПЕРЕД паутиной */
         }
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
@@ -353,7 +354,7 @@
             background: #150b1f;
             border-top: 1px solid var(--border-color);
             position: relative;
-            z-index: 2;
+            z-index: 3;
         }
         .player-name {
             font-size: 0.95rem;
@@ -371,7 +372,7 @@
             flex-shrink: 0;
         }
 
-        /* РЯДОК ГРАВЦЯ У ЗАГАЛЬНОМУ РЕЙТИНГУ */
+        /* СТРОКА ИГРОКА В ОБЩЕМ РЕЙТИНГЕ */
         .item-row {
             display: flex;
             justify-content: space-between;
