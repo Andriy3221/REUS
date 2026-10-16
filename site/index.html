@@ -10,7 +10,7 @@
             --card-bg: rgba(20, 12, 28, 0.88);
             --inner-card-bg: #150b1f;
             --border-color: #381a4d;
-            --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
+            --accent-color: #ff6b00;
             --accent-glow: rgba(255, 107, 0, 0.35);
             --text-color: #f3e8ee;
             --text-muted: #9a88a0;
@@ -65,7 +65,6 @@
             gap: 15px;
         }
         
-        /* --- ХЕЛЛОВІНСЬКИЙ ЛОГОТИП --- */
         .project-logo-container {
             display: inline-flex;
             align-items: center;
@@ -107,11 +106,6 @@
             right: 6px;
             font-size: 1.1rem;
             filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.8));
-            animation: pumpkinGlow 2s infinite alternate ease-in-out;
-        }
-        @keyframes pumpkinGlow {
-            from { transform: scale(1) rotate(-5deg); filter: drop-shadow(0 0 4px #ff6b00); }
-            to { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 12px #ff8533); }
         }
 
         .project-title {
@@ -124,7 +118,6 @@
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* Кнопка "Не натискати" */
         .scream-trigger-btn {
             background: linear-gradient(135deg, #ff4444, #cc0000);
             color: #fff;
@@ -148,7 +141,7 @@
             to { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8), 0 0 30px rgba(255, 107, 0, 0.5); }
         }
 
-        /* --- ЖОРСТКИЙ СКРИМЕР НА ВЕСЬ ЕКРАН --- */
+        /* ЖОРСТКИЙ СКРИМЕР НА ВЕСЬ ЕКРАН */
         #jumpscareOverlay {
             display: none;
             position: fixed;
@@ -370,7 +363,6 @@
             flex-shrink: 0;
         }
 
-        /* --- ЯКІСНІ АВАТАРКИ В РЕЙТИНГУ --- */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -438,7 +430,6 @@
             padding: 40px;
         }
 
-        /* --- ТУРНІРИ --- */
         .tournaments-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -509,7 +500,6 @@
         .tier-4 { background: rgba(100, 223, 223, 0.2); color: #64dfdf; border-color: rgba(100, 223, 223, 0.4); }
         .tier-5 { background: rgba(154, 136, 160, 0.2); color: #9a88a0; border-color: rgba(154, 136, 160, 0.4); }
 
-        /* Модальне вікно */
         #tourModalOverlay {
             display: none;
             position: fixed;
@@ -557,7 +547,6 @@
             box-shadow: 0 4px 12px var(--accent-glow);
         }
 
-        /* Contact us */
         .contact-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -622,13 +611,12 @@
 </head>
 <body>
 
-    <!-- ЖОРСТКИЙ МОНСТР-СКРИМЕР НА ВЕСЬ ЕКРАН -->
+    <!-- ЖОРСТКИЙ МОНСТР-СКРИМЕР -->
     <div id="jumpscareOverlay" onclick="closeJumpscare()">
-        <!-- Змінено посилання на жорсткого страшного монстра (зомбі/демон з фільму жахів) -->
         <img id="jumpscareImg" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80" alt="Scary Monster">
     </div>
 
-    <!-- Страшний аудіо-ефект крику (гучний несамовитий крик) -->
+    <!-- АУДІО КРИКУ З ПРИМУСОВИМ ЗАВАНТАЖЕННЯМ -->
     <audio id="screamAudio" preload="auto">
         <source src="https://www.myinstants.com/media/sounds/horror-screaming.mp3" type="audio/mpeg">
     </audio>
@@ -647,7 +635,6 @@
                 <div class="project-title">Reus <span>Championship 🎃</span></div>
             </a>
             
-            <!-- КНОПКА СКРИМЕРА -->
             <button class="scream-trigger-btn" onclick="triggerJumpscare()">⚠️ НЕ НАТИСКАТИ</button>
         </div>
 
@@ -657,7 +644,6 @@
             <button class="tab-btn" onclick="switchTab('tournaments', this)">🎃 Турніри</button>
         </div>
 
-        <!-- Секція команд -->
         <div id="teams-section" class="section-box active">
             <div class="section-title">🏆 Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
@@ -668,7 +654,6 @@
             <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
-        <!-- Секція гравців -->
         <div id="players-section" class="section-box">
             <div class="section-title">👻 Рейтинг гравців</div>
             <div id="players-app" class="list-container">
@@ -676,7 +661,6 @@
             </div>
         </div>
 
-        <!-- Секція турнірів -->
         <div id="tournaments-section" class="section-box">
             <div class="section-title">🎃 Турніри</div>
             <div id="tournaments-app">
@@ -684,7 +668,6 @@
             </div>
         </div>
 
-        <!-- Блок Contact us -->
         <div class="contact-box">
             <div class="contact-title">🎃 Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
@@ -703,7 +686,6 @@
         </div>
     </div>
 
-    <!-- Модальне вікно перегляду учасників турніру -->
     <div id="tourModalOverlay">
         <div class="tour-modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
@@ -721,33 +703,38 @@
             </div>
 
             <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">🕷️ Команди-учасники:</div>
-            <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
-                <!-- Список команд -->
-            </div>
+            <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
 
     <script>
-        // ЛОГІКА ЖОРСТКОГО СКРИМЕРА ЗІ ЗВУКОМ КРИКУ
+        // Розблокування аудіо при першому кліку на будь-яку частину сайту
+        document.addEventListener('click', function unlockAudio() {
+            const audio = document.getElementById('screamAudio');
+            if (audio) {
+                audio.play().then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                }).catch(() => {});
+            }
+            document.removeEventListener('click', unlockAudio);
+        }, { once: true });
+
         function triggerJumpscare() {
             const overlay = document.getElementById('jumpscareOverlay');
             const audio = document.getElementById('screamAudio');
             const bgVideo = document.getElementById('bgVideo');
 
-            // Пауза фонового відео
             if (bgVideo) bgVideo.pause();
 
-            // Показуємо монстра на весь екран
             overlay.style.display = 'flex';
 
-            // Вмикаємо страшний крик на повну потужність
             audio.currentTime = 0;
             audio.volume = 1.0;
             audio.play().catch(err => {
-                console.log("Браузер вимагає взаємодії, звук активовано:", err);
+                console.log("Помилка відтворення звуку:", err);
             });
 
-            // Автоматично закриваємо через 4 секунди
             setTimeout(() => {
                 closeJumpscare();
             }, 4000);
@@ -836,7 +823,6 @@
                 allTournamentsCache = tournaments;
                 allTeamsCache = teams;
 
-                // 1. Рендер команд
                 if (teams.length === 0) {
                     document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
                 } else {
@@ -928,7 +914,6 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                // 2. Рендер гравців
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
@@ -969,7 +954,6 @@
                     document.getElementById('players-app').innerHTML = playersHtml;
                 }
 
-                // 3. Рендер турнірів
                 const tContainer = document.getElementById('tournaments-app');
                 if (tournaments.length === 0) {
                     tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
@@ -1037,9 +1021,6 @@
 
             } catch (err) {
                 console.error("Помилка завантаження:", err);
-                document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
-                document.getElementById('players-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
-                document.getElementById('tournaments-app').innerHTML = '<div class="loading">Помилка завантаження даних.</div>';
             }
         }
 
