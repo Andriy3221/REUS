@@ -61,6 +61,8 @@
             border-radius: 14px;
             margin-bottom: 25px;
             box-shadow: 0 0 25px rgba(157, 78, 221, 0.15), 0 8px 24px rgba(0, 0, 0, 0.6);
+            flex-wrap: wrap;
+            gap: 15px;
         }
         
         /* --- ХЕЛЛОВІНСЬКИЙ ЛОГОТИП --- */
@@ -121,6 +123,56 @@
             color: var(--accent-color);
             text-shadow: 0 0 10px var(--accent-glow);
         }
+
+        /* Кнопка "Не натискати" */
+        .scream-trigger-btn {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: #fff;
+            border: 2px solid #ff6b00;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
+            transition: all 0.2s ease;
+            animation: btnPulse 1.5s infinite alternate;
+        }
+        .scream-trigger-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(255, 68, 68, 0.8);
+        }
+        @keyframes btnPulse {
+            from { box-shadow: 0 0 10px rgba(255, 68, 68, 0.4); }
+            to { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8), 0 0 30px rgba(255, 107, 0, 0.5); }
+        }
+
+        /* --- С К Р И М Е Р (ЕЛЕМЕНТ НА ВЕСЬ ЕКРАН) --- */
+        #jumpscareOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #jumpscareImg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            animation: jumpShake 0.1s infinite alternate;
+        }
+        @keyframes jumpShake {
+            0% { transform: scale(1.1) translate(0, 0) rotate(0deg); filter: contrast(200%) invert(10%); }
+            25% { transform: scale(1.18) translate(-15px, 15px) rotate(-3deg); filter: contrast(250%) saturate(300%) drop-shadow(0 0 20px red); }
+            50% { transform: scale(1.12) translate(15px, -15px) rotate(3deg); filter: contrast(200%) invert(20%); }
+            75% { transform: scale(1.2) translate(-10px, -10px) rotate(-2deg); filter: contrast(300%) saturate(400%); }
+            100% { transform: scale(1.15) translate(10px, 10px) rotate(2deg); filter: contrast(250%); }
+        }
+
         .tabs-container {
             display: flex;
             gap: 15px;
@@ -362,7 +414,6 @@
             object-fit: cover;
             object-position: 50% 18%;
             transform: scale(1.18);
-            /* Покращення якості та різкості */
             image-rendering: -webkit-optimize-contrast;
             image-rendering: crisp-edges;
             filter: contrast(105%) brightness(102%);
@@ -388,7 +439,7 @@
             padding: 40px;
         }
 
-        /* --- HALLOWEEN TOUR NAY TIERS --- */
+        /* --- ТУРНІРИ --- */
         .tournaments-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -443,7 +494,6 @@
             box-shadow: 0 4px 15px var(--accent-glow);
         }
 
-        /* Хелловінські бейджі тірів */
         .tier-badge {
             display: inline-block;
             padding: 3px 8px;
@@ -573,6 +623,16 @@
 </head>
 <body>
 
+    <!-- С К Р И М Е Р (ЕЛЕМЕНТ НА ВЕСЬ ЕКРАН) -->
+    <div id="jumpscareOverlay" onclick="closeJumpscare()">
+        <img id="jumpscareImg" src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=80" alt="Scares">
+    </div>
+
+    <!-- Страшний звук крику для скримера -->
+    <audio id="screamAudio" preload="auto">
+        <source src="https://www.myinstants.com/media/sounds/the-conjuring-clap-sound-scary.mp3" type="audio/mpeg">
+    </audio>
+
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
         <source src="fon.mp4" type="video/mp4">
     </video>
@@ -586,6 +646,9 @@
                 </div>
                 <div class="project-title">Reus <span>Championship 🎃</span></div>
             </a>
+            
+            <!-- КНОПКА СКРИМЕРА -->
+            <button class="scream-trigger-btn" onclick="triggerJumpscare()">⚠️ НЕ НАТИСКАТИ</button>
         </div>
 
         <div class="tabs-container">
@@ -665,6 +728,40 @@
     </div>
 
     <script>
+        // ЛОГІКА СКРИМЕРА
+        function triggerJumpscare() {
+            const overlay = document.getElementById('jumpscareOverlay');
+            const audio = document.getElementById('screamAudio');
+            const bgVideo = document.getElementById('bgVideo');
+
+            // Зупиняємо відеофон, щоб нічого не відволікало
+            if (bgVideo) bgVideo.pause();
+
+            // Вмикаємо на весь екран скример
+            overlay.style.display = 'flex';
+
+            // Пускаємо моторошний звук на максимальній гучності
+            audio.currentTime = 0;
+            audio.volume = 1.0;
+            audio.play().catch(e => console.log("Блокування аудіо браузером:", e));
+
+            // Автоматично вимикаємо скример через 4 секунди (або можна клікнути по ньому раніше)
+            setTimeout(() => {
+                closeJumpscare();
+            }, 4000);
+        }
+
+        function closeJumpscare() {
+            const overlay = document.getElementById('jumpscareOverlay');
+            const audio = document.getElementById('screamAudio');
+            const bgVideo = document.getElementById('bgVideo');
+
+            overlay.style.display = 'none';
+            audio.pause();
+            audio.currentTime = 0;
+            if (bgVideo) bgVideo.play();
+        }
+
         const bgVideo = document.getElementById('bgVideo');
         if (bgVideo) {
             bgVideo.addEventListener('ended', function() {
@@ -829,7 +926,7 @@
                     document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
                 }
 
-                // 2. Рендер гравців (із великими, якісними та різкими аватарками)
+                // 2. Рендер гравців
                 if (allPlayers.length === 0) {
                     document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
                 } else {
@@ -870,7 +967,7 @@
                     document.getElementById('players-app').innerHTML = playersHtml;
                 }
 
-                // 3. Рендер турнірів зі стикерами тірів
+                // 3. Рендер турнірів
                 const tContainer = document.getElementById('tournaments-app');
                 if (tournaments.length === 0) {
                     tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
