@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship</title>
+    <title>Reus Championship | Halloween Edition 🎃</title>
     <style>
         :root {
             --bg-color: #0a060d;
-            --card-bg: rgba(20, 12, 28, 0.88);
+            --card-bg: rgba(20, 12, 28, 0.92);
             --inner-card-bg: #150b1f;
             --border-color: #381a4d;
             --accent-color: #ff6b00;
@@ -63,8 +63,21 @@
             box-shadow: 0 0 25px rgba(157, 78, 221, 0.15), 0 8px 24px rgba(0, 0, 0, 0.6);
             flex-wrap: wrap;
             gap: 15px;
+            position: relative;
+            overflow: hidden;
         }
         
+        /* ЕФЕКТ ПАВУТИНИ НА БАНЕРІ */
+        .header-banner::before {
+            content: '🕸️';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 3.5rem;
+            opacity: 0.25;
+            pointer-events: none;
+        }
+
         .project-logo-container {
             display: inline-flex;
             align-items: center;
@@ -149,6 +162,7 @@
             display: none;
             margin-bottom: 25px;
             animation: fadeIn 0.3s ease;
+            position: relative;
         }
         .section-box.active {
             display: block;
@@ -167,6 +181,9 @@
             padding-bottom: 10px;
             letter-spacing: 0.5px;
             text-shadow: 0 0 8px var(--accent-glow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         .section-title.unranked-title {
             color: var(--text-muted);
@@ -177,16 +194,28 @@
             flex-direction: column;
             gap: 10px;
         }
+
+        /* КАДРИ КОМАНД ІЗ ПАВУТИНОЮ ТА НЕОНОМ */
         .team-card {
             background: var(--inner-card-bg);
             border-radius: 10px;
             border: 1px solid var(--border-color);
             overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .team-card::after {
+            content: '🕸️';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            font-size: 0.9rem;
+            opacity: 0.3;
+            pointer-events: none;
         }
         .team-card:hover {
             border-color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(255, 107, 0, 0.15);
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.25);
         }
         .team-header {
             display: flex;
@@ -241,10 +270,12 @@
             display: none;
             padding: 15px;
             border-top: 1px solid var(--border-color);
-            background: rgba(10, 6, 13, 0.6);
+            background: rgba(10, 6, 13, 0.7);
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
         }
+
+        /* КАРТКИ ГРАВЦІВ У КОМАНДАХ ТА РЕЙТИНЗІ З ЕФЕКТАМИ */
         .team-player-card {
             display: flex;
             flex-direction: column;
@@ -257,11 +288,22 @@
             color: var(--text-color);
             transition: all 0.25s ease;
             text-align: center;
+            position: relative;
+        }
+        .team-player-card::before {
+            content: '🕷️';
+            position: absolute;
+            top: 4px;
+            left: 6px;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            z-index: 2;
+            pointer-events: none;
         }
         .team-player-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.25);
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.35);
         }
         .player-photo-wrapper {
             width: 100%;
@@ -319,6 +361,15 @@
             text-decoration: none;
             color: var(--text-color);
             transition: all 0.2s ease;
+            position: relative;
+        }
+        .item-row::after {
+            content: '🕸️';
+            position: absolute;
+            right: 15px;
+            font-size: 0.85rem;
+            opacity: 0.15;
+            pointer-events: none;
         }
         .item-row:hover {
             border-color: var(--accent-color);
@@ -350,9 +401,6 @@
             object-fit: cover;
             object-position: 50% 18%;
             transform: scale(1.18);
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            filter: contrast(105%) brightness(102%);
         }
         .rating-player-placeholder {
             font-size: 1.4rem;
@@ -390,6 +438,7 @@
             flex-direction: column;
             cursor: pointer;
             transition: all 0.25s ease;
+            position: relative;
         }
         .tournament-big-card:hover {
             border-color: var(--accent-color);
@@ -501,6 +550,7 @@
             margin-top: 30px;
             text-align: center;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
         .contact-title {
             color: var(--accent-color);
@@ -567,20 +617,20 @@
                 <div class="project-logo-wrapper">
                     <img src="REUS.png" alt="REUS Logo"> 
                 </div>
-                <div class="project-title">Reus <span>Championship</span></div>
+                <div class="project-title">Reus <span>Championship 🎃</span></div>
             </a>
         </div>
 
         <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
-            <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
-            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
+            <button class="tab-btn active" onclick="switchTab('teams', this)">🦇 Команди</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">👻 Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">🎃 Турніри</button>
         </div>
 
         <div id="teams-section" class="section-box active">
-            <div class="section-title">🏆 Рейтинг команд</div>
+            <div class="section-title">🕸️ Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
-                <div class="loading">Завантаження команд...</div>
+                <div class="loading">Завантаження команд... 🎃</div>
             </div>
 
             <div class="section-title unranked-title" style="margin-top: 35px;">🪦 Нерейтингові команди / Дизбанд</div>
@@ -588,21 +638,21 @@
         </div>
 
         <div id="players-section" class="section-box">
-            <div class="section-title">👻 Рейтинг гравців</div>
+            <div class="section-title">🕷️ Рейтинг гравців</div>
             <div id="players-app" class="list-container">
-                <div class="loading">Завантаження гравців...</div>
+                <div class="loading">Завантаження гравців... 🎃</div>
             </div>
         </div>
 
         <div id="tournaments-section" class="section-box">
             <div class="section-title">🎃 Турніри</div>
             <div id="tournaments-app">
-                <div class="loading">Завантаження турнірів...</div>
+                <div class="loading">Завантаження турнірів... 🎃</div>
             </div>
         </div>
 
         <div class="contact-box">
-            <div class="contact-title">Contact us</div>
+            <div class="contact-title">🕸️ Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
             
             <div class="contact-links">
@@ -635,7 +685,7 @@
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">🕷️ Команди-учасники:</div>
             <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
@@ -871,7 +921,7 @@
                                                     ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
                                                     <b style="font-size:1.1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                                 </div>
-                                                <span class="tier-badge ${tierClass}">${tierName}</span>
+                                                <span class="tier-badge ${tierClass}">🎃 ${tierName}</span>
                                             </div>
                                         </div>
                                         <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
@@ -890,7 +940,7 @@
                                         <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                     </div>
                                     <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
-                                        <span class="tier-badge ${tierClass}">${tierName}</span>
+                                        <span class="tier-badge ${tierClass}">👻 ${tierName}</span>
                                         <span>${teamsCount} Teams</span>
                                         <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
                                         <span>📅 ${tour.date || 'Online'}</span>
