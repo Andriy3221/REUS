@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship | Halloween Edition 🎃</title>
+    <title>Reus Championship</title>
     <style>
         :root {
             --bg-color: #0a060d;
@@ -99,14 +99,6 @@
             object-position: center;
             filter: sepia(100%) hue-rotate(330deg) saturate(900%) contrast(120%) drop-shadow(0 0 8px #ff6b00);
         }
-        .project-logo-wrapper::after {
-            content: '🎃';
-            position: absolute;
-            top: 4px;
-            right: 6px;
-            font-size: 1.1rem;
-            filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.8));
-        }
 
         .project-title {
             color: var(--text-color);
@@ -116,58 +108,6 @@
         .project-title span {
             color: var(--accent-color);
             text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .scream-trigger-btn {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: #fff;
-            border: 2px solid #ff6b00;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-weight: 800;
-            cursor: pointer;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            box-shadow: 0 0 15px rgba(255, 68, 68, 0.5);
-            transition: all 0.2s ease;
-            animation: btnPulse 1.5s infinite alternate;
-        }
-        .scream-trigger-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 25px rgba(255, 68, 68, 0.8);
-        }
-        @keyframes btnPulse {
-            from { box-shadow: 0 0 10px rgba(255, 68, 68, 0.4); }
-            to { box-shadow: 0 0 20px rgba(255, 68, 68, 0.8), 0 0 30px rgba(255, 107, 0, 0.5); }
-        }
-
-        /* НАДЖОРСТКИЙ АНІМОВАНИЙ СКРИМЕР (GIF / ВІДЕО-ЕФЕКТ) */
-        #jumpscareOverlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #050000;
-            z-index: 999999;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        #jumpscareImg {
-            width: 105vw;
-            height: 105vh;
-            object-fit: cover;
-            animation: psychoShake 0.03s infinite alternate, redFlash 0.1s infinite alternate;
-        }
-        @keyframes psychoShake {
-            0% { transform: scale(1.25) translate(-35px, 30px) rotate(-8deg); }
-            33% { transform: scale(1.4) translate(35px, -30px) rotate(8deg); }
-            66% { transform: scale(1.3) translate(-20px, -25px) rotate(-4deg); }
-            100% { transform: scale(1.45) translate(30px, 35px) rotate(6deg); }
-        }
-        @keyframes redFlash {
-            0% { filter: contrast(450%) saturate(800%) drop-shadow(0 0 70px red); }
-            100% { filter: contrast(500%) invert(25%) drop-shadow(0 0 90px darkred); }
         }
 
         .tabs-container {
@@ -616,11 +556,6 @@
 </head>
 <body>
 
-    <!-- ДИНАМІЧНА АНІМОВАНА GIF-КАРТИНКА ЖАХІВ НА ВЕСЬ ЕКРАН -->
-    <div id="jumpscareOverlay" onclick="closeJumpscare()">
-        <img id="jumpscareImg" src="https://media.giphy.com/media/3oKIPcfX631trLEyCQ/giphy.gif" alt="Ghostface Scream Scare">
-    </div>
-
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
         <source src="fon.mp4" type="video/mp4">
     </video>
@@ -632,22 +567,20 @@
                 <div class="project-logo-wrapper">
                     <img src="REUS.png" alt="REUS Logo"> 
                 </div>
-                <div class="project-title">Reus <span>Championship 🎃</span></div>
+                <div class="project-title">Reus <span>Championship</span></div>
             </a>
-            
-            <button class="scream-trigger-btn" onclick="triggerJumpscare()">⚠️ НЕ НАТИСКАТИ</button>
         </div>
 
         <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('teams', this)">🦇 Команди</button>
-            <button class="tab-btn" onclick="switchTab('players', this)">👻 Гравці</button>
-            <button class="tab-btn" onclick="switchTab('tournaments', this)">🎃 Турніри</button>
+            <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
         </div>
 
         <div id="teams-section" class="section-box active">
             <div class="section-title">🏆 Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
-                <div class="loading">Завантаження команд... 🎃</div>
+                <div class="loading">Завантаження команд...</div>
             </div>
 
             <div class="section-title unranked-title" style="margin-top: 35px;">🪦 Нерейтингові команди / Дизбанд</div>
@@ -657,19 +590,19 @@
         <div id="players-section" class="section-box">
             <div class="section-title">👻 Рейтинг гравців</div>
             <div id="players-app" class="list-container">
-                <div class="loading">Завантаження гравців... 🎃</div>
+                <div class="loading">Завантаження гравців...</div>
             </div>
         </div>
 
         <div id="tournaments-section" class="section-box">
             <div class="section-title">🎃 Турніри</div>
             <div id="tournaments-app">
-                <div class="loading">Завантаження турнірів... 🎃</div>
+                <div class="loading">Завантаження турнірів...</div>
             </div>
         </div>
 
         <div class="contact-box">
-            <div class="contact-title">🎃 Contact us</div>
+            <div class="contact-title">Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
             
             <div class="contact-links">
@@ -702,81 +635,12 @@
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">🕷️ Команди-учасники:</div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
             <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
 
     <script>
-        // СИНТЕЗАТОР ЗВУКУ СКРИМЕРА WEBAUDIO (ГАРАНТОВАНИЙ ГУЧНИЙ КРИК)
-        let audioCtx = null;
-
-        function playSyntheticScream() {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-
-                const bufferSize = audioCtx.sampleRate * 2.5; 
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-
-                for (let i = 0; i < bufferSize; i++) {
-                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.8));
-                }
-
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-
-                const osc = audioCtx.createOscillator();
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(3500, audioCtx.currentTime + 0.3);
-                osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 2.0);
-
-                const gainNode = audioCtx.createGain();
-                gainNode.gain.setValueAtTime(1.0, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
-
-                noise.connect(gainNode);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-
-                noise.start();
-                osc.start();
-                noise.stop(audioCtx.currentTime + 2.5);
-                osc.stop(audioCtx.currentTime + 2.5);
-            } catch (e) {
-                console.log("Audio Context Error:", e);
-            }
-        }
-
-        function triggerJumpscare() {
-            const overlay = document.getElementById('jumpscareOverlay');
-            const bgVideo = document.getElementById('bgVideo');
-
-            if (bgVideo) bgVideo.pause();
-
-            overlay.style.display = 'flex';
-
-            playSyntheticScream();
-
-            setTimeout(() => {
-                closeJumpscare();
-            }, 3500);
-        }
-
-        function closeJumpscare() {
-            const overlay = document.getElementById('jumpscareOverlay');
-            const bgVideo = document.getElementById('bgVideo');
-
-            overlay.style.display = 'none';
-            if (bgVideo) bgVideo.play();
-        }
-
         const bgVideo = document.getElementById('bgVideo');
         if (bgVideo) {
             bgVideo.addEventListener('ended', function() {
@@ -1007,7 +871,7 @@
                                                     ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
                                                     <b style="font-size:1.1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                                 </div>
-                                                <span class="tier-badge ${tierClass}">🎃 ${tierName}</span>
+                                                <span class="tier-badge ${tierClass}">${tierName}</span>
                                             </div>
                                         </div>
                                         <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
@@ -1026,7 +890,7 @@
                                         <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                     </div>
                                     <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
-                                        <span class="tier-badge ${tierClass}">👻 ${tierName}</span>
+                                        <span class="tier-badge ${tierClass}">${tierName}</span>
                                         <span>${teamsCount} Teams</span>
                                         <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
                                         <span>📅 ${tour.date || 'Online'}</span>
