@@ -297,8 +297,9 @@
     </div>
 
     <script>
-        const BIN_ID = '6a8b3dffda38895dfe079cb1';
-        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
+        // ВИПРАВЛЕНО: Використовуємо правильні активні ключі JSONBin
+        const BIN_ID = '6ad23f85ac6210605a379839';
+        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
 
         function getUrlParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -329,10 +330,12 @@
                 const teams = cloudData.teams || [];
                 const allPlayers = cloudData.players || [];
 
-                const team = teams.find(t => (t.name || '').trim().toLowerCase() === decodeURIComponent(teamNameParam).trim().toLowerCase());
+                const decodedName = decodeURIComponent(teamNameParam).trim().toLowerCase();
+                const team = teams.find(t => (t.name || '').trim().toLowerCase() === decodedName);
 
                 if (!team) {
-                    document.getElementById('teamHeader').innerHTML = '<div style="color: var(--danger-color);">Команду не знайдено в базі даних.</div>';
+                    document.getElementById('teamHeader').innerHTML = `<div style="color: var(--danger-color);">Команду "${decodeURIComponent(teamNameParam)}" не знайдено в базі даних.</div>`;
+                    document.getElementById('mainPlayersGrid').innerHTML = '<div style="color: var(--text-muted);">Немає даних.</div>';
                     return;
                 }
 
