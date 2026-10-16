@@ -6,15 +6,18 @@
     <title>Player Profile | REUS</title>
     <style>
         :root {
-            --card-bg: rgba(13, 17, 23, 0.92);
-            --inner-card-bg: #111620;
-            --border-color: #21262d;
-            --accent-color: #00ff88;
-            --text-color: #ffffff;
-            --text-muted: #8b949e;
+            --bg-color: #0a060d;
+            --card-bg: rgba(20, 12, 28, 0.88);
+            --inner-card-bg: #150b1f;
+            --border-color: #381a4d;
+            --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
+            --accent-glow: rgba(255, 107, 0, 0.35);
+            --text-color: #f3e8ee;
+            --text-muted: #9a88a0;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 30px;
@@ -33,16 +36,17 @@
             object-fit: cover;
             z-index: -2;
             pointer-events: none;
+            filter: hue-rotate(270deg) brightness(0.4);
         }
 
-        /* ЗАТЕМНЕННЯ ФОНУ (можеш міняти opacity від 0.3 до 0.8) */
+        /* ЗАТЕМНЕННЯ ФОНУ */
         .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 8, 15, 0.75);
+            background: radial-gradient(circle, rgba(20, 10, 30, 0.7) 0%, rgba(10, 6, 13, 0.95) 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -56,11 +60,11 @@
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
         }
         .profile-header {
             display: flex;
@@ -70,10 +74,14 @@
         .profile-avatar {
             width: 100px;
             height: 100px;
-            border-radius: 12px;
+            border-radius: 50%;
             background: var(--inner-card-bg);
             border: 2px solid var(--accent-color);
             object-fit: cover;
+            object-position: 50% 20%;
+            box-shadow: 0 0 15px var(--accent-glow);
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
         .trophies-grid {
             display: flex;
@@ -84,7 +92,7 @@
         .trophy-item {
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 8px;
             width: 65px;
             height: 65px;
@@ -100,25 +108,29 @@
         }
         .back-link {
             color: var(--text-color);
-            background: rgba(13, 17, 23, 0.8);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 8px 16px;
+            padding: 10px 18px;
             text-decoration: none;
             font-weight: bold;
-            display: inline-block;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            transition: border-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            transition: all 0.2s;
         }
         .back-link:hover {
             border-color: var(--accent-color);
+            color: var(--accent-color);
+            box-shadow: 0 0 12px var(--accent-glow);
         }
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 15px;
+            padding: 12px 18px;
             background: var(--inner-card-bg);
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 10px;
             border: 1px solid var(--border-color);
         }
@@ -127,6 +139,7 @@
             font-size: 1.1rem;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            text-shadow: 0 0 8px var(--accent-glow);
         }
     </style>
 </head>
@@ -141,22 +154,23 @@
     <div class="bg-overlay"></div>
 
     <div class="container">
-        <a href="index.html" class="back-link">← Назад до рейтингу</a>
+        <a href="index.html" class="back-link">🦇 Назад до рейтингу</a>
         <div id="playerContent">
-            <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження профілю...</div>
+            <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження профілю... 🎃</div>
         </div>
     </div>
 
     <script>
-        const BIN_ID = '6a8b3dffda38895dfe079cb1';
-        const API_KEY = '$2a$10$6Adzn8zk89sLiPDw77z2N.yvSIbiyPSVqKuR/rhFxmMH0syerf4C6';
+        // ВИПРАВЛЕНО: Використовуємо правильні ключі бази даних
+        const BIN_ID = '6ad23f85ac6210605a379839';
+        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
 
         async function loadPlayer() {
             const urlParams = new URLSearchParams(window.location.search);
             const playerName = urlParams.get('name');
 
             if (!playerName) {
-                document.getElementById('playerContent').innerHTML = '<div style="color: #ff4444;">Гравець не вказаний у посиланні!</div>';
+                document.getElementById('playerContent').innerHTML = '<div style="color: #ff6b00; text-align:center; padding:30px;">Гравець не вказаний у посиланні!</div>';
                 return;
             }
 
@@ -165,27 +179,27 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                let data = result.record || result;
-                if (data.record) data = data.record;
+                let cloudData = result.record?.record || result.record || result;
 
-                const players = data.players || [];
-                const player = players.find(p => (p.name || p.nickname || '').toLowerCase() === playerName.toLowerCase());
+                const players = cloudData.players || [];
+                const decodedName = decodeURIComponent(playerName).trim().toLowerCase();
+                const player = players.find(p => (p.name || p.nickname || '').trim().toLowerCase() === decodedName);
 
                 if (!player) {
-                    document.getElementById('playerContent').innerHTML = '<div style="color: #ff4444;">Гравця не знайдено в базі!</div>';
+                    document.getElementById('playerContent').innerHTML = `<div style="color: #ff6b00; text-align:center; padding:30px;">Гравця "${decodeURIComponent(playerName)}" не знайдено в базі!</div>`;
                     return;
                 }
 
                 renderPlayer(player);
             } catch (err) {
                 console.error(err);
-                document.getElementById('playerContent').innerHTML = '<div style="color: #ff4444;">Помилка завантаження даних.</div>';
+                document.getElementById('playerContent').innerHTML = '<div style="color: #ff6b00; text-align:center; padding:30px;">Помилка завантаження даних.</div>';
             }
         }
 
         function renderPlayer(p) {
             const pName = p.name || p.nickname || 'Гравець';
-            const pPhoto = p.photo || 'https://via.placeholder.com/100?text=No+Photo';
+            const pPhoto = p.photo || p.avatar || p.image || 'https://via.placeholder.com/150';
             
             let trophiesHTML = '';
             const trophies = p.trophies || p.cups || [];
@@ -217,8 +231,8 @@
                     <div class="profile-header">
                         <img src="${pPhoto}" class="profile-avatar" alt="${pName}">
                         <div>
-                            <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: bold;">${p.role || 'Rifler'}</div>
-                            <h1 style="margin: 5px 0; color: var(--accent-color);">${pName}</h1>
+                            <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">${p.role || 'Rifler'}</div>
+                            <h1 style="margin: 5px 0; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow);">${pName}</h1>
                             <div style="color: var(--text-muted); font-size: 0.95rem;">Команда: <b style="color: var(--text-color);">${p.team || 'Без команди'}</b></div>
                         </div>
                     </div>
@@ -228,19 +242,19 @@
                     <h2>Статистика гравця</h2>
                     <div class="stat-row">
                         <span>K/D Ratio</span>
-                        <b style="color: var(--accent-color);">${p.kd || '-'}</b>
+                        <b style="color: var(--accent-color);">${p.kd || p.stats?.kd || '-'}</b>
                     </div>
                     <div class="stat-row">
                         <span>Rating 2.0</span>
-                        <b style="color: var(--accent-color);">${p.rating || '-'}</b>
+                        <b style="color: var(--accent-color);">${p.rating || p.stats?.rating || '-'}</b>
                     </div>
                     <div class="stat-row">
                         <span>Impact</span>
-                        <b style="color: var(--accent-color);">${p.impact || '-'}</b>
+                        <b style="color: var(--accent-color);">${p.impact || p.stats?.impact || '-'}</b>
                     </div>
                     <div class="stat-row">
                         <span>ADR (Шкода за раунд)</span>
-                        <b style="color: var(--accent-color);">${p.adr || '-'}</b>
+                        <b style="color: var(--accent-color);">${p.adr || p.stats?.adr || '-'}</b>
                     </div>
                 </div>
 
