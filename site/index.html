@@ -51,7 +51,6 @@
             z-index: 1;
         }
 
-        /* SVG ВЕЛЕЧЕЗНОЇ ПАВУТИНИ В КУТКАХ */
         .header-banner {
             display: flex;
             align-items: center;
@@ -76,7 +75,7 @@
             right: 0;
             width: 140px;
             height: 140px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.25)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='0' r='20' stroke='rgba(255,107,0,0.25)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='0' r='45' stroke='rgba(255,107,0,0.2)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='0' r='70' stroke='rgba(255,107,0,0.15)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='0' r='95' stroke='rgba(255,107,0,0.1)' stroke-width='1' fill='none'/%3E%3C/svg%3E") no-repeat top right;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.35)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='20' stroke='rgba(255,107,0,0.35)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='45' stroke='rgba(255,107,0,0.3)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='70' stroke='rgba(255,107,0,0.25)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='95' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat top right;
             background-size: contain;
             pointer-events: none;
         }
@@ -212,17 +211,17 @@
             position: absolute;
             top: 0;
             right: 0;
-            width: 120px;
+            width: 130px;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.18)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='25' stroke='rgba(255,107,0,0.18)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='55' stroke='rgba(255,107,0,0.15)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='85' stroke='rgba(255,107,0,0.12)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat top right;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='25' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='55' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='85' stroke='rgba(255,107,0,0.2)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
             background-size: contain;
             pointer-events: none;
-            opacity: 0.8;
+            opacity: 0.95;
             transition: opacity 0.3s ease;
         }
         .team-card:hover::after {
             opacity: 1;
-            filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.4));
+            filter: drop-shadow(0 0 8px rgba(255, 107, 0, 0.6));
         }
         .team-card:hover {
             border-color: var(--accent-color);
@@ -290,7 +289,7 @@
             z-index: 1;
         }
 
-        /* КАРТКИ ГРАВЦІВ ІЗ ВЕЛИКИМ КУТОВИМ ВІЗЕРУНКOМ ПАВУТИНИ */
+        /* ПОКРАЩЕНА, ЯСКРАВА ПАВУТИНА НА КАРТКАХ ГРАВЦІВ */
         .team-player-card {
             display: flex;
             flex-direction: column;
@@ -310,12 +309,13 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 70px;
-            height: 70px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 30 M0 0 L30 100' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.22)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.18)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top left;
+            width: 100px;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.5)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.45)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.4)' stroke-width='1.8' fill='none'/%3E%3C/svg%3E") no-repeat top left;
             background-size: contain;
             pointer-events: none;
-            z-index: 3;
+            z-index: 5;
+            filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.7));
         }
         .team-player-card:hover {
             border-color: var(--accent-color);
@@ -336,6 +336,8 @@
             object-position: 50% 22%; 
             transform: scale(1.15);
             transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
@@ -369,7 +371,7 @@
             flex-shrink: 0;
         }
 
-        /* РЯДОК ГРАВЦЯ У ЗАГАЛЬНОМУ РЕЙТИНГУ С ПАВУТИНОЮ СБОКУ */
+        /* РЯДОК ГРАВЦЯ У ЗАГАЛЬНОМУ РЕЙТИНГУ */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -391,7 +393,7 @@
             right: 80px;
             width: 110px;
             height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30' stroke='rgba(255,107,0,0.15)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='35' stroke='rgba(255,107,0,0.15)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='75' stroke='rgba(255,107,0,0.12)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat top right;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='35' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='75' stroke='rgba(255,107,0,0.2)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
             background-size: contain;
             pointer-events: none;
         }
@@ -475,7 +477,7 @@
             right: 0;
             width: 100px;
             height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='30' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='60' stroke='rgba(255,107,0,0.15)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat top right;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='30' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='60' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
             background-size: contain;
             pointer-events: none;
             z-index: 2;
@@ -600,7 +602,7 @@
             left: 0;
             width: 130px;
             height: 130px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 100 L100 0 M0 100 L100 100 M0 100 L0 0' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='0' cy='100' r='35' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='0' cy='100' r='75' stroke='rgba(255,107,0,0.15)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat bottom left;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 100 L100 0 M0 100 L100 100 M0 100 L0 0' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='100' r='35' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='100' r='75' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat bottom left;
             background-size: contain;
             pointer-events: none;
         }
