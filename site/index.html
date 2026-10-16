@@ -11,8 +11,7 @@
             --inner-card-bg: #150b1f;
             --border-color: #381a4d;
             --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
-            --accent-glow: rgba(255, 107, 0, 0.3);
-            --purple-glow: #9d4edd;
+            --accent-glow: rgba(255, 107, 0, 0.35);
             --text-color: #f3e8ee;
             --text-muted: #9a88a0;
         }
@@ -63,6 +62,8 @@
             margin-bottom: 25px;
             box-shadow: 0 0 25px rgba(157, 78, 221, 0.15), 0 8px 24px rgba(0, 0, 0, 0.6);
         }
+        
+        /* --- ХЕЛЛОВІНСЬКИЙ ЛОГОТИП --- */
         .project-logo-container {
             display: inline-flex;
             align-items: center;
@@ -73,22 +74,44 @@
         .project-logo-wrapper {
             width: 190px;
             height: 75px;
-            background: var(--inner-card-bg);
-            border: 2px solid var(--accent-color);
+            background: #0f0714;
+            border: 2px solid #ff6b00;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 0 20px var(--accent-glow);
+            position: relative;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.4), inset 0 0 15px rgba(255, 107, 0, 0.2);
             flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .project-logo-wrapper:hover {
+            box-shadow: 0 0 35px rgba(255, 107, 0, 0.7), inset 0 0 20px rgba(255, 107, 0, 0.4);
+            border-color: #ff8533;
+            transform: scale(1.02);
         }
         .project-logo-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
+            filter: sepia(100%) hue-rotate(330deg) saturate(900%) contrast(120%) drop-shadow(0 0 8px #ff6b00);
         }
+        .project-logo-wrapper::after {
+            content: '🎃';
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 1.1rem;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.8));
+            animation: pumpkinGlow 2s infinite alternate ease-in-out;
+        }
+        @keyframes pumpkinGlow {
+            from { transform: scale(1) rotate(-5deg); filter: drop-shadow(0 0 4px #ff6b00); }
+            to { transform: scale(1.15) rotate(5deg); filter: drop-shadow(0 0 12px #ff8533); }
+        }
+
         .project-title {
             color: var(--text-color);
             font-size: 1.65rem;
