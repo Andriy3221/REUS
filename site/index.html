@@ -51,6 +51,45 @@
             z-index: 1;
         }
 
+        /* ФІКСОВАНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (DONATE) */
+        .donate-floating-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 9999;
+            background: linear-gradient(135deg, #ff6b00 0%, #b33600 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 22px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.6), 0 8px 25px rgba(0, 0, 0, 0.8);
+            border: 2px solid #ff8533;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(8px);
+            animation: pulseGlow 2.5s infinite ease-in-out;
+            letter-spacing: 0.5px;
+        }
+        .donate-floating-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 0 35px rgba(255, 107, 0, 0.9), 0 12px 30px rgba(0, 0, 0, 0.9);
+            border-color: #ffa366;
+            color: #ffffff;
+        }
+        .donate-floating-btn .donate-icon {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 28px rgba(255, 107, 0, 0.85), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.8); }
+        }
+
         .header-banner {
             display: flex;
             align-items: center;
@@ -197,7 +236,6 @@
             gap: 10px;
         }
 
-        /* КАРТОЧКА КОМАНДЫ С ПАУТИНОЙ */
         .team-card {
             background: var(--inner-card-bg);
             border-radius: 10px;
@@ -289,7 +327,6 @@
             z-index: 1;
         }
 
-        /* КАРТОЧКИ ИГРОКОВ (ПАУТИНА НА ЗАДНЕМ ФОНЕ) */
         .team-player-card {
             display: flex;
             flex-direction: column;
@@ -316,7 +353,6 @@
             overflow: hidden;
             position: relative;
         }
-        /* ПАУТИНА НА ЗАДНЕМ ФОНЕ ФОТОГРАФИИ */
         .player-photo-wrapper::before {
             content: '';
             position: absolute;
@@ -327,7 +363,7 @@
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.55)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.5)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.45)' stroke-width='1.8' fill='none'/%3E%3C/svg%3E") no-repeat top left;
             background-size: contain;
             pointer-events: none;
-            z-index: 1; /* Задний план относительно фото */
+            z-index: 1;
             filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.7));
         }
         .player-avatar {
@@ -338,7 +374,7 @@
             transform: scale(1.15);
             transition: transform 0.3s ease;
             position: relative;
-            z-index: 2; /* Фото игрока ПЕРЕД паутиной */
+            z-index: 2;
         }
         .team-player-card:hover .player-avatar {
             transform: scale(1.22);
@@ -372,7 +408,6 @@
             flex-shrink: 0;
         }
 
-        /* СТРОКА ИГРОКА В ОБЩЕМ РЕЙТИНГЕ */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -658,10 +693,22 @@
             .team-players {
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
+            .donate-floating-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 18px;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ (МОНОБАНКА) -->
+    <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
+        <span class="donate-icon">🏺</span>
+        <span>Підтримати проєкт</span>
+    </a>
 
     <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
         <source src="fon.mp4" type="video/mp4">
