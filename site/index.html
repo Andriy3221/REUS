@@ -51,38 +51,40 @@
             z-index: 1;
         }
 
-        /* ФІКСОВАНА КНОПКА ПІДТРИМКИ (ЗМЕНШЕНО Z-INDEX, ЩОБ НЕ ПЕРЕКРИВАТИ КАРТКИ) */
+        /* ФІКСОВАНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ */
         .donate-floating-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 99; /* Зменшено, щоб не накладалася на вміст карток */
-            background: linear-gradient(135deg, #ff6b00 0%, #b33600 100%);
+            bottom: 25px;
+            right: 25px;
+            z-index: 99;
+            background: linear-gradient(135deg, #ff6b00 0%, #cc4400 100%);
             color: #ffffff;
             text-decoration: none;
-            padding: 12px 20px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.6), 0 8px 25px rgba(0, 0, 0, 0.8);
+            gap: 12px;
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.7);
             border: 2px solid #ff8533;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(8px);
             animation: pulseGlow 2.5s infinite ease-in-out;
             letter-spacing: 0.5px;
         }
         .donate-floating-btn:hover {
-            transform: scale(1.08) translateY(-3px);
-            box-shadow: 0 0 35px rgba(255, 107, 0, 0.9), 0 12px 30px rgba(0, 0, 0, 0.9);
+            transform: scale(1.06) translateY(-3px);
+            box-shadow: 0 0 35px rgba(255, 107, 0, 0.85), 0 12px 30px rgba(0, 0, 0, 0.9);
             border-color: #ffa366;
             color: #ffffff;
         }
         .donate-floating-btn .donate-icon {
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             line-height: 1;
+            display: inline-block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
         }
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.8); }
@@ -324,7 +326,7 @@
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
             position: relative;
-            z-index: 2; /* Піднято для чіткого відображення елементів */
+            z-index: 2;
         }
 
         .team-player-card {
@@ -354,6 +356,7 @@
             overflow: hidden;
             position: relative;
         }
+        /* ПАУТИНА НА ЗАДНЬОМУ ФОНІ ФОТОГРАФІЇ ГРАВЦЯ */
         .player-photo-wrapper::before {
             content: '';
             position: absolute;
@@ -410,7 +413,7 @@
             border: 1px solid var(--border-color);
             flex-shrink: 0;
             position: relative;
-            z-index: 4; /* Прапори та стикери завжди зверху */
+            z-index: 4;
         }
 
         .item-row {
@@ -709,7 +712,7 @@
 </head>
 <body>
 
-    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (ЗМЕНШЕНО Z-INDEX, ЩОБ НЕ ПЕРЕКРИВАТИ КАРТКИ) -->
+    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">🏺</span>
         <span>Підтримати проєкт</span>
