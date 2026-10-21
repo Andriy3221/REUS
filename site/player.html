@@ -11,7 +11,7 @@
             --inner-card-bg: #150b1f;
             --border-color: #381a4d;
             --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
-            --accent-glow: rgba(255, 107, 0, 0.35);
+            --accent-glow: rgba(255, 107, 0, 0.4);
             --text-color: #f3e8ee;
             --text-muted: #9a88a0;
         }
@@ -60,7 +60,7 @@
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
+            border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.6);
@@ -69,18 +69,18 @@
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 30px;
         }
 
-        /* ПОКРАЩЕНА КАРТКА ФОТОГРАФІЇ ГРАВЦЯ (ВИДНО ВСЮ ФУТБОЛКУ ТА ЛОГОТИП) */
+        /* ЗБІЛЬШЕНА КАРТКА ФОТО ГРАВЦЯ З МАКСИМАЛЬНОЮ ЧІТКІСТЮ */
         .profile-avatar-container {
-            width: 140px;
-            height: 180px;
-            border-radius: 14px;
+            width: 220px;
+            height: 280px;
+            border-radius: 16px;
             background: #0d0612;
             border: 2px solid var(--accent-color);
             overflow: hidden;
-            box-shadow: 0 0 20px var(--accent-glow);
+            box-shadow: 0 0 25px var(--accent-glow), inset 0 0 15px rgba(255, 107, 0, 0.2);
             flex-shrink: 0;
             position: relative;
             display: flex;
@@ -88,7 +88,7 @@
             justify-content: center;
         }
 
-        /* Павутинка на фоні фото */
+        /* Яскрава фонова павутинка */
         .profile-avatar-container::before {
             content: '';
             position: absolute;
@@ -96,19 +96,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.4)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.35)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top left;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.45)' stroke-width='1.6' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.4)' stroke-width='1.6' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.35)' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat top left;
             background-size: cover;
             pointer-events: none;
             z-index: 1;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.6));
         }
 
         .profile-avatar {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center top;
+            object-position: center 15%; /* Ідеальний фокус на обличчі та логотипі */
             position: relative;
             z-index: 2;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-avatar-container:hover .profile-avatar {
+            transform: scale(1.04);
         }
 
         .trophies-grid {
@@ -174,6 +182,10 @@
             .profile-header {
                 flex-direction: column;
                 text-align: center;
+            }
+            .profile-avatar-container {
+                width: 180px;
+                height: 230px;
             }
         }
     </style>
@@ -267,9 +279,9 @@
                             <img src="${pPhoto}" class="profile-avatar" alt="${pName}">
                         </div>
                         <div>
-                            <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">${p.role || 'Rifler'}</div>
-                            <h1 style="margin: 5px 0; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); font-size: 2.2rem;">${pName}</h1>
-                            <div style="color: var(--text-muted); font-size: 1rem;">Команда: <b style="color: var(--text-color);">${p.team || 'Без команди'}</b></div>
+                            <div style="color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.8px;">${p.role || 'Rifler'}</div>
+                            <h1 style="margin: 8px 0; color: var(--accent-color); text-shadow: 0 0 12px var(--accent-glow); font-size: 2.5rem; font-weight: 800;">${pName}</h1>
+                            <div style="color: var(--text-muted); font-size: 1.05rem;">Команда: <b style="color: var(--text-color);">${p.team || 'Без команди'}</b></div>
                         </div>
                     </div>
                 </div>
