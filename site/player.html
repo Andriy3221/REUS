@@ -69,20 +69,48 @@
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
-        .profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: var(--inner-card-bg);
+
+        /* ПОКРАЩЕНА КАРТКА ФОТОГРАФІЇ ГРАВЦЯ (ВИДНО ВСЮ ФУТБОЛКУ ТА ЛОГОТИП) */
+        .profile-avatar-container {
+            width: 140px;
+            height: 180px;
+            border-radius: 14px;
+            background: #0d0612;
             border: 2px solid var(--accent-color);
-            object-fit: cover;
-            object-position: 50% 20%;
-            box-shadow: 0 0 15px var(--accent-glow);
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
+            overflow: hidden;
+            box-shadow: 0 0 20px var(--accent-glow);
+            flex-shrink: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        /* Павутинка на фоні фото */
+        .profile-avatar-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.4)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.35)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top left;
+            background-size: cover;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .profile-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            position: relative;
+            z-index: 2;
+        }
+
         .trophies-grid {
             display: flex;
             flex-wrap: wrap;
@@ -141,6 +169,13 @@
             text-transform: uppercase;
             text-shadow: 0 0 8px var(--accent-glow);
         }
+
+        @media (max-width: 600px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -161,7 +196,6 @@
     </div>
 
     <script>
-        // ВИПРАВЛЕНО: Використовуємо правильні ключі бази даних
         const BIN_ID = '6ad23f85ac6210605a379839';
         const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
 
@@ -229,11 +263,13 @@
             document.getElementById('playerContent').innerHTML = `
                 <div class="card">
                     <div class="profile-header">
-                        <img src="${pPhoto}" class="profile-avatar" alt="${pName}">
+                        <div class="profile-avatar-container">
+                            <img src="${pPhoto}" class="profile-avatar" alt="${pName}">
+                        </div>
                         <div>
                             <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">${p.role || 'Rifler'}</div>
-                            <h1 style="margin: 5px 0; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow);">${pName}</h1>
-                            <div style="color: var(--text-muted); font-size: 0.95rem;">Команда: <b style="color: var(--text-color);">${p.team || 'Без команди'}</b></div>
+                            <h1 style="margin: 5px 0; color: var(--accent-color); text-shadow: 0 0 10px var(--accent-glow); font-size: 2.2rem;">${pName}</h1>
+                            <div style="color: var(--text-muted); font-size: 1rem;">Команда: <b style="color: var(--text-color);">${p.team || 'Без команди'}</b></div>
                         </div>
                     </div>
                 </div>
