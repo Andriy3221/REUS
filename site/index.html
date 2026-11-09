@@ -73,42 +73,69 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ЛІТАЮЧІ ПЕРСОНАЖІ З БОКІВ */
-        .flying-character {
+        /* ІНТЕРАКТИВНИЙ ДІД МОРОЗ ЗЛІВА (З ЧЕРВОНОЇ ЗОНИ) */
+        .santa-popup {
             position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            width: 190px;
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
+            bottom: 30px;
+            left: -350px;
+            z-index: 99999;
+            background: rgba(12, 18, 32, 0.95);
+            border: 2px solid #38bdf8;
+            border-radius: 16px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 40px rgba(56, 189, 248, 0.4), 0 0 20px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            max-width: 320px;
+            transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Дід Мороз вилітає зліва (червона зона) */
-        .santa-fly {
-            top: 20%;
-            left: -220px;
-            animation: flyFromLeft 24s linear infinite;
+        .santa-popup.show {
+            left: 25px; /* Виїжджає зліва і зупиняється */
         }
 
-        /* Святий Миколай вилітає справа (зелена зона) */
-        .nicholas-fly {
-            top: 45%;
-            right: -220px;
-            animation: flyFromRight 28s linear infinite;
-            animation-delay: 6s;
-            transform: scaleX(-1);
+        .santa-avatar-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px #38bdf8);
+            flex-shrink: 0;
         }
 
-        @keyframes flyFromLeft {
-            0% { left: -220px; transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-            100% { left: 105vw; transform: translateY(0); }
+        .santa-text-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
-        @keyframes flyFromRight {
-            0% { right: -220px; transform: scaleX(-1) translateY(0); }
-            50% { transform: scaleX(-1) translateY(20px); }
-            100% { right: 105vw; transform: scaleX(-1) translateY(0); }
+        .santa-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #38bdf8;
+            text-transform: uppercase;
+        }
+
+        .santa-msg {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            line-height: 1.3;
+        }
+
+        .santa-close-btn {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .santa-close-btn:hover {
+            color: #38bdf8;
         }
 
         .main-container {
@@ -676,17 +703,22 @@
             .hltv-players-grid { grid-template-columns: 1fr; }
             .header-banner { margin-right: 0; }
             .donate-floating-btn { top: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
-            .flying-character { width: 130px; }
+            .santa-popup { left: -100%; max-width: 90%; }
+            .santa-popup.show { left: 5% !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ДІД МОРОЗ ВИЛІТАЄ ЗЛІВА (ІЗ ЧЕРВОНОЇ ЗОНИ) -->
-    <img src="https://i.ibb.co/6R3p89z/santa-sleigh.png" alt="Дід Мороз" class="flying-character santa-fly">
-    
-    <!-- СВЯТИЙ МИКОЛАЙ ВИЛІТАЄ СПРАВА (ІЗ ЗЕЛЕНОЇ ЗОНИ) -->
-    <img src="https://i.ibb.co/3sW8h5m/nicholas.png" alt="Святий Миколай" class="flying-character nicholas-fly">
+    <!-- ВІДВІДИ/ПРИВІТАННЯ ВІД ДІДА МОРОЗА ЗЛІВА -->
+    <div id="santaPopup" class="santa-popup">
+        <button class="santa-close-btn" onclick="closeSantaPopup()">✕</button>
+        <img src="https://i.ibb.co/6R3p89z/santa-sleigh.png" alt="Дід Мороз" class="santa-avatar-img">
+        <div class="santa-text-content">
+            <div class="santa-title">Ho-Ho-Ho! Вітаю! 🎅</div>
+            <div class="santa-msg" id="santaCountdownText">До Нового року (31 грудня о 23:59) залишилось: завантаження...</div>
+        </div>
+    </div>
 
     <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
@@ -779,6 +811,46 @@
     </div>
 
     <script>
+        // ЛОГІКА ПОЯВИ ДІДА МОРОЗА ТА АВТОМАТИЧНОГО ВІДЛІКУ ДНІВ ДО 31 ГРУДНЯ 23:59
+        window.addEventListener('DOMContentLoaded', () => {
+            // Виїзд Діда Мороза зліва через 1 секунду після завантаження сайту
+            setTimeout(() => {
+                const santa = document.getElementById('santaPopup');
+                if (santa) santa.classList.add('show');
+            }, 1000);
+
+            calculateNewYearCountdown();
+        });
+
+        function closeSantaPopup() {
+            const santa = document.getElementById('santaPopup');
+            if (santa) santa.classList.remove('show');
+        }
+
+        function calculateNewYearCountdown() {
+            const now = new Date();
+            let year = now.getFullYear();
+            // 31 грудня поточного року о 23:59:59
+            let nyDate = new Date(year, 11, 31, 23, 59, 59);
+
+            // Якщо сьогодні вже після 31 грудня, рахуємо на наступний рік
+            if (now > nyDate) {
+                nyDate = new Date(year + 1, 11, 31, 23, 59, 59);
+            }
+
+            const diffTime = nyDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            const textEl = document.getElementById('santaCountdownText');
+            if (textEl) {
+                if (diffDays > 0) {
+                    textEl.innerHTML = `До Нового року (31 груд. 23:59) залишилось рівно <b>${diffDays} днів</b>! Приготуйтесь! 🎄`;
+                } else {
+                    textEl.innerHTML = `З Новим роком! Час святкувати! 🎉🍾`;
+                }
+            }
+        }
+
         // Генератор новорічних сніжинок на фоні
         function createSnowflakes() {
             const snowContainer = document.createElement('div');
@@ -1104,24 +1176,16 @@
             const container = document.getElementById('viewTourTeamsList');
             container.innerHTML = '';
 
-            const tourTeams = tour.teams || [];
-            document.getElementById('viewTourTeamsCount').innerText = `👥 ${tourTeams.length} Teams`;
-
-            if (tourTeams.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 20px;">Список команд ще не сформовано.</div>';
-            } else {
-                tourTeams.forEach(tName => {
-                    const teamObj = allTeamsCache.find(t => t.name.trim().toLowerCase() === tName.trim().toLowerCase());
-                    const logo = teamObj ? (teamObj.logo || '') : '';
-                    
-                    container.innerHTML += `
-                        <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
-                            ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
-                            <span>${tName}</span>
-                        </a>
-                    `;
-                });
-            }
+            (tour.teams || []).forEach(tName => {
+                const teamObj = allTeamsCache.find(t => t.name.trim().toLowerCase() === tName.trim().toLowerCase());
+                const logo = teamObj ? (teamObj.logo || '') : '';
+                container.innerHTML += `
+                    <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
+                        ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
+                        <span>${tName}</span>
+                    </a>
+                `;
+            });
 
             document.getElementById('tourModalOverlay').style.display = 'flex';
         }
@@ -1132,9 +1196,7 @@
 
         window.onclick = function(event) {
             const modal = document.getElementById('tourModalOverlay');
-            if (event.target === modal) {
-                closeTourModal();
-            }
+            if (event.target === modal) closeTourModal();
         }
 
         fetchData();
