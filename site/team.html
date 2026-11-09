@@ -3,175 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Profile | REUS</title>
+    <title>Team Profile | Reus Championship ❄️</title>
     <style>
         :root {
-            --bg-color: #0a060d;
-            --card-bg: rgba(20, 12, 28, 0.88);
-            --inner-card-bg: #150b1f;
-            --border-color: #381a4d;
-            --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
-            --accent-glow: rgba(255, 107, 0, 0.35);
-            --text-color: #f3e8ee;
-            --text-muted: #9a88a0;
-            --danger-color: #ff4444;
+            --bg-color: #060913;
+            --card-bg: rgba(12, 18, 32, 0.92);
+            --inner-card-bg: #0f172a;
+            --border-color: #1e293b;
+            --accent-color: #38bdf8; /* Крижаний блакитний */
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
-            padding: 20px;
+            padding: 30px;
             position: relative;
             min-height: 100vh;
             box-sizing: border-box;
         }
 
+        /* ВІДЕО-ФОН */
         .bg-video {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -2;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            filter: hue-rotate(270deg) brightness(0.4);
+            z-index: -2;
+            pointer-events: none;
+            filter: hue-rotate(180deg) brightness(0.35);
         }
 
+        /* ЗАТЕМНЕННЯ ФОНУ */
         .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(20, 10, 30, 0.7) 0%, rgba(10, 6, 13, 0.95) 100%);
+            background: radial-gradient(circle, rgba(10, 20, 38, 0.75) 0%, rgba(6, 9, 19, 0.96) 100%);
             z-index: -1;
+            pointer-events: none;
         }
 
-        .main-container {
+        .container {
             max-width: 1000px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .back-link {
+            color: var(--text-color);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            text-decoration: none;
+            font-weight: bold;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 10px 18px;
             margin-bottom: 25px;
             border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.25s ease;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
         }
-
         .back-link:hover {
-            color: var(--accent-color);
             border-color: var(--accent-color);
+            color: var(--accent-color);
             box-shadow: 0 0 12px var(--accent-glow);
         }
 
-        .header-card {
+        .card {
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 30px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--accent-color);
-            box-shadow: 0 0 12px var(--accent-color);
-        }
-
-        .header-logo-wrap {
-            width: 85px;
-            height: 85px;
-            background: var(--inner-card-bg);
-            border: 2px solid var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            flex-shrink: 0;
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-
-        .header-logo {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 5px;
-        }
-
-        h1 {
-            margin: 0 0 6px 0;
-            font-size: 2.2rem;
-            color: var(--text-color);
-            text-shadow: 0 0 8px var(--accent-glow);
-        }
-
-        .region {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .section-box {
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .team-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .team-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 14px;
+            background: var(--inner-card-bg);
+            border: 2px solid var(--accent-color);
+            object-fit: contain;
+            padding: 8px;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        h1 {
             color: var(--accent-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 8px var(--accent-glow);
+            margin: 0 0 5px 0;
+            font-size: 2.2rem;
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        .players-grid {
+        h2 {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px var(--accent-glow);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .roster-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 15px;
         }
 
@@ -179,134 +135,90 @@
             background: var(--inner-card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 15px;
-            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--text-color);
             transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
         }
-
         .player-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.2);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
         }
 
-        .player-avatar-wrap {
+        .player-img-wrap {
             width: 100%;
-            height: 130px;
-            background: #0d0612;
-            border-radius: 8px;
+            height: 160px;
+            background: #080d1a;
+            position: relative;
             overflow: hidden;
-            margin-bottom: 12px;
         }
 
         .player-avatar {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: 50% 20%;
+            object-position: center 15%;
             transform: scale(1.15);
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
         }
 
-        .player-info-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+        .player-info-footer {
             width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
         }
 
-        .player-name {
-            font-size: 1.05rem;
-            font-weight: bold;
+        .player-nickname {
+            font-weight: 700;
+            font-size: 0.95rem;
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .player-role {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
-            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .retired-badge {
-            background: rgba(255, 68, 68, 0.15);
-            color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            font-size: 0.65rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 4px;
-        }
-
-        .flag-icon {
-            width: 20px;
-            height: 14px;
+        .player-flag {
+            width: 18px;
+            height: 13px;
             border-radius: 2px;
             object-fit: cover;
             border: 1px solid var(--border-color);
-            flex-shrink: 0;
-        }
-
-        .loading {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 40px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 4px;
         }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline preload="auto" class="bg-video" id="bgVideo">
+    <video autoplay muted loop playsinline class="bg-video">
         <source src="fon.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
 
-    <div class="main-container">
-        <a href="index.html" class="back-link">🦇 Назад до рейтингу</a>
-
-        <div class="header-card" id="teamHeader">
-            <div class="loading" style="width: 100%;">Завантаження даних команди... 🎃</div>
-        </div>
-
-        <div class="section-box">
-            <div class="section-title">🏆 Основний склад</div>
-            <div id="mainPlayersGrid" class="players-grid">
-                <div class="loading">Завантаження гравців... 🎃</div>
-            </div>
-        </div>
-
-        <div class="section-box" id="benchSection" style="display: none;">
-            <div class="section-title">🪦 Запасні гравці</div>
-            <div id="benchPlayersGrid" class="players-grid"></div>
-        </div>
-
-        <div class="section-box" id="coachSection" style="display: none;">
-            <div class="section-title">🕷️ Тренер</div>
-            <div id="coachPlayersGrid" class="players-grid"></div>
+    <div class="container">
+        <a href="index.html" class="back-link">❄️ Назад до рейтингу</a>
+        <div id="teamContent">
+            <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження команди... ❄️</div>
         </div>
     </div>
 
     <script>
-        // АКТУАЛЬНІ КЛЮЧІ БАЗИ ДАНИХ
         const BIN_ID = '6ad23f85ac6210605a379839';
         const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
-
-        function getUrlParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
 
         function getFlagUrl(flagValue) {
             if (!flagValue) return '';
@@ -316,10 +228,12 @@
             return `https://flagcdn.com/24x18/${flagValue.trim().toLowerCase()}.png`;
         }
 
-        async function fetchTeamData() {
-            const teamNameParam = getUrlParam('name');
-            if (!teamNameParam) {
-                document.getElementById('teamHeader').innerHTML = '<div style="color: var(--danger-color);">Команду не вказано в параметрах URL.</div>';
+        async function loadTeam() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const teamName = urlParams.get('name');
+
+            if (!teamName) {
+                document.getElementById('teamContent').innerHTML = '<div style="color: var(--accent-color); text-align:center; padding:30px;">Команда не вказана у посиланні!</div>';
                 return;
             }
 
@@ -328,102 +242,110 @@
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
-                const cloudData = result.record?.record || result.record || result;
-                const teams = cloudData.teams || [];
-                const allPlayers = cloudData.players || [];
+                let cloudData = result.record?.record || result.record || result;
 
-                const decodedName = decodeURIComponent(teamNameParam).trim().toLowerCase();
+                const teams = cloudData.teams || [];
+                const players = cloudData.players || [];
+                const decodedName = decodeURIComponent(teamName).trim().toLowerCase();
+
                 const team = teams.find(t => (t.name || '').trim().toLowerCase() === decodedName);
 
                 if (!team) {
-                    document.getElementById('teamHeader').innerHTML = `<div style="color: var(--danger-color);">Команду "${decodeURIComponent(teamNameParam)}" не знайдено в базі даних.</div>`;
-                    document.getElementById('mainPlayersGrid').innerHTML = '<div style="color: var(--text-muted);">Немає даних.</div>';
+                    document.getElementById('teamContent').innerHTML = `<div style="color: var(--accent-color); text-align:center; padding:30px;">Команду "${decodeURIComponent(teamName)}" не знайдено в базі!</div>`;
                     return;
                 }
 
                 const tName = team.name || 'Команда';
-                const tLogo = team.logo || team.image || '';
-                const tRegion = team.region || team.status || 'Reus Championship 🎃';
+                const tLogo = team.logo || 'https://via.placeholder.com/150';
+                const tStatus = team.status || 'АКТИВНА';
+                const tPoints = team.points !== undefined ? team.points : (team.rating || 0);
 
-                document.getElementById('teamHeader').innerHTML = `
-                    <div class="header-logo-wrap">
-                        ${tLogo ? `<img src="${tLogo}" class="header-logo" alt="${tName}">` : '<div style="font-size: 1.5rem;">🛡️</div>'}
+                const teamPlayers = players.filter(p => {
+                    const pTeam = (p.team || p.teamName || p.club || p.group || '').trim().toLowerCase();
+                    return pTeam === decodedName;
+                });
+
+                const mainPlayers = teamPlayers.filter(p => {
+                    const r = (p.role || p.slot || '').toLowerCase();
+                    return !r.includes('запасний') && !r.includes('bench') && !r.includes('тренер');
+                });
+
+                const benchPlayers = teamPlayers.filter(p => {
+                    const r = (p.role || p.slot || '').toLowerCase();
+                    return r.includes('запасний') || r.includes('bench') || r.includes('тренер');
+                });
+
+                let mainHtml = '';
+                if (mainPlayers.length > 0) {
+                    mainPlayers.forEach(p => {
+                        mainHtml += renderPlayerCard(p);
+                    });
+                } else {
+                    mainHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Немає основних гравців</div>';
+                }
+
+                let benchHtml = '';
+                if (benchPlayers.length > 0) {
+                    benchPlayers.forEach(p => {
+                        benchHtml += renderPlayerCard(p);
+                    });
+                } else {
+                    benchHtml = '<div style="color: var(--text-muted); font-size: 0.9rem;">Немає запасних гравців</div>';
+                }
+
+                document.getElementById('teamContent').innerHTML = `
+                    <div class="card">
+                        <div class="team-header">
+                            <img src="${tLogo}" class="team-logo" alt="${tName}">
+                            <div>
+                                <h1>${tName}</h1>
+                                <div style="color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; font-weight: 600;">Статус: <b style="color: var(--accent-color);">${tStatus}</b> | Бали рейтингу: <b style="color: var(--accent-color);">${tPoints}</b></div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h1>${tName}</h1>
-                        <p class="region">${tRegion}</p>
+
+                    <div class="card">
+                        <h2>❄️ Основний склад</h2>
+                        <div class="roster-grid">
+                            ${mainHtml}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>⛄ Запасні / Тренери</h2>
+                        <div class="roster-grid">
+                            ${benchHtml}
+                        </div>
                     </div>
                 `;
 
-                const teamPlayers = allPlayers.filter(p => {
-                    const pTeam = p.team || p.teamName || p.club || p.group || '';
-                    return pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
-                });
-
-                const mainRoster = [];
-                const coachRoster = [];
-                const benchRoster = [];
-
-                teamPlayers.forEach(p => {
-                    const pRole = (p.role || p.slot || '').toLowerCase();
-                    if (pRole.includes('coach') || pRole.includes('тренер')) {
-                        coachRoster.push(p);
-                    } else if (pRole.includes('запасний') || pRole.includes('bench')) {
-                        benchRoster.push(p);
-                    } else {
-                        mainRoster.push(p);
-                    }
-                });
-
-                function renderPlayerCards(array) {
-                    return array.map(tp => {
-                        const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
-                        const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
-                        const playerFlag = getFlagUrl(tp.flag || tp.countryFlag || tp.country || '');
-                        const flagHtml = playerFlag ? `<img src="${playerFlag}" class="flag-icon" alt="flag">` : '';
-                        const roleText = tp.role || 'Гравець';
-                        const isRetired = tp.status && tp.status.toLowerCase().includes('retired');
-
-                        return `
-                            <a href="player.html?name=${encodeURIComponent(playerName)}" class="player-card">
-                                <div class="player-avatar-wrap">
-                                    <img src="${playerPhoto}" class="player-avatar" alt="${playerName}">
-                                </div>
-                                <div class="player-info-row">
-                                    ${flagHtml}
-                                    <div class="player-name">${playerName}</div>
-                                </div>
-                                <div class="player-role">${roleText}</div>
-                                ${isRetired ? '<span class="retired-badge">INACTIVE / RETIRED</span>' : ''}
-                            </a>
-                        `;
-                    }).join('');
-                }
-
-                const mainContainerEl = document.getElementById('mainPlayersGrid');
-                if (mainRoster.length > 0) {
-                    mainContainerEl.innerHTML = renderPlayerCards(mainRoster);
-                } else {
-                    mainContainerEl.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Немає гравців основного складу.</div>';
-                }
-
-                if (benchRoster.length > 0) {
-                    document.getElementById('benchSection').style.display = 'block';
-                    document.getElementById('benchPlayersGrid').innerHTML = renderPlayerCards(benchRoster);
-                }
-
-                if (coachRoster.length > 0) {
-                    document.getElementById('coachSection').style.display = 'block';
-                    document.getElementById('coachPlayersGrid').innerHTML = renderPlayerCards(coachRoster);
-                }
-
             } catch (err) {
-                console.error("Помилка завантаження профілю команди:", err);
-                document.getElementById('teamHeader').innerHTML = '<div style="color: var(--danger-color);">Помилка завантаження даних команди.</div>';
+                console.error(err);
+                document.getElementById('teamContent').innerHTML = '<div style="color: var(--accent-color); text-align:center; padding:30px;">Помилка завантаження даних команди.</div>';
             }
         }
 
-        fetchTeamData();
+        function renderPlayerCard(p) {
+            const pName = p.name || p.nickname || 'Гравець';
+            const pPhoto = p.photo || p.avatar || p.image || 'https://via.placeholder.com/150';
+            const pRole = p.role || 'Rifler';
+            const pFlag = getFlagUrl(p.flag || p.countryFlag || p.country || '');
+            let flagHtml = pFlag ? `<img src="${pFlag}" class="player-flag" alt="flag">` : '';
+
+            return `
+                <a href="player.html?name=${encodeURIComponent(pName)}" class="player-card">
+                    <div class="player-img-wrap">
+                        <img src="${pPhoto}" class="player-avatar" alt="${pName}">
+                    </div>
+                    <div class="player-info-footer">
+                        <div class="player-nickname">${flagHtml}${pName}</div>
+                        <div class="player-role">${pRole}</div>
+                    </div>
+                </a>
+            `;
+        }
+
+        loadTeam();
     </script>
 </body>
 </html>
