@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship | Halloween Edition 🎃</title>
+    <title>Reus Championship</title>
     <style>
         :root {
             --bg-color: #0a060d;
@@ -108,18 +108,6 @@
             position: relative;
             overflow: hidden;
         }
-        
-        .header-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 140px;
-            height: 140px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.35)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='20' stroke='rgba(255,107,0,0.35)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='45' stroke='rgba(255,107,0,0.3)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='70' stroke='rgba(255,107,0,0.25)' stroke-width='1.2' fill='none'/%3E%3Ccircle cx='100' cy='0' r='95' stroke='rgba(255,107,0,0.2)' stroke-width='1.2' fill='none'/%3E%3C/svg%3E") no-repeat top right;
-            background-size: contain;
-            pointer-events: none;
-        }
 
         .project-logo-container {
             display: inline-flex;
@@ -153,7 +141,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            filter: sepia(100%) hue-rotate(330deg) saturate(900%) contrast(120%) drop-shadow(0 0 8px #ff6b00);
+            filter: drop-shadow(0 0 8px #ff6b00);
         }
 
         .project-title {
@@ -245,23 +233,6 @@
             overflow: hidden;
             transition: all 0.25s ease;
             position: relative;
-        }
-        .team-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 130px;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30 M100 0 L60 100 M100 0 L0 60' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='25' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='55' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='85' stroke='rgba(255,107,0,0.2)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
-            background-size: contain;
-            pointer-events: none;
-            opacity: 0.95;
-            transition: opacity 0.3s ease;
-        }
-        .team-card:hover::after {
-            opacity: 1;
-            filter: drop-shadow(0 0 8px rgba(255, 107, 0, 0.6));
         }
         .team-card:hover {
             border-color: var(--accent-color);
@@ -356,19 +327,6 @@
             overflow: hidden;
             position: relative;
         }
-        .player-photo-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100px;
-            height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.55)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.5)' stroke-width='1.8' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.45)' stroke-width='1.8' fill='none'/%3E%3C/svg%3E") no-repeat top left;
-            background-size: contain;
-            pointer-events: none;
-            z-index: 1;
-            filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.7));
-        }
         .player-avatar {
             width: 100%;
             height: 100%;
@@ -415,81 +373,74 @@
             z-index: 4;
         }
 
-        .item-row {
+        /* НОВИЙ СТИЛЬ СТОРІНКИ ГРАВЦІВ (СІТКА У ДВА СТОВПЧИКИ, ЯК ПРОСИВ ШЕФ) */
+        .players-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .player-row-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            justify-content: space-between;
             background: var(--inner-card-bg);
             border-radius: 12px;
             border: 1px solid var(--border-color);
+            padding: 10px 16px;
             text-decoration: none;
             color: var(--text-color);
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
         }
-        .item-row::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            right: 80px;
-            width: 110px;
-            height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100 M100 0 L30 100 M100 0 L0 30' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='35' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='75' stroke='rgba(255,107,0,0.2)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
-            background-size: contain;
-            pointer-events: none;
-        }
-        .item-row:hover {
+        .player-row-item:hover {
             border-color: var(--accent-color);
             background: rgba(35, 18, 50, 0.85);
-            transform: translateX(3px);
+            transform: translateY(-2px);
             box-shadow: 0 0 15px var(--accent-glow);
         }
-        .item-info {
+        .player-row-left {
             display: flex;
             align-items: center;
-            gap: 16px;
-            position: relative;
-            z-index: 1;
+            gap: 14px;
         }
-        .rating-player-avatar-wrap {
-            width: 54px;
-            height: 54px;
+        .player-row-avatar-wrap {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid var(--accent-color);
             background: #1d0f2b;
             flex-shrink: 0;
-            box-shadow: 0 0 12px rgba(255, 107, 0, 0.4);
+            box-shadow: 0 0 10px rgba(255, 107, 0, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .rating-player-avatar {
+        .player-row-avatar {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: 50% 18%;
             transform: scale(1.18);
         }
-        .rating-player-placeholder {
-            font-size: 1.4rem;
+        .player-row-placeholder {
+            font-size: 1.2rem;
             color: var(--accent-color);
             font-weight: bold;
         }
-        .item-name {
+        .player-row-name {
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
         }
-        .item-value {
+        .player-row-value {
             color: var(--accent-color);
             font-weight: 800;
-            font-size: 1.15rem;
+            font-size: 1.05rem;
             text-shadow: 0 0 6px var(--accent-glow);
-            position: relative;
-            z-index: 1;
         }
+
         .loading {
             text-align: center;
             color: var(--text-muted);
@@ -512,18 +463,6 @@
             cursor: pointer;
             transition: all 0.25s ease;
             position: relative;
-        }
-        .tournament-big-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M100 0 L0 100 M100 0 L0 0 M100 0 L100 100' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='30' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='0' r='60' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat top right;
-            background-size: contain;
-            pointer-events: none;
-            z-index: 2;
         }
         .tournament-big-card:hover {
             border-color: var(--accent-color);
@@ -638,17 +577,6 @@
             position: relative;
             overflow: hidden;
         }
-        .contact-box::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 130px;
-            height: 130px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 100 L100 0 M0 100 L100 100 M0 100 L0 0' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='100' r='35' stroke='rgba(255,107,0,0.3)' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='0' cy='100' r='75' stroke='rgba(255,107,0,0.25)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") no-repeat bottom left;
-            background-size: contain;
-            pointer-events: none;
-        }
         .contact-title {
             color: var(--accent-color);
             margin-top: 0;
@@ -700,6 +628,9 @@
             .team-players {
                 grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
+            .players-grid-layout {
+                grid-template-columns: 1fr;
+            }
             .donate-floating-btn {
                 bottom: 15px;
                 right: 15px;
@@ -711,7 +642,7 @@
 </head>
 <body>
 
-    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ З СТИКЕРОМ ПАПЕРОВИХ ГРОШЕЙ -->
+    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
@@ -728,42 +659,42 @@
                 <div class="project-logo-wrapper">
                     <img src="REUS.png" alt="REUS Logo"> 
                 </div>
-                <div class="project-title">Reus <span>Championship 🎃</span></div>
+                <div class="project-title">Reus <span>Championship</span></div>
             </a>
         </div>
 
         <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('teams', this)">🦇 Команди</button>
-            <button class="tab-btn" onclick="switchTab('players', this)">👻 Гравці</button>
-            <button class="tab-btn" onclick="switchTab('tournaments', this)">🎃 Турніри</button>
+            <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
         </div>
 
         <div id="teams-section" class="section-box active">
-            <div class="section-title">🕸️ Рейтинг команд</div>
+            <div class="section-title">Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
-                <div class="loading">Завантаження команд... 🎃</div>
+                <div class="loading">Завантаження команд...</div>
             </div>
 
-            <div class="section-title unranked-title" style="margin-top: 35px;">🪦 Нерейтингові команди / Дизбанд</div>
+            <div class="section-title unranked-title" style="margin-top: 35px;">Нерейтингові команди / Дизбанд</div>
             <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
         <div id="players-section" class="section-box">
-            <div class="section-title">🕷️ Рейтинг гравців</div>
-            <div id="players-app" class="list-container">
-                <div class="loading">Завантаження гравців... 🎃</div>
+            <div class="section-title">Рейтинг гравців</div>
+            <div id="players-app" class="players-grid-layout">
+                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців...</div>
             </div>
         </div>
 
         <div id="tournaments-section" class="section-box">
-            <div class="section-title">🎃 Турніри</div>
+            <div class="section-title">Турніри</div>
             <div id="tournaments-app">
-                <div class="loading">Завантаження турнірів... 🎃</div>
+                <div class="loading">Завантаження турнірів...</div>
             </div>
         </div>
 
         <div class="contact-box">
-            <div class="contact-title">🕸️ Contact us</div>
+            <div class="contact-title">Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
             
             <div class="contact-links">
@@ -796,7 +727,7 @@
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">🕷️ Команди-учасники:</div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
             <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
@@ -966,7 +897,7 @@
                 }
 
                 if (allPlayers.length === 0) {
-                    document.getElementById('players-app').innerHTML = '<div class="loading">Список гравців порожній.</div>';
+                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;">Список гравців порожній.</div>';
                 } else {
                     allPlayers.sort((a, b) => {
                         const rA = getRawRating(a);
@@ -985,20 +916,20 @@
                         const pFlag = getFlagUrl(p.flag || p.countryFlag || p.country || '');
 
                         let avatarHtml = pPhoto ? 
-                            `<div class="rating-player-avatar-wrap"><img src="${pPhoto}" class="rating-player-avatar" alt=""></div>` : 
-                            `<div class="rating-player-avatar-wrap"><span class="rating-player-placeholder">👤</span></div>`;
+                            `<div class="player-row-avatar-wrap"><img src="${pPhoto}" class="player-row-avatar" alt=""></div>` : 
+                            `<div class="player-row-avatar-wrap"><span class="player-row-placeholder">👤</span></div>`;
                         
                         let flagHtml = pFlag ? `<img src="${pFlag}" class="player-flag" alt="flag">` : '';
                         
                         playersHtml += `
-                            <a href="player.html?name=${encodeURIComponent(pName)}" class="item-row">
-                                <div class="item-info">
-                                    <span style="color: var(--text-muted); font-weight: bold; min-width: 28px;">#${index + 1}</span>
+                            <a href="player.html?name=${encodeURIComponent(pName)}" class="player-row-item">
+                                <div class="player-row-left">
+                                    <span style="color: var(--text-muted); font-weight: bold; min-width: 24px;">#${index + 1}</span>
                                     ${avatarHtml}
                                     ${flagHtml}
-                                    <span class="item-name">${pName}</span>
+                                    <span class="player-row-name">${pName}</span>
                                 </div>
-                                <div class="item-value">${pRating}</div>
+                                <div class="player-row-value">${pRating}</div>
                             </a>
                         `;
                     });
@@ -1032,7 +963,7 @@
                                                     ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
                                                     <b style="font-size:1.1rem; color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                                 </div>
-                                                <span class="tier-badge ${tierClass}">🎃 ${tierName}</span>
+                                                <span class="tier-badge ${tierClass}">${tierName}</span>
                                             </div>
                                         </div>
                                         <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 5px;">
@@ -1051,7 +982,7 @@
                                         <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
                                     </div>
                                     <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
-                                        <span class="tier-badge ${tierClass}">👻 ${tierName}</span>
+                                        <span class="tier-badge ${tierClass}">${tierName}</span>
                                         <span>${teamsCount} Teams</span>
                                         <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
                                         <span>📅 ${tour.date || 'Online'}</span>
