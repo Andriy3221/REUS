@@ -61,7 +61,7 @@
             padding-bottom: 60px;
         }
 
-        /* АНІМОВАНА КНОПКА, ЯКА ПЛАВНО РЕАГУЄ НА СКРОЛ */
+        /* НЕВЕЛИКИЙ АКУРАТНИЙ ПРЯМОКУТНИК-КНОПКА ПІДТРИМКИ */
         .donate-floating-btn {
             position: fixed !important;
             bottom: 25px !important;
@@ -70,52 +70,32 @@
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.95rem;
+            padding: 10px 18px;
+            border-radius: 8px; /* Робить форму акуратним прямокутником зі злегка заокругленими кутами */
+            font-weight: 700;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 8px 25px rgba(0, 0, 0, 0.7);
-            border: 2px solid #38bdf8;
-            /* Плавність переміщення та анімацій */
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, opacity 0.3s ease;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.4), 0 4px 15px rgba(0, 0, 0, 0.6);
+            border: 1px solid #38bdf8;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(8px);
-            animation: pulseGlow 2.5s infinite ease-in-out;
-            letter-spacing: 0.5px;
-        }
-
-        /* Ефект під час руху / скролу (даємо клас через JS) */
-        .donate-floating-btn.scrolling {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.8), 0 12px 30px rgba(0, 0, 0, 0.9);
+            letter-spacing: 0.3px;
         }
 
         .donate-floating-btn:hover {
-            transform: scale(1.06) translateY(-5px);
-            box-shadow: 0 0 35px rgba(56, 189, 248, 0.9), 0 15px 35px rgba(0, 0, 0, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(56, 189, 248, 0.7), 0 6px 20px rgba(0, 0, 0, 0.8);
             border-color: #7dd3fc;
-            color: #ffffff;
+            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
         }
         .donate-floating-btn:active {
             transform: scale(0.97);
         }
         .donate-floating-btn .donate-icon {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             line-height: 1;
-            display: inline-block;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
-            transition: transform 0.3s ease;
-        }
-        .donate-floating-btn:hover .donate-icon {
-            transform: rotate(15deg) scale(1.1);
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            50% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.75), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
         }
 
         .header-banner {
@@ -635,14 +615,14 @@
         @media (max-width: 768px) {
             .team-players { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
             .hltv-players-grid { grid-template-columns: 1fr; }
-            .donate-floating-btn { bottom: 15px; right: 15px; padding: 10px 16px; font-size: 0.8rem; }
+            .donate-floating-btn { bottom: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- АНІМОВАНА КНОПКА ВНИЗУ, ЯКА СЛІДУЄ ЗА СКРОЛОМ -->
-    <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" id="donateBtn" title="Підтримати проєкт">
+    <!-- АКУРАТНИЙ ПРЯМОКУТНИК ПІДТРИМКИ, ЩО ПЛИВЕ РАЗОМ ЗІ СКРОЛОМ -->
+    <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
     </a>
@@ -732,18 +712,6 @@
     </div>
 
     <script>
-        // Скрипт динамічної анімації кнопки при скролі (гортанні вгору/вниз)
-        let scrollTimeout;
-        const donateBtn = document.getElementById('donateBtn');
-
-        window.addEventListener('scroll', () => {
-            donateBtn.classList.add('scrolling');
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                donateBtn.classList.remove('scrolling');
-            }, 150);
-        });
-
         const bgVideo = document.getElementById('bgVideo');
         if (bgVideo) {
             bgVideo.addEventListener('ended', function() {
