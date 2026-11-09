@@ -73,70 +73,76 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ІНТЕРАКТИВНИЙ ДІД МОРОЗ ЗЛІВА (З ЧЕРВОНОЇ ЗОНИ) */
-        .santa-popup {
+        /* ІНТЕРАКТИВНИЙ ПЕРСОНАЖ: ВИЛІЗАЄ ЗЛІВА І СТОЇТЬ З ПРИВІТАННЯМ */
+        .interactive-santa-box {
             position: fixed;
-            bottom: 30px;
-            left: -350px;
+            bottom: 20px;
+            left: -320px; /* Схований зліва за екраном */
             z-index: 99999;
-            background: rgba(12, 18, 32, 0.95);
-            border: 2px solid #38bdf8;
-            border-radius: 16px;
-            padding: 18px 20px;
             display: flex;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 10px 40px rgba(56, 189, 248, 0.4), 0 0 20px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            max-width: 320px;
+            align-items: flex-end;
+            gap: 12px;
             transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .santa-popup.show {
-            left: 25px; /* Виїжджає зліва і зупиняється */
+        .interactive-santa-box.active {
+            left: 20px; /* Вилізає і зупиняється на екрані */
         }
 
-        .santa-avatar-img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 8px #38bdf8);
-            flex-shrink: 0;
+        .santa-character-img {
+            width: 110px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+            animation: santaBreathe 3s ease-in-out infinite;
         }
 
-        .santa-text-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        @keyframes santaBreathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
         }
 
-        .santa-title {
-            font-size: 0.95rem;
+        .santa-dialogue-bubble {
+            background: rgba(12, 18, 32, 0.95);
+            border: 2px solid #38bdf8;
+            border-radius: 14px;
+            padding: 14px 18px;
+            max-width: 260px;
+            box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .santa-dialogue-title {
+            font-size: 0.85rem;
             font-weight: 800;
             color: #38bdf8;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
 
-        .santa-msg {
-            font-size: 0.85rem;
+        .santa-dialogue-text {
+            font-size: 0.8rem;
             color: var(--text-color);
-            line-height: 1.3;
+            line-height: 1.4;
         }
 
-        .santa-close-btn {
+        .santa-dialogue-text span {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+
+        .santa-close-cross {
             position: absolute;
-            top: 8px;
-            right: 10px;
+            top: 6px;
+            right: 8px;
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: color 0.2s;
         }
-        .santa-close-btn:hover {
-            color: #38bdf8;
-        }
+        .santa-close-cross:hover { color: #38bdf8; }
 
         .main-container {
             max-width: 1050px;
@@ -703,20 +709,20 @@
             .hltv-players-grid { grid-template-columns: 1fr; }
             .header-banner { margin-right: 0; }
             .donate-floating-btn { top: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
-            .santa-popup { left: -100%; max-width: 90%; }
-            .santa-popup.show { left: 5% !important; }
+            .interactive-santa-box { left: -100%; max-width: 90%; }
+            .interactive-santa-box.active { left: 10px !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ВІДВІДИ/ПРИВІТАННЯ ВІД ДІДА МОРОЗА ЗЛІВА -->
-    <div id="santaPopup" class="santa-popup">
-        <button class="santa-close-btn" onclick="closeSantaPopup()">✕</button>
-        <img src="https://i.ibb.co/6R3p89z/santa-sleigh.png" alt="Дід Мороз" class="santa-avatar-img">
-        <div class="santa-text-content">
-            <div class="santa-title">Ho-Ho-Ho! Вітаю! 🎅</div>
-            <div class="santa-msg" id="santaCountdownText">До Нового року (31 грудня о 23:59) залишилось: завантаження...</div>
+    <!-- ДІД МОРОЗ ВИЛІЗАЄ ЗЛІВА, ВІТАЄТЬСЯ ТА ПОПЕРЕДЖАЄ ПРО НОВИЙ РІК -->
+    <div id="interactiveSanta" class="interactive-santa-box">
+        <img src="https://i.ibb.co/3sW8h5m/nicholas.png" alt="Дід Мороз" class="santa-character-img">
+        <div class="santa-dialogue-bubble">
+            <button class="santa-close-cross" onclick="closeSantaDialogue()">✕</button>
+            <div class="santa-dialogue-title" id="santaBubbleTitle">Ho-Ho-Ho! Вітаю! 🎅</div>
+            <div class="santa-dialogue-text" id="santaBubbleText">Завантаження привітання...</div>
         </div>
     </div>
 
@@ -811,42 +817,56 @@
     </div>
 
     <script>
-        // ЛОГІКА ПОЯВИ ДІДА МОРОЗА ТА АВТОМАТИЧНОГО ВІДЛІКУ ДНІВ ДО 31 ГРУДНЯ 23:59
+        // ЛОГІКА ПОЯВИ ТА ПРИВІТАННЯ ВІД ДІДА МОРОЗА
         window.addEventListener('DOMContentLoaded', () => {
-            // Виїзд Діда Мороза зліва через 1 секунду після завантаження сайту
+            // Вилізає зліва через 1 секунду після завантаження сайту
             setTimeout(() => {
-                const santa = document.getElementById('santaPopup');
-                if (santa) santa.classList.add('show');
+                const santaBox = document.getElementById('interactiveSanta');
+                if (santaBox) santaBox.classList.add('active');
             }, 1000);
 
-            calculateNewYearCountdown();
+            checkNewYearGreeting();
         });
 
-        function closeSantaPopup() {
-            const santa = document.getElementById('santaPopup');
-            if (santa) santa.classList.remove('show');
+        function closeSantaDialogue() {
+            const santaBox = document.getElementById('interactiveSanta');
+            if (santaBox) santaBox.classList.remove('active');
         }
 
-        function calculateNewYearCountdown() {
+        function checkNewYearGreeting() {
             const now = new Date();
-            let year = now.getFullYear();
-            // 31 грудня поточного року о 23:59:59
-            let nyDate = new Date(year, 11, 31, 23, 59, 59);
+            const month = now.getMonth(); // 11 = грудень, 0 = січень
+            const date = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
 
-            // Якщо сьогодні вже після 31 грудня, рахуємо на наступний рік
-            if (now > nyDate) {
-                nyDate = new Date(year + 1, 11, 31, 23, 59, 59);
-            }
+            const titleEl = document.getElementById('santaBubbleTitle');
+            const textEl = document.getElementById('santaBubbleText');
 
-            const diffTime = nyDate - now;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            // ПЕРЕВІРКА НА 1 СІЧНЯ 00:00 (або якщо наступив Новий Рік)
+            const isNewYearTime = (month === 0 && date === 1); // 1 січня
 
-            const textEl = document.getElementById('santaCountdownText');
-            if (textEl) {
-                if (diffDays > 0) {
-                    textEl.innerHTML = `До Нового року (31 груд. 23:59) залишилось рівно <b>${diffDays} днів</b>! Приготуйтесь! 🎄`;
-                } else {
-                    textEl.innerHTML = `З Новим роком! Час святкувати! 🎉🍾`;
+            if (isNewYearTime) {
+                if (titleEl) titleEl.innerText = "З Новим Роком! 🎉";
+                if (textEl) textEl.innerHTML = "Ура! Наступив <b>1 січня</b>! Бажаю перемог у кожному матчі та крутих раундів! 🍾🥂";
+            } else {
+                // Розрахунок днів до 31 грудня 23:59
+                let year = now.getFullYear();
+                let nyDate = new Date(year, 11, 31, 23, 59, 59);
+                if (now > nyDate) {
+                    nyDate = new Date(year + 1, 11, 31, 23, 59, 59);
+                }
+
+                const diffTime = nyDate - now;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (titleEl) titleEl.innerText = "Ho-Ho-Ho! Вітаю! 🎅";
+                if (textEl) {
+                    if (diffDays > 0) {
+                        textEl.innerHTML = `Попереджаю: до Нового року (31 грудня о 23:59) залишилось рівно <span>${diffDays} днів</span>! Час тренуватись! 🎄`;
+                    } else {
+                        textEl.innerHTML = `Вже зовсім скоро Новий рік (31 грудня о 23:59)! Готуйтесь до свята! 🎁`;
+                    }
                 }
             }
         }
