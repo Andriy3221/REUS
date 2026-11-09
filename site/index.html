@@ -139,7 +139,7 @@
         .project-logo-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Змінено на contain для ідеального вписування нового логотипа */
             object-position: center;
             filter: drop-shadow(0 0 8px #38bdf8);
         }
@@ -373,7 +373,7 @@
             z-index: 4;
         }
 
-        /* НОВИЙ СТИЛЬ КАРТОК ГРАВЦІВ ЯК НА СКРІНШОТІ ШЕФА (HLTV STYLE) */
+        /* КАРТКИ ГРАВЦІВ У СТИЛІ HLTV (ДВА СТОВПЧИКИ, БЕЗ ІМЕН ТА ПРІЗВИЩ)[cite: 17, 18] */
         .hltv-players-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -698,7 +698,8 @@
         <div class="header-banner">
             <a href="index.html" class="project-logo-container">
                 <div class="project-logo-wrapper">
-                    <img src="REUS.png" alt="REUS Logo"> 
+                    <!-- Оновлений логотип згідно із завданням шефа -->
+                    <img src="image-removebg-preview.png" alt="REUS Logo"> 
                 </div>
                 <div class="project-title">Reus <span>Championship ❄️</span></div>
             </a>
