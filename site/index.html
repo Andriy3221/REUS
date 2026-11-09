@@ -73,12 +73,12 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ГАРАНТОВАНИЙ НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА ЗЛІВА ВНИЗУ ПОВЕРХ УСЬОГО */
+        /* ДІД МОРОЗ: ЗАВЖДИ З НАМИ ПРИ СКРОЛІ (ПОВЕРХ УСЬОГО) */
         .santa-widget {
             position: fixed !important;
             bottom: 25px !important;
             left: 25px !important;
-            z-index: 2147483647 !important; /* Найвищий пріоритет у браузері */
+            z-index: 2147483647 !important;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -379,7 +379,7 @@
 </head>
 <body>
 
-    <!-- ВІДЖЕТ ДІДА МОРОЗА (ЗАВЖДИ ЗВЕРХУ УСІХ ЕЛЕМЕНТІВ) -->
+    <!-- ВІДЖЕТ ДІДА МОРОЗА (ЗАВЖДИ НА ЕКРАНІ ПРИ СКРОЛІ) -->
     <div class="santa-widget" id="santaNoticeWidget">
         <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
         <div class="santa-avatar">🎅</div>
