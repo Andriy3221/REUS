@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship</title>
+    <title>Reus Championship | Winter Edition ❄️</title>
     <style>
         :root {
-            --bg-color: #0a060d;
-            --card-bg: rgba(20, 12, 28, 0.92);
-            --inner-card-bg: #150b1f;
-            --border-color: #381a4d;
-            --accent-color: #ff6b00;
-            --accent-glow: rgba(255, 107, 0, 0.35);
-            --text-color: #f3e8ee;
-            --text-muted: #9a88a0;
+            --bg-color: #060913;
+            --card-bg: rgba(12, 18, 32, 0.92);
+            --inner-card-bg: #0f172a;
+            --border-color: #1e293b;
+            --accent-color: #38bdf8; /* Крижаний блакитний */
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,7 +33,7 @@
             min-height: 100%;
             z-index: -2;
             object-fit: cover;
-            filter: hue-rotate(270deg) brightness(0.4);
+            filter: hue-rotate(180deg) brightness(0.35);
         }
         .bg-overlay {
             position: fixed;
@@ -41,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(20, 10, 30, 0.7) 0%, rgba(10, 6, 13, 0.95) 100%);
+            background: radial-gradient(circle, rgba(10, 20, 38, 0.75) 0%, rgba(6, 9, 19, 0.96) 100%);
             z-index: -1;
         }
         .main-container {
@@ -51,13 +51,13 @@
             z-index: 1;
         }
 
-        /* ФІКСОВАНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ */
+        /* ФІКСОВАНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (ЗИМОВИЙ СТИЛЬ) */
         .donate-floating-btn {
             position: fixed;
             bottom: 25px;
             right: 25px;
             z-index: 99;
-            background: linear-gradient(135deg, #ff6b00 0%, #cc4400 100%);
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
             text-decoration: none;
             padding: 12px 24px;
@@ -67,8 +67,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.7);
-            border: 2px solid #ff8533;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.7);
+            border: 2px solid #38bdf8;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(8px);
             animation: pulseGlow 2.5s infinite ease-in-out;
@@ -76,8 +76,8 @@
         }
         .donate-floating-btn:hover {
             transform: scale(1.06) translateY(-3px);
-            box-shadow: 0 0 35px rgba(255, 107, 0, 0.85), 0 12px 30px rgba(0, 0, 0, 0.9);
-            border-color: #ffa366;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.7), 0 12px 30px rgba(0, 0, 0, 0.9);
+            border-color: #7dd3fc;
             color: #ffffff;
         }
         .donate-floating-btn .donate-icon {
@@ -87,9 +87,9 @@
             filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
         }
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            50% { box-shadow: 0 0 28px rgba(255, 107, 0, 0.85), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            100% { box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.75), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
         }
 
         .header-banner {
@@ -102,7 +102,7 @@
             padding: 15px 25px;
             border-radius: 14px;
             margin-bottom: 25px;
-            box-shadow: 0 0 25px rgba(157, 78, 221, 0.15), 0 8px 24px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.1), 0 8px 24px rgba(0, 0, 0, 0.6);
             flex-wrap: wrap;
             gap: 15px;
             position: relative;
@@ -119,21 +119,21 @@
         .project-logo-wrapper {
             width: 190px;
             height: 75px;
-            background: #0f0714;
-            border: 2px solid #ff6b00;
+            background: #080d1a;
+            border: 2px solid #38bdf8;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.4), inset 0 0 15px rgba(255, 107, 0, 0.2);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.15);
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
         .project-logo-wrapper:hover {
-            box-shadow: 0 0 35px rgba(255, 107, 0, 0.7), inset 0 0 20px rgba(255, 107, 0, 0.4);
-            border-color: #ff8533;
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.6), inset 0 0 20px rgba(56, 189, 248, 0.3);
+            border-color: #7dd3fc;
             transform: scale(1.02);
         }
         .project-logo-wrapper img {
@@ -141,7 +141,7 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            filter: drop-shadow(0 0 8px #ff6b00);
+            filter: drop-shadow(0 0 8px #38bdf8);
         }
 
         .project-title {
@@ -236,7 +236,7 @@
         }
         .team-card:hover {
             border-color: var(--accent-color);
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.25);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
         }
         .team-header {
             display: flex;
@@ -278,7 +278,7 @@
             text-shadow: 0 0 6px var(--accent-glow);
         }
         .unranked-badge {
-            background: rgba(154, 136, 160, 0.15);
+            background: rgba(148, 163, 184, 0.15);
             color: var(--text-muted);
             border: 1px solid var(--border-color);
             padding: 3px 10px;
@@ -293,7 +293,7 @@
             display: none;
             padding: 15px;
             border-top: 1px solid var(--border-color);
-            background: rgba(10, 6, 13, 0.7);
+            background: rgba(6, 9, 19, 0.75);
             grid-template-columns: repeat(5, 1fr);
             gap: 12px;
             position: relative;
@@ -304,7 +304,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #1d0f2b;
+            background: #111c33;
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
@@ -318,12 +318,12 @@
         .team-player-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.35);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
         }
         .player-photo-wrapper {
             width: 100%;
             height: 155px;
-            background: #0d0612;
+            background: #080d1a;
             overflow: hidden;
             position: relative;
         }
@@ -348,7 +348,7 @@
             padding: 10px 6px;
             width: 100%;
             box-sizing: border-box;
-            background: #150b1f;
+            background: var(--inner-card-bg);
             border-top: 1px solid var(--border-color);
             position: relative;
             z-index: 3;
@@ -373,7 +373,7 @@
             z-index: 4;
         }
 
-        /* НОВИЙ СТИЛЬ СТОРІНКИ ГРАВЦІВ (СІТКА У ДВА СТОВПЧИКИ, ЯК ПРОСИВ ШЕФ) */
+        /* СІТКА ГРАВЦІВ У ДВА СТОВПЧИКИ */
         .players-grid-layout {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -396,7 +396,7 @@
         }
         .player-row-item:hover {
             border-color: var(--accent-color);
-            background: rgba(35, 18, 50, 0.85);
+            background: rgba(15, 30, 56, 0.85);
             transform: translateY(-2px);
             box-shadow: 0 0 15px var(--accent-glow);
         }
@@ -411,9 +411,9 @@
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid var(--accent-color);
-            background: #1d0f2b;
+            background: #111c33;
             flex-shrink: 0;
-            box-shadow: 0 0 10px rgba(255, 107, 0, 0.4);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -467,7 +467,7 @@
         .tournament-big-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.25);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25);
         }
         .tournament-big-card img.t-banner {
             width: 100%;
@@ -497,7 +497,7 @@
         }
         .tournament-row-card:hover {
             border-color: var(--accent-color);
-            background: rgba(35, 18, 50, 0.8);
+            background: rgba(15, 30, 56, 0.8);
             transform: translateX(3px);
             box-shadow: 0 4px 15px var(--accent-glow);
         }
@@ -512,17 +512,17 @@
             letter-spacing: 0.5px;
             border: 1px solid transparent;
         }
-        .tier-1 { background: rgba(255, 107, 0, 0.2); color: #ff6b00; border-color: rgba(255, 107, 0, 0.4); box-shadow: 0 0 10px rgba(255, 107, 0, 0.3); }
-        .tier-2 { background: rgba(157, 78, 221, 0.2); color: #c77dff; border-color: rgba(157, 78, 221, 0.4); box-shadow: 0 0 10px rgba(157, 78, 221, 0.3); }
-        .tier-3 { background: rgba(235, 94, 85, 0.2); color: #eb5e55; border-color: rgba(235, 94, 85, 0.4); }
-        .tier-4 { background: rgba(100, 223, 223, 0.2); color: #64dfdf; border-color: rgba(100, 223, 223, 0.4); }
-        .tier-5 { background: rgba(154, 136, 160, 0.2); color: #9a88a0; border-color: rgba(154, 136, 160, 0.4); }
+        .tier-1 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); box-shadow: 0 0 10px rgba(56, 189, 248, 0.25); }
+        .tier-2 { background: rgba(129, 140, 248, 0.15); color: #818cf8; border-color: rgba(129, 140, 248, 0.35); box-shadow: 0 0 10px rgba(129, 140, 248, 0.25); }
+        .tier-3 { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border-color: rgba(244, 63, 94, 0.35); }
+        .tier-4 { background: rgba(45, 212, 191, 0.15); color: #2dd4bf; border-color: rgba(45, 212, 191, 0.35); }
+        .tier-5 { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border-color: rgba(148, 163, 184, 0.35); }
 
         #tourModalOverlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(10, 6, 13, 0.92);
+            background: rgba(6, 9, 19, 0.92);
             backdrop-filter: blur(8px);
             justify-content: center;
             align-items: center;
@@ -539,7 +539,7 @@
             max-width: 600px;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 0 30px rgba(255, 107, 0, 0.2), 0 20px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 0 30px rgba(56, 189, 248, 0.2), 0 20px 40px rgba(0,0,0,0.8);
             animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes modalPop {
@@ -642,7 +642,7 @@
 </head>
 <body>
 
-    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ ПРОЄКТУ -->
+    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (ЗИМОВА) -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
@@ -659,42 +659,42 @@
                 <div class="project-logo-wrapper">
                     <img src="REUS.png" alt="REUS Logo"> 
                 </div>
-                <div class="project-title">Reus <span>Championship</span></div>
+                <div class="project-title">Reus <span>Championship ❄️</span></div>
             </a>
         </div>
 
         <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
-            <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
-            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
+            <button class="tab-btn active" onclick="switchTab('teams', this)">❄️ Команди</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">⛄ Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">🎄 Турніри</button>
         </div>
 
         <div id="teams-section" class="section-box active">
-            <div class="section-title">Рейтинг команд</div>
+            <div class="section-title">❄️ Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
-                <div class="loading">Завантаження команд...</div>
+                <div class="loading">Завантаження команд... ❄️</div>
             </div>
 
-            <div class="section-title unranked-title" style="margin-top: 35px;">Нерейтингові команди / Дизбанд</div>
+            <div class="section-title unranked-title" style="margin-top: 35px;">🏔️ Нерейтингові команди / Дизбанд</div>
             <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
         <div id="players-section" class="section-box">
-            <div class="section-title">Рейтинг гравців</div>
+            <div class="section-title">⛄ Рейтинг гравців</div>
             <div id="players-app" class="players-grid-layout">
-                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців...</div>
+                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців... ❄️</div>
             </div>
         </div>
 
         <div id="tournaments-section" class="section-box">
-            <div class="section-title">Турніри</div>
+            <div class="section-title">🎄 Турніри</div>
             <div id="tournaments-app">
-                <div class="loading">Завантаження турнірів...</div>
+                <div class="loading">Завантаження турнірів... ❄️</div>
             </div>
         </div>
 
         <div class="contact-box">
-            <div class="contact-title">Contact us</div>
+            <div class="contact-title">❄️ Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
             
             <div class="contact-links">
@@ -718,7 +718,7 @@
                     <img id="viewTourLogo" style="width: 32px; height: 32px; object-fit: contain; display: none;">
                     <h2 id="viewTourTitle" style="margin: 0; color: var(--accent-color); font-size: 1.3rem;">Назва турніру</h2>
                 </div>
-                <button onclick="closeTourModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ff6b00'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
+                <button onclick="closeTourModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='var(--text-muted)'">✕</button>
             </div>
 
             <div style="display: flex; gap: 20px; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
@@ -727,7 +727,7 @@
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">❄️ Команди-учасники:</div>
             <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
