@@ -67,12 +67,12 @@
             z-index: 1;
         }
 
-        /* ФІКСОВАНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ */
+        /* СУВОРО ЗАКРІПЛЕНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (ПОВЕРХ УСЬОГО) */
         .donate-floating-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            z-index: 99;
+            position: fixed !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            z-index: 9999 !important;
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
             text-decoration: none;
@@ -207,7 +207,7 @@
             box-shadow: 0 0 18px var(--accent-glow);
         }
 
-        /* ПЛАВНЕ ПЕРЕМИКАННЯ ВКЛАДОК */
+        /* ПЛАВНЕ ПЕРЕМИКАННЯ ВКЛАДОК ТА ПОЯВА */
         .section-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -258,7 +258,6 @@
             gap: 10px;
         }
 
-        /* КОМАНДИ - КАРТКИ З ПЛАВНИМ ЕФЕКТОМ */
         .team-card {
             background: var(--inner-card-bg);
             border-radius: 10px;
@@ -335,7 +334,6 @@
             gap: 12px;
             position: relative;
             z-index: 2;
-            animation: fadeIn 0.25s ease;
         }
 
         .team-player-card {
@@ -414,7 +412,7 @@
             z-index: 4;
         }
 
-        /* КАРТКИ ГРАВЦІВ У СТИЛІ HLTV З ПЛАВНИМИ ЕФЕКТАМИ */
+        /* КАРТКИ ГРАВЦІВ У СТИЛІ HLTV */
         .hltv-players-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -733,6 +731,7 @@
 </head>
 <body>
 
+    <!-- ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ЯКА НЕ ДВИГАЄТЬСЯ ПРИ СКРОЛІ) -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
