@@ -73,6 +73,52 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
+        /* КРАСИВІ КІБЕРСПОРТИВНІ АНІМОВАНІ СИЛУЕТИ (ДІД МОРОЗ ТА МИКОЛАЙ) */
+        .flying-element {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(12, 18, 32, 0.6);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            white-space: nowrap;
+        }
+
+        .santa-sledge {
+            top: 18%;
+            animation: flyLeftToRight 25s linear infinite;
+        }
+
+        .st-nicholas {
+            top: 40%;
+            animation: flyRightToLeft 30s linear infinite;
+            animation-delay: 4s;
+            border-color: rgba(244, 63, 94, 0.4);
+            color: #fb7185;
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+        }
+
+        @keyframes flyLeftToRight {
+            0% { left: -250px; transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { left: 105vw; transform: translateY(0); }
+        }
+
+        @keyframes flyRightToLeft {
+            0% { right: -250px; transform: translateY(0); }
+            50% { transform: translateY(20px); }
+            100% { right: 105vw; transform: translateY(0); }
+        }
+
         .main-container {
             max-width: 1050px;
             margin: 0 auto;
@@ -643,6 +689,14 @@
 </head>
 <body>
 
+    <!-- ЛІТАЮЧІ АНІМОВАНІ ЕЛЕМЕНТИ НА ФОНІ (ЖОДНИХ СТІКЕРІВ) -->
+    <div class="flying-element santa-sledge">
+        <span>🛷🎅 Дід Мороз & Олень</span>
+    </div>
+    <div class="flying-element st-nicholas">
+        <span>✨🎅 Святий Миколай</span>
+    </div>
+
     <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
@@ -660,42 +714,42 @@
                 <div class="project-logo-wrapper">
                     <img src="image-removebg-preview.png" alt="REUS Logo"> 
                 </div>
-                <div class="project-title">Reus Championship Winter Edition</div>
+                <div class="project-title">Reus <span>Championship ❄️</span></div>
             </a>
         </div>
 
         <div class="tabs-container">
-            <button class="tab-btn active" onclick="switchTab('teams', this)">Команди</button>
-            <button class="tab-btn" onclick="switchTab('players', this)">Гравці</button>
-            <button class="tab-btn" onclick="switchTab('tournaments', this)">Турніри</button>
+            <button class="tab-btn active" onclick="switchTab('teams', this)">❄️ Команди</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">⛄ Гравці</button>
+            <button class="tab-btn" onclick="switchTab('tournaments', this)">🎄 Турніри</button>
         </div>
 
         <div id="teams-section" class="section-box active">
-            <div class="section-title">Рейтинг команд</div>
+            <div class="section-title">❄️ Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
-                <div class="loading">Завантаження команд...</div>
+                <div class="loading">Завантаження команд... ❄️</div>
             </div>
 
-            <div class="section-title unranked-title" style="margin-top: 35px;">Нерейтингові команди / Дизбанд</div>
+            <div class="section-title unranked-title" style="margin-top: 35px;">🏔️ Нерейтингові команди / Дизбанд</div>
             <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
         <div id="players-section" class="section-box">
-            <div class="section-title">Рейтинг гравців</div>
+            <div class="section-title">⛄ Рейтинг гравців</div>
             <div id="players-app" class="hltv-players-grid">
-                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців...</div>
+                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців... ❄️</div>
             </div>
         </div>
 
         <div id="tournaments-section" class="section-box">
-            <div class="section-title">Турніри</div>
+            <div class="section-title">🎄 Турніри</div>
             <div id="tournaments-app">
-                <div class="loading">Завантаження турнірів...</div>
+                <div class="loading">Завантаження турнірів... ❄️</div>
             </div>
         </div>
 
         <div class="contact-box">
-            <div class="contact-title">Contact us</div>
+            <div class="contact-title">❄️ Contact us</div>
             <div class="contact-desc">Виникли питання? Звертайтесь до адміністрації:</div>
             
             <div class="contact-links">
@@ -728,13 +782,13 @@
                 <span id="viewTourTeamsCount">👥 0 Teams</span>
             </div>
 
-            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">Команди-учасники:</div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;">❄️ Команди-учасники:</div>
             <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
 
     <script>
-        // Генератор новорічних сніжинок на фоні (без емодзі-стикерів)
+        // Генератор новорічних сніжинок на фоні
         function createSnowflakes() {
             const snowContainer = document.createElement('div');
             snowContainer.id = 'snow-container';
