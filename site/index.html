@@ -233,6 +233,7 @@
             display: flex;
             gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .tab-btn {
             background: var(--card-bg);
@@ -242,11 +243,15 @@
             border-radius: 12px;
             font-weight: 700;
             cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.25s;
         }
+        .tab-btn:hover { border-color: var(--accent-color); color: var(--text-color); }
         .tab-btn.active {
             background: var(--inner-card-bg);
             border-color: var(--accent-color);
             color: var(--accent-color);
+            box-shadow: 0 0 18px var(--accent-glow);
         }
 
         .section-box {
@@ -255,6 +260,7 @@
             border-radius: 14px;
             padding: 25px;
             display: none;
+            margin-bottom: 25px;
         }
         .section-box.active { display: block; }
 
@@ -265,38 +271,125 @@
             color: var(--accent-color);
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
+            text-transform: uppercase;
         }
+        .section-title.unranked-title { color: var(--text-muted); text-shadow: none; }
 
         .list-container { display: flex; flex-direction: column; gap: 10px; }
         .loading { text-align: center; color: var(--text-muted); padding: 40px; }
 
-        .contact-box {
-            background: var(--card-bg);
+        .team-card {
+            background: var(--inner-card-bg);
+            border-radius: 10px;
             border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 25px;
-            margin-top: 30px;
+            overflow: hidden;
+            transition: all 0.25s;
+        }
+        .team-card:hover { border-color: var(--accent-color); box-shadow: 0 0 20px rgba(56, 189, 248, 0.25); }
+        .team-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .team-info { display: flex; align-items: center; gap: 15px; }
+        .team-logo { width: 38px; height: 38px; border-radius: 8px; object-fit: contain; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 2px; }
+        .team-name-link { font-weight: 700; font-size: 1.05rem; color: var(--text-color); text-decoration: none; }
+        .team-name-link:hover { color: var(--accent-color); }
+        .team-value { color: var(--accent-color); font-weight: 800; }
+        .unranked-badge { background: rgba(148,163,184,0.15); color: var(--text-muted); border: 1px solid var(--border-color); padding: 3px 10px; border-radius: 6px; font-size: 0.8rem; }
+        .team-players {
+            display: none;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(6,9,19,0.75);
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        .team-player-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #111c33;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-color);
             text-align: center;
         }
+        .player-photo-wrapper { width: 100%; height: 155px; background: #080d1a; overflow: hidden; }
+        .player-avatar { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transform: scale(1.15); }
+        .player-name-container { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; width: 100%; background: var(--inner-card-bg); border-top: 1px solid var(--border-color); }
+        .player-name { font-size: 0.95rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .player-flag { width: 20px; height: 14px; border-radius: 2px; object-fit: cover; border: 1px solid var(--border-color); }
+
+        .hltv-players-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .hltv-player-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--inner-card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: var(--text-color);
+            overflow: hidden;
+            height: 90px;
+        }
+        .hltv-player-info { display: flex; flex-direction: column; justify-content: center; padding-left: 20px; gap: 6px; }
+        .hltv-player-top-row { display: flex; align-items: center; gap: 10px; }
+        .hltv-player-rank { color: var(--text-muted); font-weight: 700; font-size: 0.9rem; }
+        .hltv-player-nickname { font-size: 1.15rem; font-weight: 800; }
+        .hltv-player-details { display: flex; align-items: center; gap: 8px; padding-left: 28px; }
+        .hltv-player-flag { width: 22px; height: 15px; border-radius: 2px; object-fit: cover; border: 1px solid var(--border-color); }
+        .hltv-player-right { display: flex; align-items: center; height: 100%; gap: 20px; }
+        .hltv-player-rating { color: var(--accent-color); font-weight: 800; font-size: 1.25rem; padding-right: 15px; }
+        .hltv-player-photo-wrap { width: 80px; height: 100%; background: #080d1a; overflow: hidden; border-left: 1px solid var(--border-color); }
+        .hltv-player-photo { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; transform: scale(1.3); }
+
+        .tournaments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .tournament-big-card { background: var(--inner-card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; cursor: pointer; }
+        .tournament-big-card img.t-banner { width: 100%; height: 130px; object-fit: cover; border-bottom: 1px solid var(--border-color); }
+        .tournament-content { padding: 16px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1; justify-content: space-between; }
+        .tournament-row-card { display: flex; justify-content: space-between; align-items: center; background: var(--inner-card-bg); border: 1px solid var(--border-color); padding: 14px 18px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
+        
+        .tier-badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: 1px solid transparent; }
+        .tier-1 { background: rgba(56,189,248,0.15); color: #38bdf8; border-color: rgba(56,189,248,0.35); }
+        .tier-2 { background: rgba(129,140,248,0.15); color: #818cf8; border-color: rgba(129,140,248,0.35); }
+        .tier-3 { background: rgba(244,63,94,0.15); color: #f43f5e; border-color: rgba(244,63,94,0.35); }
+
+        #tourModalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6,9,19,0.92); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 999; padding: 20px; box-sizing: border-box; }
+        .tour-modal-content { background: var(--card-bg); border: 1px solid var(--border-color); padding: 25px; border-radius: 16px; width: 100%; max-width: 600px; max-height: 85vh; overflow-y: auto; }
+        .tour-team-item { display: flex; align-items: center; gap: 12px; background: var(--inner-card-bg); padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border-color); text-decoration: none; color: var(--text-color); font-weight: 600; }
+
+        .contact-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 25px; margin-top: 30px; text-align: center; }
+        .contact-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 15px; }
+        .contact-item { background: var(--inner-card-bg); border: 1px solid var(--border-color); padding: 12px 20px; border-radius: 10px; color: var(--text-color); text-decoration: none; display: flex; align-items: center; gap: 10px; }
 
         @media (max-width: 768px) {
             .header-banner { margin-right: 0; }
             .santa-widget { left: 15px; bottom: 15px; max-width: 85%; }
+            .team-players { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .hltv-players-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ВІДЖЕТ ДІДА МОРОЗА ЗЛІВА В КУТКУ -->
+    <!-- НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА -->
     <div class="santa-widget" id="santaNoticeWidget">
         <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
         <div class="santa-avatar">🎅</div>
         <div class="santa-content">
-            <div class="santa-title" id="santaHeadTitle">Вітання від Діда Мороза!</div>
+            <div class="santa-title" id="santaHeadTitle">Дід Мороз попереджає!</div>
             <div class="santa-desc" id="santaHeadDesc">Розрахунок часу...</div>
         </div>
     </div>
 
+    <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn">
         <span>💵 Підтримати проєкт</span>
     </a>
@@ -322,53 +415,94 @@
             <button class="tab-btn" onclick="switchTab('tournaments', this)">🎄 Турніри</button>
         </div>
 
+        <!-- КОМАНДИ -->
         <div id="teams-section" class="section-box active">
             <div class="section-title">❄️ Рейтинг команд</div>
             <div id="ranked-teams-app" class="list-container">
                 <div class="loading">Завантаження команд... ❄️</div>
             </div>
+
+            <div class="section-title unranked-title" style="margin-top: 35px;">🏔️ Нерейтингові команди / Дизбанд</div>
+            <div id="unranked-teams-app" class="list-container"></div>
         </div>
 
+        <!-- ГРАВЦІ -->
         <div id="players-section" class="section-box">
             <div class="section-title">⛄ Рейтинг гравців</div>
-            <div id="players-app" class="loading">Завантаження гравців... ❄️</div>
+            <div id="players-app" class="hltv-players-grid">
+                <div class="loading" style="grid-column: 1 / -1;">Завантаження гравців... ❄️</div>
+            </div>
         </div>
 
+        <!-- ТУРНІРИ -->
         <div id="tournaments-section" class="section-box">
             <div class="section-title">🎄 Турніри</div>
-            <div id="tournaments-app" class="loading">Завантаження турнірів... ❄️</div>
+            <div id="tournaments-app">
+                <div class="loading">Завантаження турнірів... ❄️</div>
+            </div>
+        </div>
+
+        <div class="contact-box">
+            <div style="color: var(--accent-color); font-weight: bold; text-transform: uppercase; margin-bottom: 5px;">❄️ Contact us</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem;">Виникли питання? Звертайтесь до адміністрації:</div>
+            <div class="contact-links">
+                <a href="https://t.me/Andriy1794" target="_blank" class="contact-item">
+                    <span style="color: var(--accent-color); font-weight: 600;">Andriy:</span> 
+                    <span style="color: var(--text-muted);">@Andriy1794</span>
+                </a>
+                <a href="https://t.me/MrXwello" target="_blank" class="contact-item">
+                    <span style="color: var(--accent-color); font-weight: 600;">Xwello:</span> 
+                    <span style="color: var(--text-muted);">@MrXwello</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНЕ ВІКНО ТУРНІРУ -->
+    <div id="tourModalOverlay">
+        <div class="tour-modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img id="viewTourLogo" style="width: 32px; height: 32px; object-fit: contain; display: none;">
+                    <h2 id="viewTourTitle" style="margin: 0; color: var(--accent-color); font-size: 1.3rem;">Назва турніру</h2>
+                </div>
+                <button onclick="closeTourModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer;">✕</button>
+            </div>
+            <div style="display: flex; gap: 20px; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                <span id="viewTourDate">📅 -</span>
+                <span id="viewTourPrize" style="color: var(--accent-color); font-weight: bold;">💰 -</span>
+                <span id="viewTourTeamsCount">👥 0 Teams</span>
+            </div>
+            <div style="font-weight: bold; color: var(--text-color); margin-bottom: 10px; text-transform: uppercase; font-size: 0.85rem;">❄️ Команди-учасники:</div>
+            <div id="viewTourTeamsList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;"></div>
         </div>
     </div>
 
     <script>
-        // РОЗРАХУНОК ДНІВ ДО 31 ГРУДНЯ 23:59 АБО ПРИВІТАННЯ З 1 СІЧНЯ
+        // НОВОРІЧНИЙ ВІДЖЕТ ТА АВТОМАТИЧНИЙ ВІДЛІК
         function initSantaLogic() {
             const now = new Date();
-            const month = now.getMonth(); // 0 = січень, 11 = грудень
+            const month = now.getMonth();
             const date = now.getDate();
 
             const titleEl = document.getElementById('santaHeadTitle');
             const descEl = document.getElementById('santaHeadDesc');
 
-            // Якщо настав 1 січня
             if (month === 0 && date === 1) {
                 if (titleEl) titleEl.innerText = "З Новим 1 Січня! 🎉";
-                if (descEl) descEl.innerHTML = "Вітаю з Новим Роком! Бажаю тільки перемог та крутого аїму!";
+                if (descEl) descEl.innerHTML = "Вітаю з Новим Роком! Бажаю тільки перемог у матчах!";
             } else {
-                // Рахуємо дні до 31 грудня о 23:59
                 let year = now.getFullYear();
                 let target = new Date(year, 11, 31, 23, 59, 59);
-
                 if (now > target) {
                     target = new Date(year + 1, 11, 31, 23, 59, 59);
                 }
-
                 const diff = target - now;
                 const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
                 if (titleEl) titleEl.innerText = "Дід Мороз попереджає! 🎅";
                 if (descEl) {
-                    descEl.innerHTML = `До Нового року (31 грудня 23:59) залишилося <b>${days} днів</b>! Готуйся до свята!`;
+                    descEl.innerHTML = `До Нового року (31 грудня о 23:59) залишилося <b>${days} днів</b>! Готуйся до свята!`;
                 }
             }
         }
@@ -397,6 +531,282 @@
             btn.classList.add('active');
             document.getElementById(tabName + '-section').classList.add('active');
         }
+
+        function toggleTeam(event, headerElement) {
+            event.stopPropagation();
+            const playersDiv = headerElement.nextElementSibling;
+            playersDiv.style.display = playersDiv.style.display === 'grid' ? 'none' : 'grid';
+        }
+
+        function getFlagUrl(flagValue) {
+            if (!flagValue) return '';
+            if (flagValue.startsWith('http') || flagValue.startsWith('/') || flagValue.startsWith('data:')) {
+                return flagValue;
+            }
+            return `https://flagcdn.com/24x18/${flagValue.trim().toLowerCase()}.png`;
+        }
+
+        function getRawRating(p) {
+            const val = p.stats?.rating || p.stats?.kd || p.rating || p.kd || p.score;
+            if (val !== undefined && val !== null && val !== '' && val !== '—') {
+                const parsed = parseFloat(val);
+                return isNaN(parsed) ? null : parsed;
+            }
+            return null;
+        }
+
+        const BIN_ID = '6ad23f85ac6210605a379839';
+        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
+
+        let allTournamentsCache = [];
+        let allTeamsCache = [];
+
+        async function fetchData() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                const result = await res.json();
+                
+                const cloudData = result.record?.record || result.record || result;
+                const teams = cloudData.teams || [];
+                const allPlayers = cloudData.players || [];
+                const tournaments = cloudData.tournaments || [];
+
+                allTournamentsCache = tournaments;
+                allTeamsCache = teams;
+
+                // 1. КОМАНДИ
+                if (teams.length === 0) {
+                    document.getElementById('ranked-teams-app').innerHTML = '<div class="loading">Список команд порожній.</div>';
+                } else {
+                    teams.sort((a, b) => {
+                        const pointsA = parseFloat(a.points !== undefined && a.points !== null ? a.points : (a.rating || 0)) || 0;
+                        const pointsB = parseFloat(b.points !== undefined && b.points !== null ? b.points : (b.rating || 0)) || 0;
+                        return pointsB - pointsA;
+                    });
+
+                    let rankedHtml = '';
+                    let unrankedHtml = '';
+                    let rankedCounter = 1;
+                    let unrankedCounter = 1;
+
+                    teams.forEach((t) => {
+                        const tName = t.name || 'Команда';
+                        const tLogo = t.logo || t.image || '';
+                        
+                        const teamPlayers = allPlayers.filter(p => {
+                            const pTeam = p.team || p.teamName || p.club || p.group || '';
+                            const isTeamMatch = pTeam.trim().toLowerCase() === tName.trim().toLowerCase();
+                            const pRole = (p.role || p.slot || '').toLowerCase();
+                            const isNotBench = !pRole.includes('запасний') && !pRole.includes('bench') && !pRole.includes('тренер');
+                            return isTeamMatch && isNotBench;
+                        });
+
+                        const teamStatus = (t.status || '').trim().toLowerCase();
+                        const isRanked = !teamStatus.includes('дизбанд') && !teamStatus.includes('нерейтинг') && !teamStatus.includes('unranked');
+                        let logoHtml = tLogo ? `<img src="${tLogo}" class="team-logo" alt="">` : '';
+
+                        let playersListHtml = '';
+                        if (teamPlayers.length > 0) {
+                            teamPlayers.slice(0, 5).forEach(tp => {
+                                const playerName = tp.name || tp.nickname || tp.username || 'Гравець';
+                                const playerPhoto = tp.photo || tp.avatar || tp.image || 'https://via.placeholder.com/150';
+                                const playerFlag = getFlagUrl(tp.flag || tp.countryFlag || tp.country || '');
+                                let playerFlagHtml = playerFlag ? `<img src="${playerFlag}" class="player-flag" alt="flag">` : '';
+
+                                playersListHtml += `
+                                    <a href="player.html?name=${encodeURIComponent(playerName)}" class="team-player-card" onclick="event.stopPropagation();">
+                                        <div class="player-photo-wrapper">
+                                            <img src="${playerPhoto}" class="player-avatar" alt="">
+                                        </div>
+                                        <div class="player-name-container">
+                                            ${playerFlagHtml}
+                                            <div class="player-name">${playerName}</div>
+                                        </div>
+                                    </a>
+                                `;
+                            });
+                        } else {
+                            playersListHtml = '<div style="color: var(--text-muted); font-size: 0.9rem; grid-column: 1 / -1; text-align: center;">У команді немає активних основних гравців</div>';
+                        }
+
+                        const teamPoints = t.points !== undefined && t.points !== null ? t.points : (t.rating || 0);
+
+                        const cardHtml = `
+                            <div class="team-card ${isRanked ? '' : 'unranked'}">
+                                <div class="team-header" onclick="toggleTeam(event, this)">
+                                    <div class="team-info">
+                                        <span style="color: var(--text-muted); font-weight: bold;">#${isRanked ? rankedCounter++ : unrankedCounter++}</span>
+                                        ${logoHtml}
+                                        <a href="team.html?name=${encodeURIComponent(tName)}" class="team-name-link" onclick="event.stopPropagation();">${tName}</a>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        ${isRanked ? `<span class="team-value">${teamPoints}</span>` : `<span class="unranked-badge">${t.status || 'Нерейтингова'}</span>`}
+                                        <span style="color: var(--text-muted); font-size: 0.8rem;">▼</span>
+                                    </div>
+                                </div>
+                                <div class="team-players">${playersListHtml}</div>
+                            </div>
+                        `;
+
+                        if (isRanked) rankedHtml += cardHtml;
+                        else unrankedHtml += cardHtml;
+                    });
+
+                    document.getElementById('ranked-teams-app').innerHTML = rankedHtml || '<div class="loading">Немає рейтингових команд.</div>';
+                    document.getElementById('unranked-teams-app').innerHTML = unrankedHtml || '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 10px 0;">Немає нерейтингових команд.</div>';
+                }
+
+                // 2. ГРАВЦІ
+                if (allPlayers.length === 0) {
+                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;">Список гравців порожній.</div>';
+                } else {
+                    allPlayers.sort((a, b) => (getRawRating(b) || 0) - (getRawRating(a) || 0));
+
+                    let playersHtml = '';
+                    allPlayers.forEach((p, index) => {
+                        const pName = p.name || p.nickname || p.username || 'Гравець';
+                        const pRating = getRawRating(p) !== null ? getRawRating(p) : '—';
+                        const pPhoto = p.photo || p.avatar || p.image || '';
+                        const pFlag = getFlagUrl(p.flag || p.countryFlag || p.country || '');
+
+                        let photoHtml = pPhoto ? `<img src="${pPhoto}" class="hltv-player-photo" alt="">` : `<div style="display:flex; align-items:center; justify-content:center; height:100%; color:var(--accent-color);">👤</div>`;
+                        let flagHtml = pFlag ? `<img src="${pFlag}" class="hltv-player-flag" alt="flag">` : '';
+                        
+                        playersHtml += `
+                            <a href="player.html?name=${encodeURIComponent(pName)}" class="hltv-player-card">
+                                <div class="hltv-player-info">
+                                    <div class="hltv-player-top-row">
+                                        <span class="hltv-player-rank">#${index + 1}</span>
+                                        <span class="hltv-player-nickname">${pName}</span>
+                                    </div>
+                                    <div class="hltv-player-details">${flagHtml}</div>
+                                </div>
+                                <div class="hltv-player-right">
+                                    <div class="hltv-player-rating">${pRating}</div>
+                                    <div class="hltv-player-photo-wrap">${photoHtml}</div>
+                                </div>
+                            </a>
+                        `;
+                    });
+                    document.getElementById('players-app').innerHTML = playersHtml;
+                }
+
+                // 3. ТУРНІРИ
+                const tContainer = document.getElementById('tournaments-app');
+                if (tournaments.length === 0) {
+                    tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
+                } else {
+                    let bigCardsHtml = '<div class="tournaments-grid">';
+                    let rowCardsHtml = '<div class="list-container" style="margin-top: 15px;">';
+                    let hasBig = false, hasRow = false;
+
+                    tournaments.forEach((tour, tIdx) => {
+                        const isBigCard = tour.tier === 'tier-1' || tour.tier === 'tier-2';
+                        const teamsCount = (tour.teams && tour.teams.length) ? tour.teams.length : (tour.teamsCount || '—');
+                        const tierClass = tour.tier || 'tier-1';
+                        const tierName = tierClass.replace('-', ' ').toUpperCase();
+
+                        if (isBigCard) {
+                            hasBig = true;
+                            bigCardsHtml += `
+                                <div class="tournament-big-card" onclick="openTourModal(${tIdx})">
+                                    ${tour.banner ? `<img src="${tour.banner}" class="t-banner">` : ''}
+                                    <div class="tournament-content">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <div style="display:flex; align-items:center; gap:10px;">
+                                                ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
+                                                <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                            </div>
+                                            <span class="tier-badge ${tierClass}">${tierName}</span>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px;">
+                                            <span>📅 ${tour.date || 'TBA'}</span>
+                                            <span style="color:var(--accent-color); font-weight: bold;">💰 ${tour.prize || 'TBA'}</span>
+                                            <span>👥 ${teamsCount} Teams</span>
+                                        </div>
+                                    </div>
+                                </div>`;
+                        } else {
+                            hasRow = true;
+                            rowCardsHtml += `
+                                <div class="tournament-row-card" onclick="openTourModal(${tIdx})">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
+                                        <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                    </div>
+                                    <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
+                                        <span class="tier-badge ${tierClass}">${tierName}</span>
+                                        <span>${teamsCount} Teams</span>
+                                        <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
+                                        <span>📅 ${tour.date || 'Online'}</span>
+                                    </div>
+                                </div>`;
+                        }
+                    });
+
+                    bigCardsHtml += '</div>';
+                    rowCardsHtml += '</div>';
+                    tContainer.innerHTML = (hasBig ? bigCardsHtml : '') + (hasRow ? rowCardsHtml : '');
+                }
+
+            } catch (err) {
+                console.error("Помилка завантаження даних:", err);
+            }
+        }
+
+        function openTourModal(index) {
+            const tour = allTournamentsCache[index];
+            if (!tour) return;
+
+            document.getElementById('viewTourTitle').innerText = tour.title || 'Турнір';
+            document.getElementById('viewTourDate').innerText = '📅 ' + (tour.date || 'TBA');
+            document.getElementById('viewTourPrize').innerText = '💰 ' + (tour.prize || 'TBA');
+            
+            const logoImg = document.getElementById('viewTourLogo');
+            if (tour.logo) {
+                logoImg.src = tour.logo;
+                logoImg.style.display = 'block';
+            } else {
+                logoImg.style.display = 'none';
+            }
+
+            const container = document.getElementById('viewTourTeamsList');
+            container.innerHTML = '';
+
+            const tourTeams = tour.teams || [];
+            document.getElementById('viewTourTeamsCount').innerText = `👥 ${tourTeams.length} Teams`;
+
+            if (tourTeams.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 20px;">Список команд ще не сформовано.</div>';
+            } else {
+                tourTeams.forEach(tName => {
+                    const teamObj = allTeamsCache.find(t => t.name.trim().toLowerCase() === tName.trim().toLowerCase());
+                    const logo = teamObj ? (teamObj.logo || '') : '';
+                    container.innerHTML += `
+                        <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
+                            ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
+                            <span>${tName}</span>
+                        </a>
+                    `;
+                });
+            }
+
+            document.getElementById('tourModalOverlay').style.display = 'flex';
+        }
+
+        function closeTourModal() {
+            document.getElementById('tourModalOverlay').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('tourModalOverlay');
+            if (event.target === modal) closeTourModal();
+        }
+
+        // Запуск завантаження при старті сайту
+        fetchData();
     </script>
 </body>
 </html>
