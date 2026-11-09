@@ -73,50 +73,42 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* КРАСИВІ КІБЕРСПОРТИВНІ АНІМОВАНІ СИЛУЕТИ (ДІД МОРОЗ ТА МИКОЛАЙ) */
-        .flying-element {
+        /* ЛІТАЮЧІ ПЕРСОНАЖІ З БОКІВ */
+        .flying-character {
             position: fixed;
             pointer-events: none;
             z-index: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: rgba(12, 18, 32, 0.6);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            border-radius: 30px;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #38bdf8;
-            white-space: nowrap;
+            width: 190px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.4));
         }
 
-        .santa-sledge {
-            top: 18%;
-            animation: flyLeftToRight 25s linear infinite;
+        /* Дід Мороз вилітає зліва (червона зона) */
+        .santa-fly {
+            top: 20%;
+            left: -220px;
+            animation: flyFromLeft 24s linear infinite;
         }
 
-        .st-nicholas {
-            top: 40%;
-            animation: flyRightToLeft 30s linear infinite;
-            animation-delay: 4s;
-            border-color: rgba(244, 63, 94, 0.4);
-            color: #fb7185;
-            box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+        /* Святий Миколай вилітає справа (зелена зона) */
+        .nicholas-fly {
+            top: 45%;
+            right: -220px;
+            animation: flyFromRight 28s linear infinite;
+            animation-delay: 6s;
+            transform: scaleX(-1);
         }
 
-        @keyframes flyLeftToRight {
-            0% { left: -250px; transform: translateY(0); }
+        @keyframes flyFromLeft {
+            0% { left: -220px; transform: translateY(0); }
             50% { transform: translateY(-20px); }
             100% { left: 105vw; transform: translateY(0); }
         }
 
-        @keyframes flyRightToLeft {
-            0% { right: -250px; transform: translateY(0); }
-            50% { transform: translateY(20px); }
-            100% { right: 105vw; transform: translateY(0); }
+        @keyframes flyFromRight {
+            0% { right: -220px; transform: scaleX(-1) translateY(0); }
+            50% { transform: scaleX(-1) translateY(20px); }
+            100% { right: 105vw; transform: scaleX(-1) translateY(0); }
         }
 
         .main-container {
@@ -684,18 +676,17 @@
             .hltv-players-grid { grid-template-columns: 1fr; }
             .header-banner { margin-right: 0; }
             .donate-floating-btn { top: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
+            .flying-character { width: 130px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ЛІТАЮЧІ АНІМОВАНІ ЕЛЕМЕНТИ НА ФОНІ (ЖОДНИХ СТІКЕРІВ) -->
-    <div class="flying-element santa-sledge">
-        <span>🛷🎅 Дід Мороз & Олень</span>
-    </div>
-    <div class="flying-element st-nicholas">
-        <span>✨🎅 Святий Миколай</span>
-    </div>
+    <!-- ДІД МОРОЗ ВИЛІТАЄ ЗЛІВА (ІЗ ЧЕРВОНОЇ ЗОНИ) -->
+    <img src="https://i.ibb.co/6R3p89z/santa-sleigh.png" alt="Дід Мороз" class="flying-character santa-fly">
+    
+    <!-- СВЯТИЙ МИКОЛАЙ ВИЛІТАЄ СПРАВА (ІЗ ЗЕЛЕНОЇ ЗОНИ) -->
+    <img src="https://i.ibb.co/3sW8h5m/nicholas.png" alt="Святий Миколай" class="flying-character nicholas-fly">
 
     <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
