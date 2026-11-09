@@ -73,11 +73,11 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ІНТЕРАКТИВНИЙ ПЕРСОНАЖ: ВИЛІЗАЄ ЗЛІВА І СТОЇТЬ З ПРИВІТАННЯМ */
+        /* ІНТЕРАКТИВНИЙ ДІД МОРОЗ ЗЛІВА */
         .interactive-santa-box {
             position: fixed;
-            bottom: 20px;
-            left: -320px; /* Схований зліва за екраном */
+            bottom: 25px;
+            left: -350px; /* Схований зліва за екраном */
             z-index: 99999;
             display: flex;
             align-items: flex-end;
@@ -86,19 +86,24 @@
         }
 
         .interactive-santa-box.active {
-            left: 20px; /* Вилізає і зупиняється на екрані */
+            left: 20px; /* Плавно виїжджає і зупиняється на екрані */
         }
 
         .santa-character-img {
-            width: 110px;
-            height: auto;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6));
             animation: santaBreathe 3s ease-in-out infinite;
+            background: rgba(12, 18, 32, 0.8);
+            border-radius: 50%;
+            border: 2px solid #38bdf8;
+            padding: 5px;
         }
 
         @keyframes santaBreathe {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-5px); }
         }
 
         .santa-dialogue-bubble {
@@ -106,7 +111,7 @@
             border: 2px solid #38bdf8;
             border-radius: 14px;
             padding: 14px 18px;
-            max-width: 260px;
+            max-width: 270px;
             box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);
             backdrop-filter: blur(10px);
             position: relative;
@@ -718,7 +723,7 @@
 
     <!-- ДІД МОРОЗ ВИЛІЗАЄ ЗЛІВА, ВІТАЄТЬСЯ ТА ПОПЕРЕДЖАЄ ПРО НОВИЙ РІК -->
     <div id="interactiveSanta" class="interactive-santa-box">
-        <img src="https://i.ibb.co/3sW8h5m/nicholas.png" alt="Дід Мороз" class="santa-character-img">
+        <img src="https://cdn-icons-png.flaticon.com/512/3222/3222791.png" alt="Дід Мороз" class="santa-character-img">
         <div class="santa-dialogue-bubble">
             <button class="santa-close-cross" onclick="closeSantaDialogue()">✕</button>
             <div class="santa-dialogue-title" id="santaBubbleTitle">Ho-Ho-Ho! Вітаю! 🎅</div>
@@ -819,7 +824,7 @@
     <script>
         // ЛОГІКА ПОЯВИ ТА ПРИВІТАННЯ ВІД ДІДА МОРОЗА
         window.addEventListener('DOMContentLoaded', () => {
-            // Вилізає зліва через 1 секунду після завантаження сайту
+            // Плавно виїжджає зліва через 1 секунду після завантаження сайту
             setTimeout(() => {
                 const santaBox = document.getElementById('interactiveSanta');
                 if (santaBox) santaBox.classList.add('active');
@@ -837,20 +842,18 @@
             const now = new Date();
             const month = now.getMonth(); // 11 = грудень, 0 = січень
             const date = now.getDate();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
 
             const titleEl = document.getElementById('santaBubbleTitle');
             const textEl = document.getElementById('santaBubbleText');
 
-            // ПЕРЕВІРКА НА 1 СІЧНЯ 00:00 (або якщо наступив Новий Рік)
-            const isNewYearTime = (month === 0 && date === 1); // 1 січня
+            // АВТОМАТИЧНЕ ПРИВІТАННЯ 1 СІЧНЯ (00:00)
+            const isNewYearTime = (month === 0 && date === 1);
 
             if (isNewYearTime) {
                 if (titleEl) titleEl.innerText = "З Новим Роком! 🎉";
-                if (textEl) textEl.innerHTML = "Ура! Наступив <b>1 січня</b>! Бажаю перемог у кожному матчі та крутих раундів! 🍾🥂";
+                if (textEl) textEl.innerHTML = "Ура! Наступив <b>1 січня</b>! Бажаю максимальних перемог у кожному матчі та епічних раундів! 🍾🥂";
             } else {
-                // Розрахунок днів до 31 грудня 23:59
+                // Розрахунок днів до 31 грудня 23:59 (сьогодні 12, завтра автоматично 11 і т.д.)
                 let year = now.getFullYear();
                 let nyDate = new Date(year, 11, 31, 23, 59, 59);
                 if (now > nyDate) {
