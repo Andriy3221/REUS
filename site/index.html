@@ -65,9 +65,10 @@
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            padding-bottom: 50px; /* Запас знизу, щоб контент не ховався за кнопку */
         }
 
-        /* ЗАЛІЗОБЕТОННО ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ */
+        /* ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ПЛАВАЄ ПРИ СКРОЛІ) */
         .donate-floating-btn {
             position: fixed !important;
             bottom: 25px !important;
@@ -731,7 +732,7 @@
 </head>
 <body>
 
-    <!-- ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ВИМОГЛИВИЙ ФІКСОВАНИЙ ПОДВІЙНИЙ СТИЛЬ) -->
+    <!-- ФІКСОВАНА КНОПКА, ЯКА ЗАВЖДИ ЗУПИНИТЬСЯ І ПЛАВАТИМЕ ПРИ СКРОЛІ ВНИЗ/ВГОРИ -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
