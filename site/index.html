@@ -73,7 +73,7 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ДІД МОРОЗ: ЗАВЖДИ З НАМИ ПРИ СКРОЛІ (ПОВЕРХ УСЬОГО) */
+        /* ДІД МОРОЗ: ПРИКРІПЛЕНИЙ ДО ЕКРАНА, ХОДИТЬ ЗА ТОБЮ ПРИ СКРОЛІ */
         .santa-widget {
             position: fixed !important;
             bottom: 25px !important;
@@ -379,7 +379,7 @@
 </head>
 <body>
 
-    <!-- ВІДЖЕТ ДІДА МОРОЗА (ЗАВЖДИ НА ЕКРАНІ ПРИ СКРОЛІ) -->
+    <!-- ВІДЖЕТ ДІДА МОРОЗА (ЗАВЖДИ З ТОБОЮ ПРИ СКРОЛІ) -->
     <div class="santa-widget" id="santaNoticeWidget">
         <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
         <div class="santa-avatar">🎅</div>
@@ -543,27 +543,7 @@
             if (flagValue.startsWith('http') || flagValue.startsWith('/') || flagValue.startsWith('data:')) {
                 return flagValue;
             }
-            return `https://flagcdn.com/24x18/${flagValue.trim().toLowerCase()}.png`;
-        }
-
-        function getRawRating(p) {
-            const val = p.stats?.rating || p.stats?.kd || p.rating || p.kd || p.score;
-            if (val !== undefined && val !== null && val !== '' && val !== '—') {
-                const parsed = parseFloat(val);
-                return isNaN(parsed) ? null : parsed;
-            }
-            return null;
-        }
-
-        const BIN_ID = '6ad23f85ac6210605a379839';
-        const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';
-
-        let allTournamentsCache = [];
-        let allTeamsCache = [];
-
-        async function fetchData() {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+            return `https://flagcdn.com/24x18/${flagValue.trim().toLowerCase()}.png`; }  function getRawRating(p) { const val = p.stats?.rating \vert{}\vert{} p.stats?.kd \vert{}\vert{} p.rating \vert{}\vert{} p.kd \vert{}\vert{} p.score; if (val !== undefined && val !== null && val !== '' && val !== '—') { const parsed = parseFloat(val); return isNaN(parsed) ? null : parsed; } return null; }  const BIN_ID = '6ad23f85ac6210605a379839'; const API_KEY = '$2a$10$CISi1TUb8cLEgZ8iI9GtYu3KSoj1MZ7tOvzPKHVwtbZfwRFIJlR7G';  let allTournamentsCache = []; let allTeamsCache = [];  async function fetchData() { try { const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
                     headers: { 'X-Master-Key': API_KEY }
                 });
                 const result = await res.json();
@@ -730,92 +710,3 @@
                                             <span>📅 ${tourDate}</span>
                                             <span style="color:var(--accent-color); font-weight: bold;">💰 ${tourPrize}</span>
                                             <span>👥 ${teamsCount} Teams</span>
-                                        </div>
-                                    </div>
-                                </div>`;
-                        } else {
-                            hasRow = true;
-                            rowCardsHtml += `
-                                <div class="tournament-row-card" onclick="openTourModal(${tIdx})">
-                                    <div style="display:flex; align-items:center; gap:12px;">
-                                        ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
-                                        <b style="color:var(--text-color);">${tourTitle}</b>
-                                    </div>
-                                    <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
-                                        <span class="tier-badge ${tierClass}">${tierName}</span>
-                                        <span>${teamsCount} Teams</span>
-                                        <span style="color:var(--accent-color); font-weight: bold;">${tourPrize}</span>
-                                        <span>📅 ${tourDate}</span>
-                                    </div>
-                                </div>`;
-                        }
-                    });
-
-                    bigCardsHtml += '</div>';
-                    rowCardsHtml += '</div>';
-                    tContainer.innerHTML = (hasBig ? bigCardsHtml : '') + (hasRow ? rowCardsHtml : '');
-                }
-
-            } catch (err) {
-                console.error("Помилка завантаження даних:", err);
-            }
-        }
-
-        function openTourModal(index) {
-            const tour = allTournamentsCache[index];
-            if (!tour) return;
-
-            const tourTitle = tour.title || tour.name || tour.tournamentName || 'Турнір';
-            const tourDate = tour.date || tour.dates || tour.startDate || 'TBA';
-            const tourPrize = tour.prize || tour.prizePool || tour.money || 'TBA';
-            const tourTeams = tour.teams || tour.participants || tour.teamList || [];
-
-            document.getElementById('viewTourTitle').innerText = tourTitle;
-            document.getElementById('viewTourDate').innerText = '📅 ' + tourDate;
-            document.getElementById('viewTourPrize').innerText = '💰 ' + tourPrize;
-            
-            const logoImg = document.getElementById('viewTourLogo');
-            if (tour.logo) {
-                logoImg.src = tour.logo;
-                logoImg.style.display = 'block';
-            } else {
-                logoImg.style.display = 'none';
-            }
-
-            const container = document.getElementById('viewTourTeamsList');
-            container.innerHTML = '';
-
-            document.getElementById('viewTourTeamsCount').innerText = `👥 ${tourTeams.length} Teams`;
-
-            if (tourTeams.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 20px;">Список команд ще не сформовано.</div>';
-            } else {
-                tourTeams.forEach(tName => {
-                    const teamObj = allTeamsCache.find(t => (t.name || '').trim().toLowerCase() === String(tName).trim().toLowerCase());
-                    const logo = teamObj ? (teamObj.logo || teamObj.image || '') : '';
-                    container.innerHTML += `
-                        <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
-                            ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
-                            <span>${tName}</span>
-                        </a>
-                    `;
-                });
-            }
-
-            document.getElementById('tourModalOverlay').style.display = 'flex';
-        }
-
-        function closeTourModal() {
-            document.getElementById('tourModalOverlay').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('tourModalOverlay');
-            if (event.target === modal) closeTourModal();
-        }
-
-        // Запуск завантаження при старті сайту
-        fetchData();
-    </script>
-</body>
-</html>
