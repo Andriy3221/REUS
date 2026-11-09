@@ -15,6 +15,8 @@
             --text-color: #f1f5f9;
             --text-muted: #94a3b8;
         }
+
+        /* ПЛАВНА ПОЯВА СТОРІНКИ ПРИ ЗАВАНТАЖЕННІ */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -24,7 +26,21 @@
             position: relative;
             min-height: 100vh;
             box-sizing: border-box;
+            opacity: 0;
+            animation: pageFadeIn 0.7s ease-out forwards;
         }
+
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .bg-video {
             position: fixed;
             right: 0;
@@ -69,7 +85,7 @@
             gap: 12px;
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.7);
             border: 2px solid #38bdf8;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(8px);
             animation: pulseGlow 2.5s infinite ease-in-out;
             letter-spacing: 0.5px;
@@ -79,6 +95,9 @@
             box-shadow: 0 0 35px rgba(56, 189, 248, 0.7), 0 12px 30px rgba(0, 0, 0, 0.9);
             border-color: #7dd3fc;
             color: #ffffff;
+        }
+        .donate-floating-btn:active {
+            transform: scale(0.97);
         }
         .donate-floating-btn .donate-icon {
             font-size: 1.5rem;
@@ -139,7 +158,7 @@
         .project-logo-wrapper img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Змінено на contain для ідеального вписування нового логотипа */
+            object-fit: contain;
             object-position: center;
             filter: drop-shadow(0 0 8px #38bdf8);
         }
@@ -170,12 +189,16 @@
             font-weight: 700;
             cursor: pointer;
             font-size: 1rem;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .tab-btn:hover {
             border-color: var(--accent-color);
             color: var(--text-color);
             box-shadow: 0 0 12px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .tab-btn:active {
+            transform: scale(0.96);
         }
         .tab-btn.active {
             background: var(--inner-card-bg);
@@ -183,6 +206,8 @@
             color: var(--accent-color);
             box-shadow: 0 0 18px var(--accent-glow);
         }
+
+        /* ПЛАВНЕ ПЕРЕМИКАННЯ ВКЛАДОК */
         .section-box {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -192,16 +217,23 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             display: none;
             margin-bottom: 25px;
-            animation: fadeIn 0.3s ease;
             position: relative;
         }
         .section-box.active {
             display: block;
+            animation: tabSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes tabSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.99);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
+
         .section-title {
             font-size: 1.1rem;
             font-weight: bold;
@@ -226,17 +258,22 @@
             gap: 10px;
         }
 
+        /* КОМАНДИ - КАРТКИ З ПЛАВНИМ ЕФЕКТОМ */
         .team-card {
             background: var(--inner-card-bg);
             border-radius: 10px;
             border: 1px solid var(--border-color);
             overflow: hidden;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
         .team-card:hover {
             border-color: var(--accent-color);
             box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+            transform: translateY(-2px);
+        }
+        .team-card:active {
+            transform: scale(0.99);
         }
         .team-header {
             display: flex;
@@ -298,6 +335,7 @@
             gap: 12px;
             position: relative;
             z-index: 2;
+            animation: fadeIn 0.25s ease;
         }
 
         .team-player-card {
@@ -310,7 +348,7 @@
             overflow: hidden;
             text-decoration: none;
             color: var(--text-color);
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: center;
             position: relative;
             z-index: 2;
@@ -319,6 +357,9 @@
             border-color: var(--accent-color);
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+        }
+        .team-player-card:active {
+            transform: scale(0.96);
         }
         .player-photo-wrapper {
             width: 100%;
@@ -373,7 +414,7 @@
             z-index: 4;
         }
 
-        /* КАРТКИ ГРАВЦІВ У СТИЛІ HLTV (ДВА СТОВПЧИКИ, БЕЗ ІМЕН ТА ПРІЗВИЩ)[cite: 17, 18] */
+        /* КАРТКИ ГРАВЦІВ У СТИЛІ HLTV З ПЛАВНИМИ ЕФЕКТАМИ */
         .hltv-players-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -390,15 +431,18 @@
             text-decoration: none;
             color: var(--text-color);
             overflow: hidden;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             height: 90px;
         }
         .hltv-player-card:hover {
             border-color: var(--accent-color);
             background: rgba(15, 30, 56, 0.9);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        }
+        .hltv-player-card:active {
+            transform: scale(0.97);
         }
 
         .hltv-player-info {
@@ -475,11 +519,11 @@
             object-fit: cover;
             object-position: center 15%;
             transform: scale(1.3);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .hltv-player-card:hover .hltv-player-photo {
-            transform: scale(1.4);
+            transform: scale(1.42);
         }
 
         .loading {
@@ -502,13 +546,16 @@
             display: flex;
             flex-direction: column;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
         .tournament-big-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25);
+        }
+        .tournament-big-card:active {
+            transform: scale(0.98);
         }
         .tournament-big-card img.t-banner {
             width: 100%;
@@ -541,6 +588,9 @@
             background: rgba(15, 30, 56, 0.8);
             transform: translateX(3px);
             box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        .tournament-row-card:active {
+            transform: scale(0.99);
         }
 
         .tier-badge {
@@ -584,7 +634,7 @@
             animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         @keyframes modalPop {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.94); }
             to { opacity: 1; transform: scale(1); }
         }
         .tour-team-item {
@@ -683,7 +733,6 @@
 </head>
 <body>
 
-    <!-- ПЛАВАЮЧА КНОПКА ПІДТРИМКИ -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
@@ -698,7 +747,6 @@
         <div class="header-banner">
             <a href="index.html" class="project-logo-container">
                 <div class="project-logo-wrapper">
-                    <!-- Оновлений логотип згідно із завданням шефа -->
                     <img src="image-removebg-preview.png" alt="REUS Logo"> 
                 </div>
                 <div class="project-title">Reus <span>Championship ❄️</span></div>
