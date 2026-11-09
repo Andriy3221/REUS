@@ -65,26 +65,25 @@
             margin: 0 auto;
             position: relative;
             z-index: 1;
-            padding-bottom: 50px; /* Запас знизу, щоб контент не ховався за кнопку */
         }
 
-        /* ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ПЛАВАЄ ПРИ СКРОЛІ) */
+        /* ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ ЗВЕРХУ СПРАВА */
         .donate-floating-btn {
             position: fixed !important;
-            bottom: 25px !important;
-            right: 25px !important;
+            top: 20px !important;
+            right: 20px !important;
             z-index: 999999 !important;
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
             text-decoration: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 8px 25px rgba(0, 0, 0, 0.7);
+            gap: 10px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 5px 15px rgba(0, 0, 0, 0.7);
             border: 2px solid #38bdf8;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(8px);
@@ -92,8 +91,8 @@
             letter-spacing: 0.5px;
         }
         .donate-floating-btn:hover {
-            transform: scale(1.06) translateY(-3px);
-            box-shadow: 0 0 35px rgba(56, 189, 248, 0.8), 0 12px 30px rgba(0, 0, 0, 0.9);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.8), 0 8px 20px rgba(0, 0, 0, 0.9);
             border-color: #7dd3fc;
             color: #ffffff;
         }
@@ -101,15 +100,15 @@
             transform: scale(0.97);
         }
         .donate-floating-btn .donate-icon {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             line-height: 1;
             display: inline-block;
             filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6));
         }
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            50% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.75), 0 8px 25px rgba(0, 0, 0, 0.8); }
-            100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.8); }
+            0% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 5px 15px rgba(0, 0, 0, 0.8); }
+            50% { box-shadow: 0 0 28px rgba(56, 189, 248, 0.75), 0 5px 15px rgba(0, 0, 0, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), 0 5px 15px rgba(0, 0, 0, 0.8); }
         }
 
         .header-banner {
@@ -127,6 +126,7 @@
             gap: 15px;
             position: relative;
             overflow: hidden;
+            margin-right: 170px; /* Відступ, щоб заголовок не заходив під плаваючу кнопку */
         }
 
         .project-logo-container {
@@ -721,10 +721,13 @@
             .hltv-players-grid {
                 grid-template-columns: 1fr;
             }
+            .header-banner {
+                margin-right: 0; /* на мобільних кнопка стане під логотипом */
+            }
             .donate-floating-btn {
-                bottom: 15px;
+                top: 15px;
                 right: 15px;
-                padding: 10px 16px;
+                padding: 8px 14px;
                 font-size: 0.8rem;
             }
         }
@@ -732,7 +735,7 @@
 </head>
 <body>
 
-    <!-- ФІКСОВАНА КНОПКА, ЯКА ЗАВЖДИ ЗУПИНИТЬСЯ І ПЛАВАТИМЕ ПРИ СКРОЛІ ВНИЗ/ВГОРИ -->
+    <!-- ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
