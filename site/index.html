@@ -67,12 +67,12 @@
             z-index: 1;
         }
 
-        /* СУВОРО ЗАКРІПЛЕНА ПЛАВАЮЧА КНОПКА ПІДТРИМКИ (ПОВЕРХ УСЬОГО) */
+        /* СУВОРО ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ПОВЕРХ УСЬОГО) */
         .donate-floating-btn {
             position: fixed !important;
             bottom: 25px !important;
             right: 25px !important;
-            z-index: 9999 !important;
+            z-index: 99999 !important;
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #ffffff;
             text-decoration: none;
@@ -83,7 +83,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), 0 8px 25px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 8px 25px rgba(0, 0, 0, 0.7);
             border: 2px solid #38bdf8;
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(8px);
@@ -92,7 +92,7 @@
         }
         .donate-floating-btn:hover {
             transform: scale(1.06) translateY(-3px);
-            box-shadow: 0 0 35px rgba(56, 189, 248, 0.7), 0 12px 30px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 35px rgba(56, 189, 248, 0.8), 0 12px 30px rgba(0, 0, 0, 0.9);
             border-color: #7dd3fc;
             color: #ffffff;
         }
@@ -731,7 +731,7 @@
 </head>
 <body>
 
-    <!-- ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ЯКА НЕ ДВИГАЄТЬСЯ ПРИ СКРОЛІ) -->
+    <!-- СУВОРО ЗАКРІПЛЕНА КНОПКА ПІДТРИМКИ (ПОВЕРХ УСЬОГО НА ЕКРАНІ) -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
