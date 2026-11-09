@@ -73,7 +73,7 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА (ЗЛІВА В КУТКУ) */
+        /* НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА */
         .santa-widget {
             position: fixed;
             bottom: 25px;
@@ -693,7 +693,7 @@
                     document.getElementById('players-app').innerHTML = playersHtml;
                 }
 
-                // 3. ТУРНІРИ
+                // 3. ТУРНІРИ (з універсальним зчитуванням назв полів із бази)
                 const tContainer = document.getElementById('tournaments-app');
                 if (tournaments.length === 0) {
                     tContainer.innerHTML = '<div class="loading">Список турнірів порожній.</div>';
@@ -703,10 +703,16 @@
                     let hasBig = false, hasRow = false;
 
                     tournaments.forEach((tour, tIdx) => {
-                        const isBigCard = tour.tier === 'tier-1' || tour.tier === 'tier-2';
-                        const teamsCount = (tour.teams && tour.teams.length) ? tour.teams.length : (tour.teamsCount || '—');
-                        const tierClass = tour.tier || 'tier-1';
-                        const tierName = tierClass.replace('-', ' ').toUpperCase();
+                        // Підтримуємо різні варіанти написання ключів у JSONBin (наприклад, title або name, date або dates тощо)
+                        const tourTitle = tour.title || tour.name || tour.tournamentName || 'Турнір';
+                        const tourDate = tour.date || tour.dates || tour.startDate || 'TBA';
+                        const tourPrize = tour.prize || tour.prizePool || tour.money || 'TBA';
+                        const tourTeamsList = tour.teams || tour.participants || tour.teamList || [];
+                        const teamsCount = tourTeamsList.length > 0 ? tourTeamsList.length : (tour.teamsCount || '—');
+                        
+                        const tierClass = tour.tier || tour.division || 'tier-1';
+                        const tierName = String(tierClass).replace('-', ' ').toUpperCase();
+                        const isBigCard = tierClass === 'tier-1' || tierClass === 'tier-2' || tierName.includes('TIER 1') || tierName.includes('TIER 2');
 
                         if (isBigCard) {
                             hasBig = true;
@@ -717,13 +723,13 @@
                                         <div style="display:flex; justify-content:space-between; align-items:center;">
                                             <div style="display:flex; align-items:center; gap:10px;">
                                                 ${tour.logo ? `<img src="${tour.logo}" style="width:24px; height:24px; object-fit:contain;">` : ''}
-                                                <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                                <b style="color:var(--text-color);">${tourTitle}</b>
                                             </div>
                                             <span class="tier-badge ${tierClass}">${tierName}</span>
                                         </div>
                                         <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:0.85rem; border-top: 1px solid var(--border-color); padding-top: 10px;">
-                                            <span>📅 ${tour.date || 'TBA'}</span>
-                                            <span style="color:var(--accent-color); font-weight: bold;">💰 ${tour.prize || 'TBA'}</span>
+                                            <span>📅 ${tourDate}</span>
+                                            <span style="color:var(--accent-color); font-weight: bold;">💰 ${tourPrize}</span>
                                             <span>👥 ${teamsCount} Teams</span>
                                         </div>
                                     </div>
@@ -734,13 +740,13 @@
                                 <div class="tournament-row-card" onclick="openTourModal(${tIdx})">
                                     <div style="display:flex; align-items:center; gap:12px;">
                                         ${tour.logo ? `<img src="${tour.logo}" style="width:22px; height:22px; object-fit:contain;">` : ''}
-                                        <b style="color:var(--text-color);">${tour.title || 'Турнір'}</b>
+                                        <b style="color:var(--text-color);">${tourTitle}</b>
                                     </div>
                                     <div style="display:flex; gap:20px; color:var(--text-muted); font-size:0.85rem; align-items: center;">
                                         <span class="tier-badge ${tierClass}">${tierName}</span>
                                         <span>${teamsCount} Teams</span>
-                                        <span style="color:var(--accent-color); font-weight: bold;">${tour.prize || 'Other'}</span>
-                                        <span>📅 ${tour.date || 'Online'}</span>
+                                        <span style="color:var(--accent-color); font-weight: bold;">${tourPrize}</span>
+                                        <span>📅 ${tourDate}</span>
                                     </div>
                                 </div>`;
                         }
@@ -760,9 +766,14 @@
             const tour = allTournamentsCache[index];
             if (!tour) return;
 
-            document.getElementById('viewTourTitle').innerText = tour.title || 'Турнір';
-            document.getElementById('viewTourDate').innerText = '📅 ' + (tour.date || 'TBA');
-            document.getElementById('viewTourPrize').innerText = '💰 ' + (tour.prize || 'TBA');
+            const tourTitle = tour.title || tour.name || tour.tournamentName || 'Турнір';
+            const tourDate = tour.date || tour.dates || tour.startDate || 'TBA';
+            const tourPrize = tour.prize || tour.prizePool || tour.money || 'TBA';
+            const tourTeams = tour.teams || tour.participants || tour.teamList || [];
+
+            document.getElementById('viewTourTitle').innerText = tourTitle;
+            document.getElementById('viewTourDate').innerText = '📅 ' + tourDate;
+            document.getElementById('viewTourPrize').innerText = '💰 ' + tourPrize;
             
             const logoImg = document.getElementById('viewTourLogo');
             if (tour.logo) {
@@ -775,15 +786,14 @@
             const container = document.getElementById('viewTourTeamsList');
             container.innerHTML = '';
 
-            const tourTeams = tour.teams || [];
             document.getElementById('viewTourTeamsCount').innerText = `👥 ${tourTeams.length} Teams`;
 
             if (tourTeams.length === 0) {
                 container.innerHTML = '<div style="color:var(--text-muted); grid-column:1/-1; text-align:center; padding: 20px;">Список команд ще не сформовано.</div>';
             } else {
                 tourTeams.forEach(tName => {
-                    const teamObj = allTeamsCache.find(t => t.name.trim().toLowerCase() === tName.trim().toLowerCase());
-                    const logo = teamObj ? (teamObj.logo || '') : '';
+                    const teamObj = allTeamsCache.find(t => (t.name || '').trim().toLowerCase() === String(tName).trim().toLowerCase());
+                    const logo = teamObj ? (teamObj.logo || teamObj.image || '') : '';
                     container.innerHTML += `
                         <a href="team.html?name=${encodeURIComponent(tName)}" class="tour-team-item">
                             ${logo ? `<img src="${logo}" style="width:24px; height:24px; object-fit:contain;">` : '🛡️'}
