@@ -53,6 +53,31 @@
             background: radial-gradient(circle, rgba(10, 20, 38, 0.75) 0%, rgba(6, 9, 19, 0.96) 100%);
             z-index: -1;
         }
+
+        /* НОВОРІЧНИЙ АНІМОВАНИЙ СНІГ НА ФОНІ */
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background: #ffffff;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(50vh) translateX(20px);
+            }
+            100% {
+                transform: translateY(105vh) translateX(-20px);
+            }
+        }
+
         .main-container {
             max-width: 1050px;
             margin: 0 auto;
@@ -113,7 +138,7 @@
             gap: 15px;
             position: relative;
             overflow: hidden;
-            margin-right: 170px; /* Відступ, щоб шапка не заходила під фіксовану кнопку */
+            margin-right: 170px;
         }
 
         .project-logo-container {
@@ -623,7 +648,7 @@
 </head>
 <body>
 
-    <!-- КНОПКА ТЕПЕР ЗВЕРХУ СПРАВА І СЛІДУЄ ЗА СКРОЛОМ -->
+    <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
@@ -714,6 +739,31 @@
     </div>
 
     <script>
+        // Генератор новорічних сніжинок на фоні
+        function createSnowflakes() {
+            const snowContainer = document.createElement('div');
+            snowContainer.id = 'snow-container';
+            document.body.appendChild(snowContainer);
+
+            const snowflakesCount = 45;
+
+            for (let i = 0; i < snowflakesCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('snowflake');
+                
+                const size = Math.random() * 4 + 2 + 'px';
+                star.style.width = size;
+                star.style.height = size;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.animationDuration = Math.random() * 5 + 3 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+
+                snowContainer.appendChild(star);
+            }
+        }
+        createSnowflakes();
+
         const bgVideo = document.getElementById('bgVideo');
         if (bgVideo) {
             bgVideo.addEventListener('ended', function() {
