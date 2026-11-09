@@ -61,10 +61,10 @@
             padding-bottom: 60px;
         }
 
-        /* ПРАВИЛЬНИЙ ФІКСОВАНИЙ ПРЯМОКУТНИК СПРАВА ЗНИЗУ */
+        /* КНОПКА ЗАФІКСОВАНА ЗВЕРХУ СПРАВА І ПЛИВЕ РАЗОМ ЗІ СКРОЛОМ */
         .donate-floating-btn {
             position: fixed !important;
-            bottom: 25px !important;
+            top: 20px !important;
             right: 25px !important;
             z-index: 999999 !important;
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
@@ -85,7 +85,7 @@
         }
 
         .donate-floating-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(56, 189, 248, 0.7), 0 6px 20px rgba(0, 0, 0, 0.8);
             border-color: #7dd3fc;
             background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
@@ -113,6 +113,7 @@
             gap: 15px;
             position: relative;
             overflow: hidden;
+            margin-right: 170px; /* Відступ, щоб шапка не заходила під фіксовану кнопку */
         }
 
         .project-logo-container {
@@ -615,13 +616,14 @@
         @media (max-width: 768px) {
             .team-players { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
             .hltv-players-grid { grid-template-columns: 1fr; }
-            .donate-floating-btn { bottom: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
+            .header-banner { margin-right: 0; }
+            .donate-floating-btn { top: 15px; right: 15px; padding: 8px 14px; font-size: 0.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ОСЬ ТУТ ВОНА ВИСИТЬ ОКРЕМО ВІД УСІХ БЛОКІВ І ПЛИВЕ РАЗОМ ЗІ СКРОЛОМ -->
+    <!-- КНОПКА ТЕПЕР ЗВЕРХУ СПРАВА І СЛІДУЄ ЗА СКРОЛОМ -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn" title="Підтримати проєкт">
         <span class="donate-icon">💵</span>
         <span>Підтримати проєкт</span>
