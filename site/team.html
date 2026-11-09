@@ -10,7 +10,7 @@
             --card-bg: rgba(12, 18, 32, 0.92);
             --inner-card-bg: #0f172a;
             --border-color: #1e293b;
-            --accent-color: #38bdf8; /* Крижаний блакитний */
+            --accent-color: #38bdf8;
             --accent-glow: rgba(56, 189, 248, 0.35);
             --text-color: #f1f5f9;
             --text-muted: #94a3b8;
@@ -24,9 +24,15 @@
             position: relative;
             min-height: 100vh;
             box-sizing: border-box;
+            opacity: 0;
+            animation: pageFadeIn 0.7s ease-out forwards;
         }
 
-        /* ВІДЕО-ФОН */
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .bg-video {
             position: fixed;
             top: 0;
@@ -39,7 +45,6 @@
             filter: hue-rotate(180deg) brightness(0.35);
         }
 
-        /* ЗАТЕМНЕННЯ ФОНУ */
         .bg-overlay {
             position: fixed;
             top: 0;
@@ -70,13 +75,17 @@
             gap: 8px;
             margin-bottom: 25px;
             border-radius: 10px;
-            transition: all 0.2s;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             backdrop-filter: blur(10px);
         }
         .back-link:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
             box-shadow: 0 0 12px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+        .back-link:active {
+            transform: scale(0.96);
         }
 
         .card {
@@ -87,6 +96,11 @@
             margin-bottom: 25px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.6);
             backdrop-filter: blur(12px);
+            animation: cardPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes cardPop {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .team-header {
@@ -104,6 +118,10 @@
             object-fit: contain;
             padding: 8px;
             box-shadow: 0 0 20px var(--accent-glow);
+            transition: transform 0.3s ease;
+        }
+        .team-logo:hover {
+            transform: scale(1.05);
         }
 
         h1 {
@@ -141,12 +159,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.25s ease;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .player-card:hover {
             border-color: var(--accent-color);
             transform: translateY(-4px);
             box-shadow: 0 6px 20px rgba(56, 189, 248, 0.3);
+        }
+        .player-card:active {
+            transform: scale(0.96);
         }
 
         .player-img-wrap {
@@ -163,6 +184,10 @@
             object-fit: cover;
             object-position: center 15%;
             transform: scale(1.15);
+            transition: transform 0.3s ease;
+        }
+        .player-card:hover .player-avatar {
+            transform: scale(1.24);
         }
 
         .player-info-footer {
