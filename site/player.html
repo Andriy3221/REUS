@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Profile | REUS</title>
+    <title>Player Profile | Reus Championship ❄️</title>
     <style>
         :root {
-            --bg-color: #0a060d;
-            --card-bg: rgba(20, 12, 28, 0.88);
-            --inner-card-bg: #150b1f;
-            --border-color: #381a4d;
-            --accent-color: #ff6b00; /* Гарбузовий помаранчевий */
-            --accent-glow: rgba(255, 107, 0, 0.4);
-            --text-color: #f3e8ee;
-            --text-muted: #9a88a0;
+            --bg-color: #060913;
+            --card-bg: rgba(12, 18, 32, 0.92);
+            --inner-card-bg: #0f172a;
+            --border-color: #1e293b;
+            --accent-color: #38bdf8; /* Крижаний блакитний */
+            --accent-glow: rgba(56, 189, 248, 0.4);
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,7 +36,7 @@
             object-fit: cover;
             z-index: -2;
             pointer-events: none;
-            filter: hue-rotate(270deg) brightness(0.4);
+            filter: hue-rotate(180deg) brightness(0.35);
         }
 
         /* ЗАТЕМНЕННЯ ФОНУ */
@@ -46,7 +46,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(20, 10, 30, 0.7) 0%, rgba(10, 6, 13, 0.95) 100%);
+            background: radial-gradient(circle, rgba(10, 20, 38, 0.75) 0%, rgba(6, 9, 19, 0.96) 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -72,15 +72,15 @@
             gap: 30px;
         }
 
-        /* ЗБІЛЬШЕНА КАРТКА ФОТО ГРАВЦЯ З МАКСИМАЛЬНОЮ ЧІТКІСТЮ */
+        /* ЗБІЛЬШЕНА КАРТКА ФОТО ГРАВЦЯ ЗІ ЗИМОВИМ СЯЙВОМ */
         .profile-avatar-container {
             width: 220px;
             height: 280px;
             border-radius: 16px;
-            background: #0d0612;
+            background: #080d1a;
             border: 2px solid var(--accent-color);
             overflow: hidden;
-            box-shadow: 0 0 25px var(--accent-glow), inset 0 0 15px rgba(255, 107, 0, 0.2);
+            box-shadow: 0 0 25px var(--accent-glow), inset 0 0 15px rgba(56, 189, 248, 0.2);
             flex-shrink: 0;
             position: relative;
             display: flex;
@@ -88,26 +88,11 @@
             justify-content: center;
         }
 
-        /* Яскрава фонова павутинка */
-        .profile-avatar-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L100 100 M0 0 L100 0 M0 0 L0 100 M0 0 L100 35 M0 0 L35 100' stroke='rgba(255,107,0,0.45)' stroke-width='1.6' fill='none'/%3E%3Ccircle cx='0' cy='0' r='30' stroke='rgba(255,107,0,0.4)' stroke-width='1.6' fill='none'/%3E%3Ccircle cx='0' cy='0' r='65' stroke='rgba(255,107,0,0.35)' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat top left;
-            background-size: cover;
-            pointer-events: none;
-            z-index: 1;
-            filter: drop-shadow(0 0 5px rgba(255, 107, 0, 0.6));
-        }
-
         .profile-avatar {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 15%; /* Ідеальний фокус на обличчі та логотипі */
+            object-position: center 15%;
             position: relative;
             z-index: 2;
             image-rendering: -webkit-optimize-contrast;
@@ -155,6 +140,7 @@
             margin-bottom: 25px;
             border-radius: 10px;
             transition: all 0.2s;
+            backdrop-filter: blur(10px);
         }
         .back-link:hover {
             border-color: var(--accent-color);
@@ -192,18 +178,15 @@
 </head>
 <body>
 
-    <!-- ВІДЕО ФОН -->
     <video autoplay muted loop playsinline class="bg-video">
         <source src="fon.mp4" type="video/mp4">
     </video>
-
-    <!-- ЗАТЕМНЕННЯ -->
     <div class="bg-overlay"></div>
 
     <div class="container">
-        <a href="index.html" class="back-link">🦇 Назад до рейтингу</a>
+        <a href="index.html" class="back-link">❄️ Назад до рейтингу</a>
         <div id="playerContent">
-            <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження профілю... 🎃</div>
+            <div style="color: var(--text-muted); text-align: center; padding: 40px;">Завантаження профілю... ❄️</div>
         </div>
     </div>
 
@@ -216,7 +199,7 @@
             const playerName = urlParams.get('name');
 
             if (!playerName) {
-                document.getElementById('playerContent').innerHTML = '<div style="color: #ff6b00; text-align:center; padding:30px;">Гравець не вказаний у посиланні!</div>';
+                document.getElementById('playerContent').innerHTML = '<div style="color: var(--accent-color); text-align:center; padding:30px;">Гравець не вказаний у посиланні!</div>';
                 return;
             }
 
@@ -232,14 +215,14 @@
                 const player = players.find(p => (p.name || p.nickname || '').trim().toLowerCase() === decodedName);
 
                 if (!player) {
-                    document.getElementById('playerContent').innerHTML = `<div style="color: #ff6b00; text-align:center; padding:30px;">Гравця "${decodeURIComponent(playerName)}" не знайдено в базі!</div>`;
+                    document.getElementById('playerContent').innerHTML = `<div style="color: var(--accent-color); text-align:center; padding:30px;">Гравця "${decodeURIComponent(playerName)}" не знайдено в базі!</div>`;
                     return;
                 }
 
                 renderPlayer(player);
             } catch (err) {
                 console.error(err);
-                document.getElementById('playerContent').innerHTML = '<div style="color: #ff6b00; text-align:center; padding:30px;">Помилка завантаження даних.</div>';
+                document.getElementById('playerContent').innerHTML = '<div style="color: var(--accent-color); text-align:center; padding:30px;">Помилка завантаження даних.</div>';
             }
         }
 
