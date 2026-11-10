@@ -81,7 +81,7 @@
             padding-bottom: 60px;
         }
 
-        /* НОВОРІЧНИЙ ВІДЖЕТ ВВЕРХУ (СТУПЛЕНИЙ У ПОТІК СТОРІНКИ, ВИДНО З ПЕРШОЇ СЕКУНДИ) */
+        /* НОВОРІЧНИЙ ВІДЖЕТ ВВЕРХУ З ТАЙМЕРОМ */
         .santa-widget-top {
             display: flex;
             align-items: center;
@@ -137,8 +137,29 @@
             line-height: 1.4;
         }
 
-        .santa-desc b {
+        /* СТИЛІ ЖИВОГО ТАЙМЕРА */
+        .santa-timer-grid {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            font-family: monospace;
+        }
+
+        .santa-timer-block {
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            padding: 2px 7px;
             color: #38bdf8;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .santa-timer-unit {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-right: 4px;
         }
 
         .santa-close {
@@ -396,7 +417,7 @@
             </a>
         </div>
 
-        <!-- НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА (ВВЕРХУ, ВИДНО З ПЕРШОЇ СЕКУНДИ ПРИ ЗАВАНТАЖЕННІ) -->
+        <!-- НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА З ЖИВИМ ТАЙМЕРОМ СЕКУНД -->
         <div class="santa-widget-top" id="santaNoticeWidget">
             <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
             <div class="santa-avatar">🎅</div>
@@ -476,8 +497,8 @@
     </div>
 
     <script>
-        // НОВОРІЧНИЙ ВІДЖЕТ ТА АВТОМАТИЧНИЙ ВІДЛІК
-        function initSantaLogic() {
+        // ЖИВИЙ ТАЙМЕР З ЗВОРЕНИМ ВІДЛІКОМ ДО 31 ГРУДНЯ 23:59:59
+        function updateSantaLiveTimer() {
             const now = new Date();
             const month = now.getMonth();
             const date = now.getDate();
@@ -487,7 +508,7 @@
 
             if (month === 0 && date === 1) {
                 if (titleEl) titleEl.innerText = "З Новим 1 Січня! 🎉";
-                if (descEl) descEl.innerHTML = "Вітаю з Новим Роком! Бажаю тільки перемог у матчах!";
+                if (descEl) descEl.innerHTML = "Вітаю з Новим Роком! Бажаю тільки перемог та крутого аїму!";
             } else {
                 let year = now.getFullYear();
                 let target = new Date(year, 11, 31, 23, 59, 59);
@@ -495,15 +516,38 @@
                     target = new Date(year + 1, 11, 31, 23, 59, 59);
                 }
                 const diff = target - now;
-                const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+
+                if (diff <= 0) {
+                    if (titleEl) titleEl.innerText = "З Новим Роком! 🎉";
+                    if (descEl) descEl.innerHTML = "Свято настало! Успіхів та перемог у новому році!";
+                    return;
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((diff / 1000 / 60) % 60);
+                const s = Math.floor((diff / 1000) % 60);
+
+                const pad = (n) => n < 10 ? '0' + n : n;
 
                 if (titleEl) titleEl.innerText = "Дід Мороз попереджає! 🎅";
                 if (descEl) {
-                    descEl.innerHTML = `До Нового року (31 грудня о 23:59) залишилося <b>${days} днів</b>! Готуйся до свята!`;
+                    descEl.innerHTML = `
+                        До Нового року (31 грудня 23:59:59) залишилось: 
+                        <div class="santa-timer-grid">
+                            <span class="santa-timer-block">${pad(d)}</span><span class="santa-timer-unit">дн</span>
+                            <span class="santa-timer-block">${pad(h)}</span><span class="santa-timer-unit">год</span>
+                            <span class="santa-timer-block">${pad(m)}</span><span class="santa-timer-unit">хв</span>
+                            <span class="santa-timer-block">${pad(s)}</span><span class="santa-timer-unit">сек</span>
+                        </div>
+                    `;
                 }
             }
         }
-        initSantaLogic();
+        
+        // Запускаємо щосекундне оновлення таймера
+        updateSantaLiveTimer();
+        setInterval(updateSantaLiveTimer, 1000);
 
         // СНІЖИНКИ НА ФОНІ
         function createSnow() {
@@ -657,7 +701,7 @@
 
                 // 2. ГРАВЦІ
                 if (allPlayers.length === 0) {
-                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;>Список гравців порожній.</div>';
+                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;">Список гравців порожній.</div>';
                 } else {
                     allPlayers.sort((a, b) => (getRawRating(b) || 0) - (getRawRating(a) || 0));
 
