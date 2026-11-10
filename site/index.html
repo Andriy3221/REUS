@@ -81,7 +81,7 @@
             padding-bottom: 60px;
         }
 
-        /* НОВОРІЧНИЙ ВІДЖЕТ ВВЕРХУ З ТАЙМЕРОМ */
+        /* ВІДЖЕТ ТАЙМЕРА КІНЦЯ СЕЗОНУ ВВЕРХУ */
         .santa-widget-top {
             display: flex;
             align-items: center;
@@ -417,12 +417,12 @@
             </a>
         </div>
 
-        <!-- НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА З ЖИВИМ ТАЙМЕРОМ СЕКУНД -->
+        <!-- ВІДЖЕТ ТАЙМЕРА ДО КІНЦЯ СЕЗОНУ -->
         <div class="santa-widget-top" id="santaNoticeWidget">
             <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
-            <div class="santa-avatar">🎅</div>
+            <div class="santa-avatar">⏳</div>
             <div class="santa-content">
-                <div class="santa-title" id="santaHeadTitle">Дід Мороз попереджає!</div>
+                <div class="santa-title" id="santaHeadTitle">Кінець сезону ❄️</div>
                 <div class="santa-desc" id="santaHeadDesc">Розрахунок часу...</div>
             </div>
         </div>
@@ -497,57 +497,45 @@
     </div>
 
     <script>
-        // ЖИВИЙ ТАЙМЕР З ЗВОРЕНИМ ВІДЛІКОМ ДО 31 ГРУДНЯ 23:59:59
-        function updateSantaLiveTimer() {
+        // ТАЙМЕР ДО КІНЦЯ СЕЗОНУ (24 листопада 2026 о 00:00:00)
+        function updateSeasonTimer() {
             const now = new Date();
-            const month = now.getMonth();
-            const date = now.getDate();
-
+            // Цільова дата: 24 листопада 2026 року, 00:00:00
+            const target = new Date(2026, 10, 24, 0, 0, 0); // місяць 10 = листопад (0-indexed)
+            
             const titleEl = document.getElementById('santaHeadTitle');
             const descEl = document.getElementById('santaHeadDesc');
+            const diff = target - now;
 
-            if (month === 0 && date === 1) {
-                if (titleEl) titleEl.innerText = "З Новим 1 Січня! 🎉";
-                if (descEl) descEl.innerHTML = "Вітаю з Новим Роком! Бажаю тільки перемог та крутого аїму!";
-            } else {
-                let year = now.getFullYear();
-                let target = new Date(year, 11, 31, 23, 59, 59);
-                if (now > target) {
-                    target = new Date(year + 1, 11, 31, 23, 59, 59);
-                }
-                const diff = target - now;
+            if (diff <= 0) {
+                if (titleEl) titleEl.innerText = "Сезон завершено! 🏆";
+                if (descEl) descEl.innerHTML = "Рейтинговий акт та перший сезон офіційно завершено!";
+                return;
+            }
 
-                if (diff <= 0) {
-                    if (titleEl) titleEl.innerText = "З Новим Роком! 🎉";
-                    if (descEl) descEl.innerHTML = "Свято настало! Успіхів та перемог у новому році!";
-                    return;
-                }
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const m = Math.floor((diff / 1000 / 60) % 60);
+            const s = Math.floor((diff / 1000) % 60);
 
-                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const m = Math.floor((diff / 1000 / 60) % 60);
-                const s = Math.floor((diff / 1000) % 60);
+            const pad = (n) => n < 10 ? '0' + n : n;
 
-                const pad = (n) => n < 10 ? '0' + n : n;
-
-                if (titleEl) titleEl.innerText = "Дід Мороз попереджає! 🎅";
-                if (descEl) {
-                    descEl.innerHTML = `
-                        До Нового року залишилось: 
-                        <div class="santa-timer-grid">
-                            <span class="santa-timer-block">${pad(d)}</span><span class="santa-timer-unit">дн</span>
-                            <span class="santa-timer-block">${pad(h)}</span><span class="santa-timer-unit">год</span>
-                            <span class="santa-timer-block">${pad(m)}</span><span class="santa-timer-unit">хв</span>
-                            <span class="santa-timer-block">${pad(s)}</span><span class="santa-timer-unit">сек</span>
-                        </div>
-                    `;
-                }
+            if (titleEl) titleEl.innerText = "До кінця сезону: ⏳";
+            if (descEl) {
+                descEl.innerHTML = `
+                    До завершення рейтингового акту залишилось:
+                    <div class="santa-timer-grid">
+                        <span class="santa-timer-block">${pad(d)}</span><span class="santa-timer-unit">дн</span>
+                        <span class="santa-timer-block">${pad(h)}</span><span class="santa-timer-unit">год</span>
+                        <span class="santa-timer-block">${pad(m)}</span><span class="santa-timer-unit">хв</span>
+                        <span class="santa-timer-block">${pad(s)}</span><span class="santa-timer-unit">сек</span>
+                    </div>
+                `;
             }
         }
         
-        // Запускаємо щосекундне оновлення таймера
-        updateSantaLiveTimer();
-        setInterval(updateSantaLiveTimer, 1000);
+        updateSeasonTimer();
+        setInterval(updateSeasonTimer, 1000);
 
         // СНІЖИНКИ НА ФОНІ
         function createSnow() {
