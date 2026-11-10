@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reus Championship | Winter Edition ❄️</title>
+    <title>Reus Championship | Season 1 ❄️</title>
     <style>
         :root {
             --bg-color: #060913;
@@ -500,8 +500,7 @@
         // ТАЙМЕР ДО КІНЦЯ СЕЗОНУ (24 листопада 2026 о 00:00:00)
         function updateSeasonTimer() {
             const now = new Date();
-            // Цільова дата: 24 листопада 2026 року, 00:00:00
-            const target = new Date(2026, 10, 24, 0, 0, 0); // місяць 10 = листопад (0-indexed)
+            const target = new Date(2026, 10, 24, 0, 0, 0); // місяць 10 = листопад
             
             const titleEl = document.getElementById('santaHeadTitle');
             const descEl = document.getElementById('santaHeadDesc');
