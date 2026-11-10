@@ -73,40 +73,45 @@
             100% { transform: translateY(105vh) translateX(-20px); }
         }
 
-        /* ДІД МОРОЗ: ПРИКРІПЛЕНИЙ ДО ЕКРАНА, ХОДИТЬ ЗА ТОБЮ ПРИ СКРОЛІ */
-        .santa-widget {
-            position: fixed !important;
-            bottom: 25px !important;
-            left: 25px !important;
-            z-index: 2147483647 !important;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(12, 18, 32, 0.98);
-            border: 2px solid #38bdf8;
-            border-radius: 16px;
-            padding: 14px 18px;
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.5), 0 10px 30px rgba(0,0,0,0.9);
-            backdrop-filter: blur(12px);
-            max-width: 320px;
-            animation: santaSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .main-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 60px;
         }
 
-        @keyframes santaSlideUp {
-            from { opacity: 0; transform: translateY(30px); }
+        /* НОВОРІЧНИЙ ВІДЖЕТ ВВЕРХУ (СТУПЛЕНИЙ У ПОТІК СТОРІНКИ, ВИДНО З ПЕРШОЇ СЕКУНДИ) */
+        .santa-widget-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(12, 18, 32, 0.92);
+            border: 2px solid #38bdf8;
+            border-radius: 14px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), 0 8px 24px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            position: relative;
+            animation: santaFadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes santaFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .santa-avatar {
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             background: rgba(56, 189, 248, 0.15);
             border: 1px solid #38bdf8;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             flex-shrink: 0;
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
@@ -115,10 +120,11 @@
             display: flex;
             flex-direction: column;
             gap: 3px;
+            flex-grow: 1;
         }
 
         .santa-title {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 800;
             color: #38bdf8;
             text-transform: uppercase;
@@ -126,9 +132,9 @@
         }
 
         .santa-desc {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-color);
-            line-height: 1.35;
+            line-height: 1.4;
         }
 
         .santa-desc b {
@@ -137,24 +143,16 @@
 
         .santa-close {
             position: absolute;
-            top: 6px;
-            right: 8px;
+            top: 10px;
+            right: 12px;
             background: none;
             border: none;
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: color 0.2s;
         }
         .santa-close:hover { color: #38bdf8; }
-
-        .main-container {
-            max-width: 1050px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-            padding-bottom: 60px;
-        }
 
         .donate-floating-btn {
             position: fixed !important;
@@ -371,23 +369,12 @@
 
         @media (max-width: 768px) {
             .header-banner { margin-right: 0; }
-            .santa-widget { left: 15px; bottom: 15px; max-width: 85%; }
             .team-players { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
             .hltv-players-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
-    <!-- ВІДЖЕТ ДІДА МОРОЗА (ЗАВЖДИ З ТОБОЮ ПРИ СКРОЛІ) -->
-    <div class="santa-widget" id="santaNoticeWidget">
-        <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
-        <div class="santa-avatar">🎅</div>
-        <div class="santa-content">
-            <div class="santa-title" id="santaHeadTitle">Дід Мороз попереджає!</div>
-            <div class="santa-desc" id="santaHeadDesc">Розрахунок часу...</div>
-        </div>
-    </div>
 
     <!-- КНОПКА ЗВЕРХУ СПРАВА -->
     <a href="https://send.monobank.ua/jar/2LPGcDcnWj" target="_blank" class="donate-floating-btn">
@@ -407,6 +394,16 @@
                 </div>
                 <div class="project-title">Reus <span>Championship ❄️</span></div>
             </a>
+        </div>
+
+        <!-- НОВОРІЧНИЙ ВІДЖЕТ ДІДА МОРОЗА (ВВЕРХУ, ВИДНО З ПЕРШОЇ СЕКУНДИ ПРИ ЗАВАНТАЖЕННІ) -->
+        <div class="santa-widget-top" id="santaNoticeWidget">
+            <button class="santa-close" onclick="document.getElementById('santaNoticeWidget').style.display='none'">✕</button>
+            <div class="santa-avatar">🎅</div>
+            <div class="santa-content">
+                <div class="santa-title" id="santaHeadTitle">Дід Мороз попереджає!</div>
+                <div class="santa-desc" id="santaHeadDesc">Розрахунок часу...</div>
+            </div>
         </div>
 
         <div class="tabs-container">
@@ -660,7 +657,7 @@
 
                 // 2. ГРАВЦІ
                 if (allPlayers.length === 0) {
-                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;">Список гравців порожній.</div>';
+                    document.getElementById('players-app').innerHTML = '<div class="loading" style="grid-column: 1 / -1;>Список гравців порожній.</div>';
                 } else {
                     allPlayers.sort((a, b) => (getRawRating(b) || 0) - (getRawRating(a) || 0));
 
