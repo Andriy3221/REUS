@@ -94,11 +94,29 @@
         .btn-danger:hover {
             background: var(--danger-hover);
         }
+        .search-box {
+            margin-bottom: 15px;
+        }
         .list-container {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        /* Кастомний світлий скролбар для списків */
+        .list-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .list-container::-webkit-scrollbar-track {
+            background: var(--inner-card-bg);
+            border-radius: 4px;
+        }
+        .list-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
         }
         .item-row {
             display: flex;
@@ -190,7 +208,12 @@
                 </div>
             </div>
 
-            <div id="teamsList" class="list-container" style="margin-top: 20px;">
+            <!-- ПОШУК КОМАНД -->
+            <div class="search-box" style="margin-top: 20px;">
+                <input type="text" id="searchTeamInput" placeholder="🔍 Швидкий пошук команди за назвою..." oninput="renderTeamsList()">
+            </div>
+
+            <div id="teamsList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження команд...</div>
             </div>
         </div>
@@ -201,6 +224,12 @@
                 <h2 style="margin: 0;">Керування гравцями</h2>
                 <button onclick="openPlayerModalForAdd()">+ Додати гравця</button>
             </div>
+
+            <!-- ПОШУК ГРАВЦІВ -->
+            <div class="search-box">
+                <input type="text" id="searchPlayerInput" placeholder="🔍 Швидкий пошук гравця за нікнеймом або командою..." oninput="renderPlayersList()">
+            </div>
+
             <div id="playersList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження гравців...</div>
             </div>
@@ -212,6 +241,12 @@
                 <h2 style="margin: 0;">Керування турнірами</h2>
                 <button onclick="openTournamentModalForAdd()">+ Додати турнір</button>
             </div>
+
+            <!-- ПОШУК ТУРНІРІВ -->
+            <div class="search-box">
+                <input type="text" id="searchTournamentInput" placeholder="🔍 Швидкий пошук турніру за назвою..." oninput="renderTournamentsList()">
+            </div>
+
             <div id="tournamentsList" class="list-container">
                 <div style="color: var(--text-muted);">Завантаження турнірів...</div>
             </div>
@@ -473,22 +508,30 @@
             });
         }
 
-        // Керування командами
+        // Керування командами з фільтром за пошуком
         function renderTeamsList() {
             const teams = globalData.teams || [];
             const container = document.getElementById('teamsList');
-            if (teams.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Команд немає в базі.</div>';
+            const searchQuery = document.getElementById('searchTeamInput').value.toLowerCase().trim();
+
+            const filteredTeams = teams.map((t, originalIndex) => ({ t, originalIndex })).filter(({ t }) => {
+                const name = (t.name || '').toLowerCase();
+                return name.includes(searchQuery);
+            });
+
+            if (filteredTeams.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Команд не знайдено.</div>';
                 return;
             }
+
             container.innerHTML = '';
-            teams.forEach((t, index) => {
+            filteredTeams.forEach(({ t, originalIndex }) => {
                 container.innerHTML += `
                     <div class="item-row">
                         <span><b>${t.name || 'Без назви'}</b> | Ранг: ${t.rank || '-'} | Очки: ${t.points || 0} | Статус: <b>${t.status || 'Активна'}</b></span>
                         <div class="row-actions">
-                            <button onclick="openTeamModalForEdit(${index})">Редагувати</button>
-                            <button onclick="deleteTeam(${index})" class="btn-danger">Видалити</button>
+                            <button onclick="openTeamModalForEdit(${originalIndex})">Редагувати</button>
+                            <button onclick="deleteTeam(${originalIndex})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
                 `;
@@ -579,23 +622,32 @@
             }
         }
 
-        // Керування гравцями
+        // Керування гравцями з фільтром за пошуком
         function renderPlayersList() {
             const players = globalData.players || [];
             const container = document.getElementById('playersList');
-            if (players.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Гравців немає в базі.</div>';
+            const searchQuery = document.getElementById('searchPlayerInput').value.toLowerCase().trim();
+
+            const filteredPlayers = players.map((p, originalIndex) => ({ p, originalIndex })).filter(({ p }) => {
+                const pName = (p.name || p.nickname || '').toLowerCase();
+                const pTeam = (p.team || '').toLowerCase();
+                return pName.includes(searchQuery) || pTeam.includes(searchQuery);
+            });
+
+            if (filteredPlayers.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Гравців не знайдено.</div>';
                 return;
             }
+
             container.innerHTML = '';
-            players.forEach((p, index) => {
+            filteredPlayers.forEach(({ p, originalIndex }) => {
                 const pName = p.name || p.nickname || 'Гравець';
                 container.innerHTML += `
                     <div class="item-row">
                         <span><b>${pName}</b> (${p.team || 'Без команди'}) | Роль: ${p.role || 'RIFLER'} | Країна: ${p.country || 'ua'}</span>
                         <div class="row-actions">
-                            <button onclick="openPlayerModalForEdit(${index})">Редагувати</button>
-                            <button onclick="deletePlayer(${index})" class="btn-danger">Видалити</button>
+                            <button onclick="openPlayerModalForEdit(${originalIndex})">Редагувати</button>
+                            <button onclick="deletePlayer(${originalIndex})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
                 `;
@@ -711,7 +763,7 @@
             }
         }
 
-        // Керування турнірами
+        // Керування турнірами з фільтром за пошуком
         function renderTourTeamsCheckboxes(selectedTeams = []) {
             const container = document.getElementById('tourTeamsCheckboxes');
             container.innerHTML = '';
@@ -737,19 +789,27 @@
         function renderTournamentsList() {
             const tournaments = globalData.tournaments || [];
             const container = document.getElementById('tournamentsList');
-            if (tournaments.length === 0) {
-                container.innerHTML = '<div style="color: var(--text-muted);">Турнірів немає в базі.</div>';
+            const searchQuery = document.getElementById('searchTournamentInput').value.toLowerCase().trim();
+
+            const filteredTournaments = tournaments.map((t, originalIndex) => ({ t, originalIndex })).filter(({ t }) => {
+                const title = (t.title || '').toLowerCase();
+                return title.includes(searchQuery);
+            });
+
+            if (filteredTournaments.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted);">Турнірів не знайдено.</div>';
                 return;
             }
+
             container.innerHTML = '';
-            tournaments.forEach((t, index) => {
+            filteredTournaments.forEach(({ t, originalIndex }) => {
                 const teamsLen = (t.teams && t.teams.length) ? t.teams.length : (t.teamsCount || '—');
                 container.innerHTML += `
                     <div class="item-row">
                         <span><b>${t.title || 'Без назви'}</b> | Тір: <b>${t.tier || 'tier-1'}</b> | Призові: ${t.prize || '—'} | Команд: ${teamsLen}</span>
                         <div class="row-actions">
-                            <button onclick="openTournamentModalForEdit(${index})">Редагувати</button>
-                            <button onclick="deleteTournament(${index})" class="btn-danger">Видалити</button>
+                            <button onclick="openTournamentModalForEdit(${originalIndex})">Редагувати</button>
+                            <button onclick="deleteTournament(${originalIndex})" class="btn-danger">Видалити</button>
                         </div>
                     </div>
                 `;
